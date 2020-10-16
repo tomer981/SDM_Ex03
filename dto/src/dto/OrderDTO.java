@@ -1,9 +1,6 @@
 package dto;
 
-import order.SubOrder;
-import store.Store;
 import xml.schema.generated.Location;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,9 +12,10 @@ public class OrderDTO {
     private String CustomerName;
     private Map<Integer, SubOrderDTO> KStoreVSubStore = new HashMap<>();
 
-    private Double deliveryPrice;
+    private Double totalDeliveryPrice;
     private Double ProductsPrice;
 
+    //get
     public Location getCustomerLocation() {
         return customerLocation;
     }
@@ -33,17 +31,25 @@ public class OrderDTO {
     public Map<Integer, SubOrderDTO> getKStoreVSubStore() {
         return KStoreVSubStore;
     }
-    public Double getDeliveryPrice() {
-        return deliveryPrice;
+    public Double getTotalDeliveryPrice() {
+        return totalDeliveryPrice;
+    }
+    public Date getDate() {
+        return date;
+    }
+
+    //set
+    public void setTotalDeliveryPrice(Double totalDeliveryPrice) {
+        this.totalDeliveryPrice = totalDeliveryPrice;
+    }
+    public void setProductsPrice(Double productsPrice) {
+        ProductsPrice = productsPrice;
     }
 
     public void setKStoreVSubStore(Map<Integer, SubOrderDTO> KStoreVSubStore) {
         this.KStoreVSubStore = KStoreVSubStore;
     }
 
-    public Date getDate() {
-        return date;
-    }
 
 
 }

@@ -1,10 +1,9 @@
 package order;
 
 import dto.OrderDTO;
-import xml.schema.generated.Location;
+import dto.SubOrderDTO;
 
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,18 +19,22 @@ public class Order {
             KStoreIdVSubOrder.put(storeId, subOrder);
         }
     }
-
     public Map<Integer, SubOrder> getKStoreIdVSubOrder() {
         return KStoreIdVSubOrder;
     }
-    Double deliveryPrice = getDeliveryPrice();
 
-    private Double getDeliveryPrice() {
-
-    }
 
     public OrderDTO getOrderDTO() {
+        Double totalDeliveryPrice = 0.0;
+        Double totalProductsPrice = 0.0;
+        for (SubOrder subOrder : KStoreIdVSubOrder.values()){
+            totalDeliveryPrice += subOrder.getSubOrderDTO().getDeliveryPrice();
+            totalProductsPrice += subOrder.getSubOrderDTO().getProductsPrice();
+        }
 
-        return null;
+        orderDTO.setTotalDeliveryPrice(totalDeliveryPrice);
+        orderDTO.setProductsPrice(totalProductsPrice);
+
+        return orderDTO;
     }
 }

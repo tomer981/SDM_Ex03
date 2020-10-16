@@ -3,7 +3,6 @@ package store;
 
 import dto.StoreDTO;
 import dto.SubOrderDTO;
-import order.Order;
 import order.SubOrder;
 import xml.schema.generated.Location;
 import xml.schema.generated.SDMItem;
@@ -79,6 +78,6 @@ public class Store {
         Location customerLocation =  subOrder.getSubOrderDTO().getCustomerLocation();
         Double distance = SubOrder.getDistance(storeInfo.getLocation(),customerLocation);
         Double deliveryCost = distance * storeInfo.getDeliveryPpk();
-        subOrder.getSubOrderDTO().
+        subOrder.getSubOrderDTO().setDeliveryCost(deliveryCost);
     }
 }

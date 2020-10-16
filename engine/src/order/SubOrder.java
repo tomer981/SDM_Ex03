@@ -32,7 +32,6 @@ public class SubOrder {
 
     public SubOrder(SubOrderDTO subOrderDTO) {
         this.subOrderDTO = subOrderDTO;
-
     }
 
 

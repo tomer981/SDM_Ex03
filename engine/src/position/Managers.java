@@ -40,7 +40,6 @@ public class Managers {
         return order;
     }
 
-
     private Map<Integer,Integer> getProductIdToChipsetStore(Map<SDMItem, ProductDTO> productsToBuy){
         Map<Integer,Integer> KProductIdVStoreId = new HashMap<>();
         for (SDMItem product : productsToBuy.keySet()){

@@ -19,6 +19,7 @@ public class ZoneMarket {
     private Map<String, Manager> KManagerNameVManager = new HashMap<>();
     private List<Order> orders = new ArrayList<>();//amount of order + avg price per order + number of time each product sold
 
+
     //get
     public Manager getManagerDefine() {
         return managerDefine;

@@ -123,7 +123,7 @@ public final class Market {
         ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
         Managers managers = KZoneVManagers.get(zoneMarket);
 
-        Double costForCustomer = orderDTO.getDeliveryPrice() + orderDTO.getProductsPrice();
+        Double costForCustomer = orderDTO.getTotalDeliveryPrice() + orderDTO.getProductsPrice();
         Action.invokeAction(Action.TRANSFER,customer.getMoney(),costForCustomer,orderDTO.getDate());
         customer.getKZoneNameVListOrderIds().get(zoneName).add(orderDTO.getId());
 
@@ -132,7 +132,7 @@ public final class Market {
         zoneMarket.getOrders().add(order);
     }
 
-    public OrderDTO getMinOrder(String zoneName,OrderDTO orderDTO,Map<SDMItem,ProductDTO> KProductInfoVProductDTO){
+    public OrderDTO getMinOrder(String zoneName,OrderDTO orderDTO, Map<SDMItem,ProductDTO> KProductInfoVProductDTO){
         ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
         Managers managers = KZoneVManagers.get(zoneMarket);
 

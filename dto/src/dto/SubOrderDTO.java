@@ -16,6 +16,10 @@ public class SubOrderDTO {
     private Map<SDMItem, ProductDTO> KProductVForPriceAndAmountInfo;
     private Map<SDMDiscount, Integer> KDiscountVTimeUse;
 
+    private Double deliveryPrice;
+    private Double productsPrice;
+
+    //get
     public Integer getId() {
         return id;
     }
@@ -37,7 +41,18 @@ public class SubOrderDTO {
     public Map<SDMDiscount, Integer> getKDiscountVTimeUse() {
         return KDiscountVTimeUse;
     }
+    public Double getDeliveryPrice() {
+        return deliveryPrice;
+    }
+    public Double getProductsPrice() {
+        return productsPrice;
+    }
+    //set
 
+
+    public void setDeliveryCost(Double deliveryPrice) {
+        this.deliveryPrice = deliveryPrice;
+    }
 
     public SubOrderDTO(Integer id, Date date, String customerName, Location customerLocation) {
         this.id = id;
