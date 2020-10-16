@@ -1,0 +1,70 @@
+package dto;
+
+import dto.ManagerDTO;
+import dto.OrderDTO;
+import dto.StoreDTO;
+import xml.schema.generated.*;
+import xml.schema.generated.SuperDuperMarketDescriptor;
+
+import java.util.List;
+import java.util.Map;
+
+import static xml.schema.generated.SuperDuperMarketDescriptor.*;
+
+public class ZoneMarketDTO {
+    //general
+    private ManagerDTO managerDefineName;
+    private String zoneName;
+
+    //products Info
+    private SDMItems productsInfo;
+    private Map<SDMItem, Integer> KProductVNumberOfStoreSellProduct;
+    private Map<SDMItem, Double> KProductVAvgPriceOfProduct;
+    private Map<SDMItem, Double> KProductVTotalAmountSold;
+
+    private Map<String,ManagerDTO> KManagerNameVManager;
+
+    private List<OrderDTO> ordersDTO;
+    private Double avgProductsPriceOrders;//Delivery not included
+
+    public ManagerDTO getManagerDefineName() {
+        return managerDefineName;
+    }
+    public String getZoneName() {
+        return zoneName;
+    }
+    public SDMItems getProductsInfo() {
+        return productsInfo;
+    }
+    public Map<SDMItem, Integer> getKProductVNumberOfStoreSellProduct() {
+        return KProductVNumberOfStoreSellProduct;
+    }
+    public Map<SDMItem, Double> getKProductVAvgPriceOfProduct() {
+        return KProductVAvgPriceOfProduct;
+    }
+    public Map<SDMItem, Double> getKProductVTotalAmountSold() {
+        return KProductVTotalAmountSold;
+    }
+    public Map<String, ManagerDTO> getKManagerNameVManager() {
+        return KManagerNameVManager;
+    }
+    public List<OrderDTO> getOrdersDTO() {
+        return ordersDTO;
+    }
+    public Double getAvgProductsPriceOrders() {
+        return avgProductsPriceOrders;
+    }
+
+
+    public ZoneMarketDTO(ManagerDTO managerDefineName, String zoneName, SDMItems productsInfo, Map<SDMItem, Integer> KProductVNumberOfStoreSellProduct, Map<SDMItem, Double> KProductVAvgPriceOfProduct, Map<SDMItem, Double> KProductVTotalAmountSold, Map<String, ManagerDTO> KManagerNameVManager, List<OrderDTO> ordersDTO, Double avgProductsPriceOrders) {
+        this.managerDefineName = managerDefineName;
+        this.zoneName = zoneName;
+        this.productsInfo = productsInfo;
+        this.KProductVNumberOfStoreSellProduct = KProductVNumberOfStoreSellProduct;
+        this.KProductVAvgPriceOfProduct = KProductVAvgPriceOfProduct;
+        this.KProductVTotalAmountSold = KProductVTotalAmountSold;
+        this.KManagerNameVManager = KManagerNameVManager;
+        this.ordersDTO = ordersDTO;
+        this.avgProductsPriceOrders = avgProductsPriceOrders;
+    }
+}

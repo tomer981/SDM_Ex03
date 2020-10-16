@@ -1,0 +1,1 @@
+xjc -d src -p xml.schema.generated resources\SDM-V3.xsd
