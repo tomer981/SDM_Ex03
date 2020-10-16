@@ -12,9 +12,9 @@ public class SubOrderDTO {
     private String customerName;
     private Location customerLocation;
 
-    private Map<Integer,SDMItem> KProductIdVProductsSoldInfo;
-    private Map<SDMItem, ProductDTO> KProductVForPriceAndAmountInfo;
-    private Map<SDMDiscount, Integer> KDiscountVTimeUse;
+    private Map<Integer,SDMItem> KProductIdVProductsSoldInfo = new HashMap<>();
+    private Map<SDMItem, ProductDTO> KProductVForPriceAndAmountInfo = new HashMap<>();
+    private Map<SDMDiscount, Integer> KDiscountVTimeUse = new HashMap<>();
 
     private Double deliveryPrice;
     private Double productsPrice;
@@ -47,13 +47,16 @@ public class SubOrderDTO {
     public Double getProductsPrice() {
         return productsPrice;
     }
+
     //set
-
-
     public void setDeliveryCost(Double deliveryPrice) {
         this.deliveryPrice = deliveryPrice;
     }
+    public void setProductsPrice(Double productsPrice) {
+        this.productsPrice = productsPrice;
+    }
 
+    //c'tor
     public SubOrderDTO(Integer id, Date date, String customerName, Location customerLocation) {
         this.id = id;
         this.date = date;

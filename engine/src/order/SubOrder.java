@@ -44,13 +44,19 @@ public class SubOrder {
         return Math.pow(X+Y,0.5);
     }
 
-    public boolean isProductSold(SDMItem product){
-        return subOrderDTO.getKProductIdVProductsSoldInfo().containsKey(product.getId());
+    public boolean isProductSold(Integer productId){
+        return subOrderDTO.getKProductIdVProductsSoldInfo().containsKey(productId);
+
     }
-    public Double getAmountSold(SDMItem product) {
+    public boolean isProductSold(SDMItem product){
+        return isProductSold(product.getId());
+    }
+
+    public Double getAmountSold(Integer productId){
         Double amountSold = 0.0;
-        if (subOrderDTO.getKProductVForPriceAndAmountInfo().containsKey(product)){
-            amountSold = subOrderDTO.getKProductVForPriceAndAmountInfo().get(product).getAmount();
+        SDMItem SDMProduct = subOrderDTO.getKProductIdVProductsSoldInfo().get(productId);
+        if (subOrderDTO.getKProductVForPriceAndAmountInfo().containsKey(SDMProduct)){
+            amountSold = subOrderDTO.getKProductVForPriceAndAmountInfo().get(SDMProduct).getAmount();
         }
 
         for (SDMDiscount discount : subOrderDTO.getKDiscountVTimeUse().keySet()){
@@ -60,5 +66,8 @@ public class SubOrder {
         }
 
         return amountSold;
+    }
+    public Double getAmountSold(SDMItem product) {
+        return getAmountSold(product.getId());
     }
 }

@@ -75,7 +75,6 @@ public class SchemaBaseJaxbObjects {
             validate.eachProductSoldByAtLeastOneStore(productsSoldInStores, xmlProducts);
         }
     }
-
     public void initXmlDiscounts() throws IllegalArgumentException {
         if (xmlStores != null) {
             for (SDMStore xmlStore : xmlStores) {
@@ -92,7 +91,6 @@ public class SchemaBaseJaxbObjects {
             }
         }
     }
-
     public void initXmlLocation() {
         List<Location> xmlLocation = new ArrayList<>();
         if (xmlStores != null) {

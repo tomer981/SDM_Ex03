@@ -73,9 +73,9 @@ public final class Market {
     //////method complete
 
     //////////method private
-    private void addZoneMarket(File file, Manager manager) throws JAXBException {
+    private synchronized void addZoneMarket(File file, Manager manager) throws JAXBException {
         SchemaBaseJaxbObjects schema = new SchemaBaseJaxbObjects(file);
-        if (KZoneVManagers.containsKey(schema.getXmlZoneMarket().getSDMZone().getName())){
+        if (KNameZoneVZone.containsKey(schema.getXmlZoneMarket().getSDMZone().getName())){
             throw new IllegalArgumentException("the zone with the same name already exist");
         }
 
@@ -83,7 +83,7 @@ public final class Market {
         Managers managers = new Managers(zoneMarket.getZoneName());
 
 
-        KZoneVManagers.put(zoneMarket,managers);
+        KZoneVManagers.put(zoneMarket, managers);
         KNameZoneVZone.put(zoneMarket.getZoneName(),zoneMarket);
         managers.addManager(manager);
     }
@@ -104,13 +104,16 @@ public final class Market {
         Manager manager = new Manager(name);
         addZoneMarket(file,manager);
     }
-    public void addCustomer(String name){
+    public synchronized void addCustomer(String name){
         Customer customer = new Customer(name);
         KCustomerNameVCustomer.put(name,customer);
     }
+    private synchronized void customerMakeTransaction(Action action,Customer customer, Date date, Double transactionAmount){
+        Action.invokeAction(action,customer.getMoney(),transactionAmount,date);
+    }
     public void customerMakeDeposit(String customerName, Date date,Double transactionAmount){
         Customer customer = KCustomerNameVCustomer.get(customerName);
-        Action.invokeAction(Action.DEPOSIT,customer.getMoney(),transactionAmount,date);
+        customerMakeTransaction(Action.DEPOSIT,customer,date,transactionAmount);
     }
 
     //////method incomplete
@@ -122,16 +125,14 @@ public final class Market {
         Customer customer = KCustomerNameVCustomer.get(customerName);
         ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
         Managers managers = KZoneVManagers.get(zoneMarket);
+        Double transactionAmount = orderDTO.getTotalDeliveryPrice() + orderDTO.getProductsPrice();
 
-        Double costForCustomer = orderDTO.getTotalDeliveryPrice() + orderDTO.getProductsPrice();
-        Action.invokeAction(Action.TRANSFER,customer.getMoney(),costForCustomer,orderDTO.getDate());
+        customerMakeTransaction(Action.TRANSFER,customer,orderDTO.getDate(),transactionAmount);
         customer.getKZoneNameVListOrderIds().get(zoneName).add(orderDTO.getId());
 
         Order order = managers.addOrder(orderDTO);
-
         zoneMarket.getOrders().add(order);
     }
-
     public OrderDTO getMinOrder(String zoneName,OrderDTO orderDTO, Map<SDMItem,ProductDTO> KProductInfoVProductDTO){
         ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
         Managers managers = KZoneVManagers.get(zoneMarket);

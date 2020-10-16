@@ -9,18 +9,18 @@ public class OrderDTO {
     private Integer id;
     private Date date;
     private Location customerLocation;
-    private String CustomerName;
-    private Map<Integer, SubOrderDTO> KStoreVSubStore = new HashMap<>();
+    private String customerName;
 
-    private Double totalDeliveryPrice;
-    private Double ProductsPrice;
+    private Map<Integer, SubOrderDTO> KStoreVSubStore = new HashMap<>();
+    private Double totalDeliveryPrice = 0.0;
+    private Double ProductsPrice = 0.0;
 
     //get
     public Location getCustomerLocation() {
         return customerLocation;
     }
     public String getCustomerName() {
-        return CustomerName;
+        return customerName;
     }
     public Integer getId() {
         return id;
@@ -39,17 +39,22 @@ public class OrderDTO {
     }
 
     //set
-    public void setTotalDeliveryPrice(Double totalDeliveryPrice) {
+    public void setTotalDeliveryCost(Double totalDeliveryPrice) {
         this.totalDeliveryPrice = totalDeliveryPrice;
     }
     public void setProductsPrice(Double productsPrice) {
         ProductsPrice = productsPrice;
     }
-
     public void setKStoreVSubStore(Map<Integer, SubOrderDTO> KStoreVSubStore) {
         this.KStoreVSubStore = KStoreVSubStore;
     }
 
 
-
+    //c'tor
+    public OrderDTO(Integer id, Date date, Location customerLocation, String customerName) {
+        this.id = id;
+        this.date = date;
+        this.customerLocation = customerLocation;
+        this.customerName = customerName;
+    }
 }

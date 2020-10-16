@@ -23,10 +23,13 @@ public class ZoneMarketDTO {
     private Map<SDMItem, Double> KProductVTotalAmountSold;
 
     private Map<String,ManagerDTO> KManagerNameVManager;
-
     private List<OrderDTO> ordersDTO;
-    private Double avgProductsPriceOrders;//Delivery not included
 
+    private Double avgProductsPriceOrders;//Delivery not included
+    private Integer numberOfStores;
+    private Integer numberOfOrders;
+
+    //get
     public ManagerDTO getManagerDefineName() {
         return managerDefineName;
     }
@@ -54,9 +57,12 @@ public class ZoneMarketDTO {
     public Double getAvgProductsPriceOrders() {
         return avgProductsPriceOrders;
     }
+    public int getNumberOfStores() {
+        return numberOfStores;
+    }
 
-
-    public ZoneMarketDTO(ManagerDTO managerDefineName, String zoneName, SDMItems productsInfo, Map<SDMItem, Integer> KProductVNumberOfStoreSellProduct, Map<SDMItem, Double> KProductVAvgPriceOfProduct, Map<SDMItem, Double> KProductVTotalAmountSold, Map<String, ManagerDTO> KManagerNameVManager, List<OrderDTO> ordersDTO, Double avgProductsPriceOrders) {
+    //c'tor
+    public ZoneMarketDTO(ManagerDTO managerDefineName, String zoneName, SDMItems productsInfo, Map<SDMItem, Integer> KProductVNumberOfStoreSellProduct, Map<SDMItem, Double> KProductVAvgPriceOfProduct, Map<SDMItem, Double> KProductVTotalAmountSold, Map<String, ManagerDTO> KManagerNameVManager, Integer numberOfOrders, Double avgProductsPriceOrders, int numberOfStores) {
         this.managerDefineName = managerDefineName;
         this.zoneName = zoneName;
         this.productsInfo = productsInfo;
@@ -64,7 +70,8 @@ public class ZoneMarketDTO {
         this.KProductVAvgPriceOfProduct = KProductVAvgPriceOfProduct;
         this.KProductVTotalAmountSold = KProductVTotalAmountSold;
         this.KManagerNameVManager = KManagerNameVManager;
-        this.ordersDTO = ordersDTO;
+        this.numberOfOrders = numberOfOrders;
         this.avgProductsPriceOrders = avgProductsPriceOrders;
+        this.numberOfStores = numberOfStores;
     }
 }

@@ -1,7 +1,6 @@
 package order;
 
 import dto.OrderDTO;
-import dto.SubOrderDTO;
 
 
 import java.util.HashMap;
@@ -32,7 +31,7 @@ public class Order {
             totalProductsPrice += subOrder.getSubOrderDTO().getProductsPrice();
         }
 
-        orderDTO.setTotalDeliveryPrice(totalDeliveryPrice);
+        orderDTO.setTotalDeliveryCost(totalDeliveryPrice);
         orderDTO.setProductsPrice(totalProductsPrice);
 
         return orderDTO;

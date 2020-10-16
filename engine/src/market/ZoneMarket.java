@@ -58,6 +58,7 @@ public class ZoneMarket {
             ManagerDTO managerDTO = manager.getManagerDTO(zoneName);
             KManagerNameVManagerDTO.put(manager.getName(),managerDTO);
         }
+
         return KManagerNameVManagerDTO;
     }
     public void addStoreToManager(SDMStore store, Manager manager){
@@ -65,7 +66,7 @@ public class ZoneMarket {
             KManagerNameVManager.put(manager.getName(),manager);
         }
 
-        manager.addStoreToManager(zoneName, store);
+        manager.addStoreToManager(zoneName, store, productsInfo);
     }
 
 
@@ -78,9 +79,10 @@ public class ZoneMarket {
         Map<SDMItem, Double> KProductVTotalAmountSold = new HashMap<>();
         Map<String,ManagerDTO> KManagerNameVManagerDTO = getKManagerNameVManagerDTO();
         ManagerDTO managerDefineZone = KManagerNameVManagerDTO.get(managerDefine.getName());
-        List<OrderDTO> ordersDTO = new ArrayList<>();
-        Double avgPriceOrder = 0.0;
 
+        Integer numberOfOrders = orders.size();
+        Double avgPriceOrder = 0.0;
+        int numberOfStores = 0;
 
         for (SDMItem product : productsInfo.getSDMItem()){
             Integer storesSellProduct = 0;
@@ -88,9 +90,10 @@ public class ZoneMarket {
             Double totalAmountSold = 0.0;
 
             for (Manager manager : KManagerNameVManager.values()){
-                storesSellProduct = storesSellProduct + manager.getNumberOfStoreSellProductByZone(product, zoneName);
-                totalPriceOfProducts = totalPriceOfProducts + manager.getTotalCostProductByZone(product, zoneName);
-                totalAmountSold = totalAmountSold + manager.getTotalAmountProductSoldByZone(product, zoneName);
+                numberOfStores += manager.getKZoneNameVStores().get(zoneName).size();//TODO: check what for
+                storesSellProduct += manager.getNumberOfStoreSellProductByZone(product, zoneName);
+                totalPriceOfProducts += manager.getTotalCostProductByZone(product, zoneName);
+                totalAmountSold += manager.getTotalAmountProductSoldByZone(product, zoneName);
             }
 
             KProductVNumberOfStoreSellProduct.put(product, storesSellProduct);
@@ -101,7 +104,6 @@ public class ZoneMarket {
         for (Order order : orders){
             OrderDTO orderDTO = order.getOrderDTO();
             avgPriceOrder += orderDTO.getProductsPrice();
-            ordersDTO.add(orderDTO);
         }
 
         avgPriceOrder = avgPriceOrder / orders.size();
@@ -113,7 +115,8 @@ public class ZoneMarket {
                 KProductVAvgPriceOfProduct,
                 KProductVTotalAmountSold,
                 KManagerNameVManagerDTO,
-                ordersDTO,
-                avgPriceOrder);
+                numberOfOrders,
+                avgPriceOrder,
+                numberOfStores);
     }
 }
