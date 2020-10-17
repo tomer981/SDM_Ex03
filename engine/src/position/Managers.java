@@ -3,6 +3,7 @@ package position;
 import dto.OrderDTO;
 import dto.SubOrderDTO;
 import dto.ProductDTO;
+import dto.TransactionDTO;
 import order.Action;
 import order.Order;
 import order.SubOrder;
@@ -35,11 +36,13 @@ public class Managers {
         for (Integer storeId : KStoreIdVSubOrder.keySet()){
             SubOrder subOrder = KStoreIdVSubOrder.get(storeId);
             Store store = KStoreIdVStore.get(storeId);
-            Manager storeManger = KManagerNameVManger.get(store.getStoreOwnerName());
+            Manager storeManager = KManagerNameVManger.get(store.getStoreOwnerName());
 
             store.addSubOrder(subOrder);
             Double transferAmount = subOrder.getSubOrderDTO().getDeliveryPrice() + subOrder.getSubOrderDTO().getProductsPrice();
-            Action.invokeAction(Action.TRANSFER,storeManger.getMoney(),transferAmount,orderDTO.getDate());
+            TransactionDTO transaction = Action.invokeAction(Action.TRANSFER,storeManager.getMoney(),transferAmount,orderDTO.getDate());
+            storeManager.addTransaction(transaction);
+
         }
 
         return order;

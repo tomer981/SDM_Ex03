@@ -1,10 +1,10 @@
-package order;
+package dto;
 
 import position.Customer;
 
 import java.util.Date;
 
-public class Feedback {
+public class FeedbackDTO {
     private Customer customer;
     private Date date;
     private Integer rate;

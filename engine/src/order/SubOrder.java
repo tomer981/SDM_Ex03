@@ -1,15 +1,11 @@
 package order;
 
-import dto.ProductDTO;
+import dto.FeedbackDTO;
 import dto.SubOrderDTO;
-import dto.TransactionDTO;
 import xml.schema.generated.Location;
 import xml.schema.generated.SDMDiscount;
 import xml.schema.generated.SDMItem;
 import xml.schema.generated.SDMOffer;
-
-import java.util.Date;
-import java.util.Map;
 
 public class SubOrder {
     private SubOrderDTO subOrderDTO;
@@ -21,10 +17,10 @@ public class SubOrder {
 //    private Map<Integer,SDMItem> KProductIdVProductsSoldInfo;
 //    private Map<SDMItem, ProductDTO> KProductVForPriceAndAmountInfo;
 //    private Map<SDMDiscount, Integer> KDiscountVTimeUse;
-    private Feedback feedback;
+    private FeedbackDTO feedbackDTO;
 
-    public Feedback getFeedback() {
-        return feedback;
+    public FeedbackDTO getFeedback() {
+        return feedbackDTO;
     }
     public SubOrderDTO getSubOrderDTO() {
         return subOrderDTO;

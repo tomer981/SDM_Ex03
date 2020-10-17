@@ -109,7 +109,8 @@ public final class Market {
         KCustomerNameVCustomer.put(name,customer);
     }
     private synchronized void customerMakeTransaction(Action action,Customer customer, Date date, Double transactionAmount){
-        Action.invokeAction(action,customer.getMoney(),transactionAmount,date);
+        TransactionDTO transaction = Action.invokeAction(action,customer.getMoney(),transactionAmount,date);
+        customer.addTransaction(transaction);
     }
     public void customerMakeDeposit(String customerName, Date date,Double transactionAmount){
         Customer customer = KCustomerNameVCustomer.get(customerName);
@@ -128,10 +129,10 @@ public final class Market {
         Double transactionAmount = orderDTO.getTotalDeliveryPrice() + orderDTO.getProductsPrice();
 
         customerMakeTransaction(Action.TRANSFER,customer,orderDTO.getDate(),transactionAmount);
-        customer.getKZoneNameVListOrderIds().get(zoneName).add(orderDTO.getId());
+        customer.addOrderId(zoneName,orderDTO.getId());
 
         Order order = managers.addOrder(orderDTO);
-        zoneMarket.getOrders().add(order);
+        zoneMarket.addOrder(order);
     }
     public OrderDTO getMinOrder(String zoneName,OrderDTO orderDTO, Map<SDMItem,ProductDTO> KProductInfoVProductDTO){
         ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
@@ -140,9 +141,6 @@ public final class Market {
         return managers.getMinOrder(orderDTO, KProductInfoVProductDTO);
     }
 
-    private synchronized TransactionDTO makeTransaction(Double moneyHave, String action, Double transactionAmount,Date date){
-        Action operation = Action.valueOf(action.toUpperCase());
-        return Action.invokeAction(operation, moneyHave, transactionAmount, date);
-    }
+
 
 }

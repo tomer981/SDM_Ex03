@@ -13,8 +13,8 @@ import java.util.*;
 public class Manager {
     private final String name;
     private Double money = 0.0;
-    private Map<String, List<Store>> KZoneNameVStores = new HashMap<>();
-    private List<TransactionDTO> transactions = new ArrayList<>();
+    private final Map<String, List<Store>> KZoneNameVStores = new HashMap<>();
+    private final List<TransactionDTO> transactions = new ArrayList<>();
 
     //get
     public Double getMoney() {
@@ -26,9 +26,7 @@ public class Manager {
     public String getName() {
         return name;
     }
-    public List<TransactionDTO> getTransactions() {
-        return transactions;
-    }
+
 
 
     private List<StoreDTO> getStoresDTOByZone(String zoneName) {
@@ -48,14 +46,14 @@ public class Manager {
             KZoneNameVStoresDTO.put(zoneName,getStoresDTOByZone(zoneName));
         }
 
-        return new ManagerDTO(name,money,KZoneNameVStoresDTO);
+        return new ManagerDTO(name,money,KZoneNameVStoresDTO,transactions);
     }
 
     public ManagerDTO getManagerDTO(String zoneName){
         Map<String, List<StoreDTO>> KZoneNameVStoresDTO = new HashMap<>();
         KZoneNameVStoresDTO.put(zoneName,getStoresDTOByZone(zoneName));
 
-        return new ManagerDTO(name,money,KZoneNameVStoresDTO);
+        return new ManagerDTO(name,money,KZoneNameVStoresDTO,transactions);
     }
 
     //c'tor
@@ -70,7 +68,9 @@ public class Manager {
         }
 
         Store store = new Store(sdmStore, name,productsInfo);
-        KZoneNameVStores.get(zone).add(store);
+        List<Store> stores = KZoneNameVStores.get(zone);
+        stores.add(store);
+        KZoneNameVStores.put(zone,stores);
     }
     public Integer getNumberOfStoreSellProductByZone(SDMItem product, String zoneInfo) {
         List<Store> stores = KZoneNameVStores.get(zoneInfo);
@@ -103,6 +103,10 @@ public class Manager {
         return totalAmountProductSold;
     }
 
+    public void addTransaction(TransactionDTO transaction) {
+        transactions.add(transaction);
+        money = transaction.getMoneyAfterTransaction();
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -116,5 +120,6 @@ public class Manager {
     public int hashCode() {
         return Objects.hash(name);
     }
+
 
 }

@@ -80,7 +80,6 @@ public class ZoneMarket {
         Map<String,ManagerDTO> KManagerNameVManagerDTO = getKManagerNameVManagerDTO();
         ManagerDTO managerDefineZone = KManagerNameVManagerDTO.get(managerDefine.getName());
 
-        Integer numberOfOrders = orders.size();
         Double avgPriceOrder = 0.0;
         int numberOfStores = 0;
 
@@ -101,11 +100,6 @@ public class ZoneMarket {
             KProductVTotalAmountSold.put(product, totalAmountSold);
         }
 
-        for (Order order : orders){
-            OrderDTO orderDTO = order.getOrderDTO();
-            avgPriceOrder += orderDTO.getProductsPrice();
-        }
-
         avgPriceOrder = avgPriceOrder / orders.size();
 
         return new ZoneMarketDTO(managerDefineZone,
@@ -115,8 +109,12 @@ public class ZoneMarket {
                 KProductVAvgPriceOfProduct,
                 KProductVTotalAmountSold,
                 KManagerNameVManagerDTO,
-                numberOfOrders,
+                orders.size(),
                 avgPriceOrder,
                 numberOfStores);
+    }
+
+    public void addOrder(Order order) {
+        orders.add(order);
     }
 }
