@@ -74,7 +74,7 @@ public final class Market {
     public List<OrderDTO> getOrder(){
         List<OrderDTO> ordersDTO = new ArrayList<>();
         for (ZoneMarket zoneMarket : KNameZoneVZone.values()){
-            ordersDTO.addAll(ordersDTO);
+            ordersDTO.addAll(zoneMarket.getOrdersDTO());
         }
 
         return ordersDTO;
