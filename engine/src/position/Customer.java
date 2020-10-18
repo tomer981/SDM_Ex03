@@ -1,6 +1,7 @@
 package position;
 
 
+import dto.CustomerDTO;
 import dto.TransactionDTO;
 
 import java.util.ArrayList;
@@ -9,44 +10,30 @@ import java.util.List;
 import java.util.Map;
 
 public class Customer {
-    private String name;
-    private Double money = 0.0;
-    private Map<String,List<Integer>> KZoneNameVListOrderIds = new HashMap<>();
-    private List<TransactionDTO> Transactions = new ArrayList<>();
-
-    //get
-    public String getName() {
-        return name;
-    }
-    public Double getMoney() {
-        return money;
-    }
-    public Map<String, List<Integer>> getKZoneNameVListOrderIds() {
-        return KZoneNameVListOrderIds;
-    }
-    public List<TransactionDTO> getTransactions() {
-        return Transactions;
-    }
-
-    //set
-    public void setMoney(Double money) {
-        this.money = money;
-    }
-
+    private CustomerDTO customerDTO;
 
     public Customer(String name) {
-        this.name = name;
-        this.money = 0.0;
+        customerDTO = new CustomerDTO(name);
+    }
+
+    public CustomerDTO getCustomerDTO() {
+        return customerDTO;
+    }
+    public void setCustomerDTO(CustomerDTO customerDTO) {
+        this.customerDTO = customerDTO;
     }
 
     public void addTransaction(TransactionDTO transaction) {
-        Transactions.add(transaction);
-        money = transaction.getMoneyAfterTransaction();
+        List<TransactionDTO> transactionDTOS = customerDTO.getTransactions();
+        transactionDTOS.add(transaction);
+        customerDTO.setMoney(transaction.getMoneyAfterTransaction());
     }
 
     public void addOrderId(String zoneName, Integer id) {
-        List<Integer> ordersId = KZoneNameVListOrderIds.get(zoneName);
+        Map<String, List<Integer>> KZoneVOrdersId = customerDTO.getKZoneNameVListOrderIds();
+        List<Integer> ordersId = KZoneVOrdersId.get(zoneName);
         ordersId.add(id);
-        KZoneNameVListOrderIds.put(zoneName,ordersId);
+        KZoneVOrdersId.put(zoneName,ordersId);
+        customerDTO.setKZoneNameVListOrderIds(KZoneVOrdersId);
     }
 }

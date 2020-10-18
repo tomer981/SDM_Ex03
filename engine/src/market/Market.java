@@ -49,7 +49,7 @@ public final class Market {
     public Map<String, String> getNamePosition(){
         Map<String, String> KNameVPosition = new HashMap<>();
         for (Customer customer : KCustomerNameVCustomer.values()){
-            KNameVPosition.put(customer.getName(), "Customer");
+            KNameVPosition.put(customer.getCustomerDTO().getName(), "Customer");
         }
 
         for (Manager manager : KManagerNameVManger.values()){
@@ -105,11 +105,14 @@ public final class Market {
         addZoneMarket(file,manager);
     }
     public synchronized void addCustomer(String name){
+        if (KCustomerNameVCustomer.containsKey(name)){
+            throw new RuntimeException("the Customer already in the system");
+        }
         Customer customer = new Customer(name);
         KCustomerNameVCustomer.put(name,customer);
     }
     private synchronized void customerMakeTransaction(Action action,Customer customer, Date date, Double transactionAmount){
-        TransactionDTO transaction = Action.invokeAction(action,customer.getMoney(),transactionAmount,date);
+        TransactionDTO transaction = Action.invokeAction(action,customer.getCustomerDTO().getMoney(),transactionAmount,date);
         customer.addTransaction(transaction);
     }
     public void customerMakeDeposit(String customerName, Date date,Double transactionAmount){
