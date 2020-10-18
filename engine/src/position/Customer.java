@@ -27,6 +27,7 @@ public class Customer {
         List<TransactionDTO> transactionDTOS = customerDTO.getTransactions();
         transactionDTOS.add(transaction);
         customerDTO.setMoney(transaction.getMoneyAfterTransaction());
+        customerDTO.setTransactions(transactionDTOS);
     }
 
     public void addOrderId(String zoneName, Integer id) {

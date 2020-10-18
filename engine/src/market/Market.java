@@ -66,11 +66,19 @@ public final class Market {
     public ZoneMarketDTO getZoneMarketDTO(String name){
         return  KNameZoneVZone.get(name).getZoneMarketDTO();
     }
+    public CustomerDTO getCustomerDTO(String name){
+        return KCustomerNameVCustomer.get(name).getCustomerDTO();
+    }
+    public ManagerDTO getManagerDTO(String name){ return KManagerNameVManger.get(name).getManagerDTO();}
+    public ManagerDTO getManagerDTOZone(String name, String zone){ return KManagerNameVManger.get(name).getManagerDTO(zone);}
+    public List<OrderDTO> getOrder(){
+        List<OrderDTO> ordersDTO = new ArrayList<>();
+        for (ZoneMarket zoneMarket : KNameZoneVZone.values()){
+            ordersDTO.addAll(ordersDTO);
+        }
 
-
-    //method
-
-    //////method complete
+        return ordersDTO;
+    }
 
     //////////method private
     private synchronized void addZoneMarket(File file, Manager manager) throws JAXBException {
@@ -86,6 +94,10 @@ public final class Market {
         KZoneVManagers.put(zoneMarket, managers);
         KNameZoneVZone.put(zoneMarket.getZoneName(),zoneMarket);
         managers.addManager(manager);
+    }
+    private synchronized void customerMakeTransaction(Action action,Customer customer, Date date, Double transactionAmount){
+        TransactionDTO transaction = Action.invokeAction(action,customer.getCustomerDTO().getMoney(),transactionAmount,date);
+        customer.addTransaction(transaction);
     }
 
     //////////method public
@@ -111,20 +123,10 @@ public final class Market {
         Customer customer = new Customer(name);
         KCustomerNameVCustomer.put(name,customer);
     }
-    private synchronized void customerMakeTransaction(Action action,Customer customer, Date date, Double transactionAmount){
-        TransactionDTO transaction = Action.invokeAction(action,customer.getCustomerDTO().getMoney(),transactionAmount,date);
-        customer.addTransaction(transaction);
-    }
     public void customerMakeDeposit(String customerName, Date date,Double transactionAmount){
         Customer customer = KCustomerNameVCustomer.get(customerName);
         customerMakeTransaction(Action.DEPOSIT,customer,date,transactionAmount);
     }
-
-    //////method incomplete
-
-    //////////method private
-
-    //////////method public
     public void addOrder(String zoneName,String customerName, OrderDTO orderDTO){//zoneName, customerName from headers
         Customer customer = KCustomerNameVCustomer.get(customerName);
         ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
@@ -143,7 +145,4 @@ public final class Market {
 
         return managers.getMinOrder(orderDTO, KProductInfoVProductDTO);
     }
-
-
-
 }

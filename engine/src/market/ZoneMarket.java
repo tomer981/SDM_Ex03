@@ -36,7 +36,14 @@ public class ZoneMarket {
     public List<Order> getOrders() {
         return orders;
     }
+    public List<OrderDTO> getOrdersDTO(){
+        List<OrderDTO> ordersDTO = new ArrayList<>();
+        for (Order order : orders){
+            ordersDTO.add(order.getOrderDTO());
+        }
 
+        return ordersDTO;
+    }
 
     //c'tor
     public ZoneMarket(SchemaBaseJaxbObjects schema, Manager manager){
