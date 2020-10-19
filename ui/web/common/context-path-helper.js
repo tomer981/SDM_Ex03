@@ -17,4 +17,4 @@ function wrapBuildingURLWithContextPath() {
 }
 
 // call the wrapper method and expose a final method to be used to build complete resource names (buildUrlWithContextPath)
-var buildUrlWithContextPath = buildUrlWithContextPath();
+var buildUrlWithContextPath = wrapBuildingURLWithContextPath();
