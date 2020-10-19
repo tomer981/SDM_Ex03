@@ -48,7 +48,9 @@ public class OrderDTO {
     public void setKStoreVSubStore(Map<Integer, SubOrderDTO> KStoreVSubStore) {
         this.KStoreVSubStore = KStoreVSubStore;
     }
-
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     //c'tor
     public OrderDTO(Integer id, Date date, Location customerLocation, String customerName) {

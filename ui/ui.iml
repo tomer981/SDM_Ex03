@@ -20,5 +20,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
+    <orderEntry type="module" module-name="dto" exported="" />
+    <orderEntry type="module" module-name="engine" exported="" />
   </component>
 </module>

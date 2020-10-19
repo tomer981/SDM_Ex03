@@ -30,7 +30,7 @@ public final class Market {
         KManagerNameVManger = new HashMap<>();
         KCustomerNameVCustomer = new HashMap<>();
     }
-    private static Market getMarketInstance(){
+    public static Market getMarketInstance(){
         Market market = marketInstance;
         if (market != null){
             return market;
@@ -78,6 +78,10 @@ public final class Market {
         }
 
         return ordersDTO;
+    }
+    public List<OrderDTO> getOrdersByZoneAndIds(String name, List<Integer> ordersId){
+        ZoneMarket zoneMarket = KNameZoneVZone.get(name);
+        return zoneMarket.getOrdersDTOByIds(ordersId);
     }
 
     //////////method private
@@ -144,5 +148,8 @@ public final class Market {
         Managers managers = KZoneVManagers.get(zoneMarket);
 
         return managers.getMinOrder(orderDTO, KProductInfoVProductDTO);
+    }
+    public Boolean isUserExist(String name){
+        return KCustomerNameVCustomer.containsKey(name) || KManagerNameVManger.containsKey(name);
     }
 }

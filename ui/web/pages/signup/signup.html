@@ -1,19 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset=UTF-8">
     <title>Sighup</title>
+    <script type="text/javascript" src="../../common/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="../../common/context-path-helper.js"></script>
+    <script type="text/javascript" src="../../common/Urls.js"></script>
+    <script type="text/javascript" src="../../common/is-session-exist.js"></script>
+    <script type="text/javascript" language="javascript">
+        isSessionExist({userNotFoundPage: null, userFoundPage: "../zones/Zones.html"});
+        $("#submitForm").ready(function () {
+            $(':input[type="submit"]').prop('disabled', true);
+            $('input[type="text"]').keyup(function () {
+                if ($(this).val() !== '') {
+                    $(':input[type="submit"]').prop('disabled', false);
+                }
+            });
+        });
+    </script>
+<!--    <script type="text/javascript" src="sighup.js"></script>-->
 </head>
 <body>
-    <center>
-        <div class="container">
-            <h1> Welcome to Super Duper Market</h1> <br>
-            <h2>Please enter a unique user name:</h2> <br>
-            <form method="Get" action="LogicServlet">
-                <input type="text" name="username"> <br><br>
-                <input type="submit" value="Login" class="button">
-            </form>
-        </div>
-    </center>
+<div class="container">
+    <h1> Welcome to Super Duper Market</h1> <br>
+    <h2> Please enter a unique user name:</h2> <br>
+    <form action="LogicServlet" method="Get">
+        <label>User Name:</label>
+        <input type="text" name="user-name"/>
+        <br><br>
+        <label for="user-position">User Position:</label>
+        <select name="user-position" id="user-position">
+            <!--            <option style="display: none"></option>-->
+            <option value="manager">Manager</option>
+            <option value="customer">Customer</option>
+        </select>
+        <input type="submit" value="SighUp" class="button" id="submitForm"/>
+    </form>
+</div>
 </body>
 </html>

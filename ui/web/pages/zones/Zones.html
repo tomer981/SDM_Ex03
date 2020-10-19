@@ -3,7 +3,18 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Zones</title>
-    <script src="/common/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="../../common/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="../../common/context-path-helper.js"></script>
+    <script type="text/javascript" src="../../common/Urls.js"></script>
+    <script type="text/javascript" src="../../common/is-session-exist.js"></script>
+    <script type="text/javascript" language="javascript">
+        isSessionExist({userNotFoundPage: "../../index.html", userFoundPage: ""});
+        $ajax("#userslist").empty();
+
+        // $(function (){
+        //
+        // });
+    </script>
     <link rel="stylesheet" href="../../common/styleTable.css">
 </head>
 <body>
@@ -12,16 +23,16 @@
     <br>
     <h3> My Transaction</h3>
     <div id="account" style="overflow-x:auto;">
-        <div id="maketransaction">
-            <!--            <script type="text/javascript" language="javascript">-->
-            <!--                $(function () {-->
-            <!--                    if (isUser === true) {-->
-            <!--                        $creatDepositePage-->
-            <!--                    }-->
-            <!--                    fetch(userTransaction);-->
-            <!--                });-->
-            <!--            </script>-->
-        </div>
+        <!--        <div id="maketransaction">-->
+        <!--            &lt;!&ndash;            <script type="text/javascript" language="javascript">&ndash;&gt;-->
+        <!--            &lt;!&ndash;                $(function () {&ndash;&gt;-->
+        <!--            &lt;!&ndash;                    if (isUser === true) {&ndash;&gt;-->
+        <!--            &lt;!&ndash;                        $creatDepositePage&ndash;&gt;-->
+        <!--            &lt;!&ndash;                    }&ndash;&gt;-->
+        <!--            &lt;!&ndash;                    fetch(userTransaction);&ndash;&gt;-->
+        <!--            &lt;!&ndash;                });&ndash;&gt;-->
+        <!--            &lt;!&ndash;            </script>&ndash;&gt;-->
+        <!--        </div>-->
         <div id="managerAccount" style="overflow-x:auto;">
             <table>
                 <tr>
@@ -36,6 +47,13 @@
                 <!--                                fetch(userTransaction);-->
                 <!--                            });-->
                 <!--                        </script>-->
+                <tr>
+                    <td>Deposit</td>
+                    <td>17/10/2020</td>
+                    <td>100</td>
+                    <td>0</td>
+                    <td>100</td>
+                </tr>
                 <tr>
                     <td>Deposit</td>
                     <td>17/10/2020</td>
@@ -58,7 +76,7 @@
             <!--                                fetch(usersInfo);-->
             <!--                            });-->
             <!--                        </script>-->
-            <tr>
+            <tr id="userslist">
                 <td>Tomer</td>
                 <td>Customer</td>
             </tr>

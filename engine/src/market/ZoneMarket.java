@@ -11,6 +11,7 @@ import xml.schema.generated.SDMItems;
 import xml.schema.generated.SDMStore;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ZoneMarket {
     private Manager managerDefine;
@@ -43,6 +44,9 @@ public class ZoneMarket {
         }
 
         return ordersDTO;
+    }
+    public List<OrderDTO> getOrdersDTOByIds(List<Integer> ordersId){
+        return getOrdersDTO().stream().filter(orderDTO -> ordersId.contains(orderDTO.getId())).collect(Collectors.toList());
     }
 
     //c'tor

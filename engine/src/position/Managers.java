@@ -30,7 +30,7 @@ public class Managers {
         }
     }
 
-    public Order addOrder(OrderDTO orderDTO) {
+    public synchronized Order addOrder(OrderDTO orderDTO) {
         Order order = new Order(orderDTO);
         Map<Integer, SubOrder> KStoreIdVSubOrder = order.getKStoreIdVSubOrder();
         for (Integer storeId : KStoreIdVSubOrder.keySet()){

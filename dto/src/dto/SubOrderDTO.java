@@ -55,7 +55,9 @@ public class SubOrderDTO {
     public void setProductsPrice(Double productsPrice) {
         this.productsPrice = productsPrice;
     }
-
+    public void setId(Integer orderId) {
+        id = orderId;
+    }
     //c'tor
     public SubOrderDTO(Integer id, Date date, String customerName, Location customerLocation) {
         this.id = id;
@@ -63,4 +65,5 @@ public class SubOrderDTO {
         this.customerName = customerName;
         this.customerLocation = customerLocation;
     }
+
 }

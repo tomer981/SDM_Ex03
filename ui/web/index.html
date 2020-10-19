@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>SDM - Login</title>
-    <script src="common/jquery-3.5.1.min.js"></script>
-
+    <script type="text/javascript" src="common/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="common/context-path-helper.js"></script>
+    <script type="text/javascript" src="common/Urls.js"></script>
+    <script type="text/javascript" src="common/is-session-exist.js"></script>
+    <script type="text/javascript" language="javascript">
+        isSessionExist({userNotFoundPage: "pages/signup/signup.html", userFoundPage: "pages/zones/Zones.html"});
+    </script>
 </head>
 <body>
-    <script type="text/javascript" language="javascript">
-        // $(function() {
-        //     window.location.replace("pages/signup/signup.html");
-        // });
-    </script>
+<center>
+    <h1>Welcome</h1>
+</center>
 </body>
 </html>

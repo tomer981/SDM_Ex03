@@ -3,8 +3,13 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Zone Information</title>
-    <script src="../../common/jquery-3.5.1.min.js"></script>
-    <script src="try.js"></script>
+    <script type="text/javascript" src="../../common/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="../../common/context-path-helper.js"></script>
+    <script type="text/javascript" src="../../common/Urls.js"></script>
+    <script type="text/javascript" src="../../common/is-session-exist.js"></script>
+    <script type="text/javascript" language="javascript">
+        isSessionExist({userNotFoundPage : "pages/signup/signup.html" ,userFoundPage : ""});
+    </script>
     <link rel="stylesheet" href="../../common/styleTable.css">
 </head>
 <body>
@@ -54,7 +59,7 @@
     </div>
     <br>
     <h3> Store Information</h3>
-    <div id = storeinfo>
+    <div id=storeinfo>
         <h4> General Store Information</h4>
         <table id="storegeneralinfo">
             <tr>
@@ -64,9 +69,10 @@
                 <th>Location</th>
                 <th>Orders</th>
                 <th>Products Cost<br>
-                    In Orders</th>
+                    In Orders
+                </th>
                 <th>PPK</th>
-                <th>Deliveries Earning </th>
+                <th>Deliveries Earning</th>
             </tr>
             <!--                        <script type="text/javascript" language="javascript">-->
             <!--                            $(function () {-->
@@ -94,7 +100,8 @@
                     Category
                 </th>
                 <th>Product<br>
-                    Cost</th>
+                    Cost
+                </th>
                 <th>Sold</th>
             </tr>
             <tr>
