@@ -24,7 +24,6 @@ public class LoginServlet extends HttpServlet {
         HttpSession session = req.getSession(false);
         if (session == null) {
             resp.getWriter().write(userNotFoundPage);
-
         } else {
             resp.getWriter().write(userFoundPage);
         }
