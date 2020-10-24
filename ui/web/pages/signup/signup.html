@@ -5,14 +5,16 @@
     <title>Signup</title>
     <script type="text/javascript" src="../../common/jquery-3.5.1.min.js"></script>
     <script type="text/javascript" src="../../common/context-path-helper.js"></script>
-    <script type="text/javascript" src="../../common/Urls.js"></script>
+    <script type="text/javascript" src="../../common/urls.js"></script>
     <script type="text/javascript" src="../../common/is-session-exist.js"></script>
+    <script type="text/javascript" src="signup.js"></script>
+
 </head>
 <body>
 <div class="container">
     <h1> Welcome to Super Duper Market</h1> <br>
     <h2> Please enter a unique user name:</h2> <br>
-    <form action="LoginServlet" method="POST" enctype="multipart/form-data">
+    <form action="LoginServlet" method="POST" id="submit-form" enctype="multipart/form-data">
         <label>User Name:</label>
         <input type="text" name="user-name" id="user-name" onkeyup="submitButtonValidateParameters()"/>
         <br><br>
@@ -26,36 +28,11 @@
         <input type='file' id='add-file' class="button" accept='.xml' multiple onchange="submitButtonValidateParameters()"
                disabled="disabled" name="uploadfiles">
         <br>
-        <input type="submit" value="SignUp" class="button" disabled="disabled" id="submitForm"/>
+        <input type="submit" value="SignUp" class="button" disabled="disabled" id="submitFormButton"/>
     </form>
 </div>
 
 <script type="text/javascript">
-    isSessionExist({action : "isSessionExist",userNotFoundPage: "", userFoundPage: "../zones/zones.html"});
-    function submitButtonValidateParameters() {
-        $("#submitForm").ready(function () {
-            if ($("#user-name").val() !== "") {
-                if ($("#user-position").find("option:selected").attr("value") === "customer") {
-                    $("#add-file").prop('disabled', true);
-                    $("#add-file").val("");
-                    $("#submitForm").prop("disabled", false);
-                } else if ($("#user-position").find("option:selected").attr("value") === "manager") {
-                    $("#add-file").prop('disabled', false);
-                    if ($("#add-file").val() !== "") {
-                        $("#submitForm").prop("disabled", false);
-                    } else {
-                        $("#submitForm").prop("disabled", true);
-                    }
-                }
-            } else {
-                $("#add-file").prop('disabled', true);
-                $("#add-file").val("");
-                $("#submitForm").prop("disabled", true);
-            }
-        })
-    }
-
-
 
 </script>
 </body>
