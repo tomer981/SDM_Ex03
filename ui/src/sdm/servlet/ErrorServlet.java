@@ -1,6 +1,5 @@
 package sdm.servlet;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,9 +16,9 @@ public class ErrorServlet extends HttpServlet {
         String requestUri = (String) req.getAttribute("javax.servlet.error.request_uri");
 
         String errorParameter = "errorMessage=" + URLEncoder.encode(exception.getMessage(), "ASCII");
-        String redirectedUri = requestUri.contains("?")
+        String redirectedUri = requestUri + (requestUri.contains("?")
                 ? "&" + errorParameter
-                : "?" + errorParameter;
+                : "?" + errorParameter);
 
         resp.sendRedirect(redirectedUri);
     }
