@@ -23,7 +23,7 @@ import static sdm.constants.Constants.*;
 @WebServlet(name = "LogicServlet", urlPatterns = {"/LogicServlet", "/pages/signup/LogicServlet"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class LoginServlet extends HttpServlet {
-    private final String ZONES_URL = "../zones/Zones.html";
+    private final String ZONES_URL = "../zones/zones.html";
     private final String USER_EXIST_URL = "/pages/signup/signup.html";
 
     private void processRequestIfSessionExist(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -50,19 +50,20 @@ public class LoginServlet extends HttpServlet {
         synchronized (this){
             if(req.getSession(false) == null){
                 if (!engine.isUserExist(userName) && userName != null) {
-                    HttpSession session = req.getSession(true);
-                    session.setAttribute(USER_NAME, userName);
-                    session.setAttribute(USER_POSITION,position);
+
                     if (position.equals("manager")){
                         addManager(userName,parts);
                     }
                     else {
                         engine.addCustomer(userName);
                     }
+                    HttpSession session = req.getSession(true);
+                    session.setAttribute(USER_NAME, userName);
+                    session.setAttribute(USER_POSITION,position);
                     resp.sendRedirect(ZONES_URL);
                 }
                 else {
-                    getServletContext().getRequestDispatcher(USER_EXIST_URL).forward(req, resp);
+                    getServletContext().getRequestDispatcher(USER_EXIST_URL).forward(req, resp);//msg : user already exist
                 }
             }
         }
