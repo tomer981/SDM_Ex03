@@ -102,6 +102,9 @@ public class Manager {
 
         return totalAmountProductSold;
     }
+    public Integer getNumberOfStores(String zoneName){
+        return KZoneNameVStores.get(zoneName).size();
+    }
 
     public void addTransaction(TransactionDTO transaction) {
         transactions.add(transaction);

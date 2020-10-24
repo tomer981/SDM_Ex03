@@ -7,14 +7,9 @@
     <script type="text/javascript" src="../../common/context-path-helper.js"></script>
     <script type="text/javascript" src="../../common/Urls.js"></script>
     <script type="text/javascript" src="../../common/is-session-exist.js"></script>
-    <script type="text/javascript" language="javascript">
-        isSessionExist({userNotFoundPage: "../../index.html", userFoundPage: ""});
-        // $ajax("#userslist").empty();
+    <script type="text/javascript" src="../../common/generalMethods.js"></script>
 
-        // $(function (){
-        //
-        // });
-    </script>
+    <link rel="stylesheet" href="zones.css">
     <link rel="stylesheet" href="../../common/styleTable.css">
 </head>
 <body>
@@ -22,102 +17,158 @@
     <h1> Screen 2 : Zone Information</h1>
     <br>
     <h3> My Transaction</h3>
-    <div id="account" style="overflow-x:auto;">
-        <!--        <div id="maketransaction">-->
-        <!--            &lt;!&ndash;            <script type="text/javascript" language="javascript">&ndash;&gt;-->
-        <!--            &lt;!&ndash;                $(function () {&ndash;&gt;-->
-        <!--            &lt;!&ndash;                    if (isUser === true) {&ndash;&gt;-->
-        <!--            &lt;!&ndash;                        $creatDepositePage&ndash;&gt;-->
-        <!--            &lt;!&ndash;                    }&ndash;&gt;-->
-        <!--            &lt;!&ndash;                    fetch(userTransaction);&ndash;&gt;-->
-        <!--            &lt;!&ndash;                });&ndash;&gt;-->
-        <!--            &lt;!&ndash;            </script>&ndash;&gt;-->
-        <!--        </div>-->
-        <div id="managerAccount" style="overflow-x:auto;">
+    <div id="user-account" style="overflow-x:auto;">
+        <div id="manage-account" style="overflow-x:auto;">
             <table>
+                <thead>
                 <tr>
                     <th>Action</th>
                     <th>Data</th>
-                    <th>Amount Transaction</th>
+                    <th>Transaction Amount</th>
                     <th>Money Before</th>
                     <th>Money After</th>
                 </tr>
-                <!--                        <script type="text/javascript" language="javascript">-->
-                <!--                            $(function () {-->
-                <!--                                fetch(userTransaction);-->
-                <!--                            });-->
-                <!--                        </script>-->
-                <tr>
-                    <td>Deposit</td>
-                    <td>17/10/2020</td>
-                    <td>100</td>
-                    <td>0</td>
-                    <td>100</td>
-                </tr>
-                <tr>
-                    <td>Deposit</td>
-                    <td>17/10/2020</td>
-                    <td>100</td>
-                    <td>0</td>
-                    <td>100</td>
-                </tr>
+                </thead>
+                <tbody id="user-transaction-tableview">
+                </tbody>
             </table>
+        </div>
+        <div id="make-deposit">
         </div>
     </div>
     <h3> Users Information</h3>
-    <div id="usersinfo" style="overflow-x:auto;">
+    <div id="users-info" style="overflow-x:auto;">
         <table>
+            <thead>
             <tr>
                 <th>First Name</th>
                 <th>Position</th>
             </tr>
-            <!--                        <script type="text/javascript" language="javascript">-->
-            <!--                            $(function () {-->
-            <!--                                fetch(usersInfo);-->
-            <!--                            });-->
-            <!--                        </script>-->
-            <tr id="userslist">
-                <td>Tomer</td>
-                <td>Customer</td>
-            </tr>
+            </thead>
+            <tbody id="users-tableview">
+            </tbody>
         </table>
     </div>
     <br>
     <h3> Zone Information</h3>
-    <div id="zoneinfo" style="overflow-x:auto;">
-        <table>
+    <div id="zones-info" style="overflow-x:auto;">
+        <table id="zone-table">
+            <thead>
             <tr>
-                <th>Zone <br>
-                    Owner
-                </th>
-                <th>Zone <br>
-                    Name
-                </th>
-                <th>Products <br>
-                    in Zone
-                </th>
+                <th>Zone<br>Name</th>
+                <th>Zone<br>Owner</th>
+                <th>Products<br>in Zone</th>
                 <th>Stores</th>
                 <th>Orders</th>
-                <th>Average Price per <br>
-                    Products Order
-                </th>
+                <th>Average Price Per<br>Products Order</th>
             </tr>
-            <!--            <script type="text/javascript" language="javascript">-->
-            <!--                $(function () {-->
-            <!--                    fetch(ZoneInfo);-->
-            <!--                });-->
-            <!--            </script>-->
-            <tr>
-                <td>Tomer</td>
-                <td>tel aviv</td>
-                <td>10</td>
-                <td>2</td>
-                <td>5</td>
-                <td>100</td>
-            </tr>
+            </thead>
+            <tbody id="zone-info-tableview">
+            </tbody>
         </table>
     </div>
     <br>
 </div>
+<script type="text/javascript">
+    isSessionExist({action: "isSessionExist", userNotFoundPage: "../../index.html", userFoundPage: ""});
+    $("#userslist").empty();
+    $("#user-transaction-tableview").empty();
+    $("#zone-info-tableview").empty();
+
+    function isFloat(n) {
+        number = parseFloat(n)
+        return Number(number) === number && number == n;
+    }
+
+    function submitButtonValidateParameters() {
+        if ($("#date").val() !== "" && $("#deposit-amount").val() !== "") {
+            if (isFloat($("#deposit-amount").val())) {
+                $("#submit-deposit").prop("disabled", false)
+            } else {
+                $("#submit-deposit").prop("disabled", true)
+            }
+        } else {
+            $("#submit-deposit").prop("disabled", true)
+        }
+    }
+
+    function createMakeTransactionLayout() {
+        var output = "<form action='ZonesServlet' method='POST' id='submitForm' enctype='multipart/form-data'>";
+        output += '<br><input type="date"  name="date" id="date" placeholder="Pick a date" autocomplete="off" onchange="submitButtonValidateParameters()"/>     ';
+        output += '<input type="text" id="deposit-amount" name="depositAmount" placeholder="Amount Deposit" autocomplete="off" onkeyup="submitButtonValidateParameters()"/>       ';
+        output += '<input type="submit" value="Add Deposit" class="button" disabled="disabled" id="submit-deposit"/>';
+        $(output).appendTo($("#make-deposit"));
+
+        $("#submitForm").on("submit", function (e) {
+            var form = this;
+            $.ajax({
+                url: this.action,
+                type: this.method,
+                data: $(this).serialize(),
+                success: function () {
+                    window.location.reload();
+                },
+                error: function () {
+                    alert("problem");
+                }
+            });
+
+            return false;
+        });
+    }
+
+    function moveToZone(zoneName){
+        var url = "../storesInfo/storesInfo.html?zoneName=" + zoneName;
+        window.location.replace(url);
+    }
+
+    $.ajax({
+        method: "Get",
+        url: ZONES_URL,
+        data: {action: "getKUsersVPosition"},
+        success: function (KUsersVPosition) {
+            appendToTableView(KUsersVPosition, "#users-tableview");
+        }
+    })
+
+    $.ajax({
+        method: "GET",
+        url: ZONES_URL,
+        data: {action: "getUserTransactions"},
+        success: function (transactions) {
+            appendToTableView(transactions, "#user-transaction-tableview");
+        },
+    })
+
+    $.ajax({
+        method: "GET",
+        url: SIGHUP_URL,
+        data: {action: "isCustomer"},
+        success: function (isCustomer) {
+            if (isCustomer === "true") {
+                createMakeTransactionLayout();
+            }
+        }
+    })
+
+    $.ajax({
+        method: "Get",
+        url: ZONES_URL,
+        data: {action: "getZoneInfo"},
+        success: function (zones) {
+            appendToTableView(zones, "#zone-info-tableview")
+            $("#zone-table tr").click(function () {
+                $(this).addClass("selected").siblings().removeClass("selected");
+                var zoneName = $(this).find("td:first").html();
+                moveToZone(zoneName);
+            });
+        },
+    })
+
+
+
+
+
+</script>
 </body>
 </html>

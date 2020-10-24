@@ -60,6 +60,9 @@ public class ZoneMarketDTO {
     public int getNumberOfStores() {
         return numberOfStores;
     }
+    public Integer getNumberOfOrders() {
+        return numberOfOrders;
+    }
 
     //c'tor
     public ZoneMarketDTO(ManagerDTO managerDefineName, String zoneName, SDMItems productsInfo, Map<SDMItem, Integer> KProductVNumberOfStoreSellProduct, Map<SDMItem, Double> KProductVAvgPriceOfProduct, Map<SDMItem, Double> KProductVTotalAmountSold, Map<String, ManagerDTO> KManagerNameVManager, Integer numberOfOrders, Double avgProductsPriceOrders, int numberOfStores) {

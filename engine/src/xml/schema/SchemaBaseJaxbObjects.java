@@ -25,6 +25,8 @@ public class SchemaBaseJaxbObjects {
     private List<SDMStore> xmlStores;
 
     public SchemaBaseJaxbObjects(File file) throws JAXBException,IllegalStateException {
+        validate = new ValidateSchema(this);
+        validate.isXmlFile(file);
         JAXBContext jaxbContext = null;
         Unmarshaller SDM = null;
 
@@ -36,7 +38,6 @@ public class SchemaBaseJaxbObjects {
             throw new JAXBException("Couldn't parse XML file");
         }
 
-        validate = new ValidateSchema(this);
         initializeSchema();
     }
 

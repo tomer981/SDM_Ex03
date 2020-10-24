@@ -1,9 +1,6 @@
 package position;
 
-import dto.OrderDTO;
-import dto.SubOrderDTO;
-import dto.ProductDTO;
-import dto.TransactionDTO;
+import dto.*;
 import order.Action;
 import order.Order;
 import order.SubOrder;
@@ -17,6 +14,10 @@ public class Managers {
     private String zoneName;
     private Map <String, Manager> KManagerNameVManger = new HashMap<>();
     private Map<Integer, Store> KStoreIdVStore = new HashMap<>();
+
+    public StoreDTO getStoreDTO(Integer storeId){
+        return KStoreIdVStore.get(storeId).getStoreDTO();
+    }
 
     public Managers(String zoneName) {
         this.zoneName = zoneName;

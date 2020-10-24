@@ -24,6 +24,9 @@ public class StoreDTO {
     public Map<Integer, SubOrderDTO> getKIdOrderVSubOrderDTO() {
         return KIdOrderVSubOrderDTO;
     }
+    public Map<SDMItem, ProductDTO> getKProductIdVPriceAndAmount() {
+        return KProductIdVPriceAndAmount;
+    }
     public Double getMoneyEarnFromProducts() {
         return moneyEarnFromProducts;
     }

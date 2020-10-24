@@ -7,35 +7,53 @@
     <script type="text/javascript" src="../../common/context-path-helper.js"></script>
     <script type="text/javascript" src="../../common/Urls.js"></script>
     <script type="text/javascript" src="../../common/is-session-exist.js"></script>
-    <script type="text/javascript" language="javascript">
-        isSessionExist({userNotFoundPage: null, userFoundPage: "../zones/Zones.html"});
-        $("#submitForm").ready(function () {
-            $(':input[type="submit"]').prop('disabled', true);
-            $('input[type="text"]').keyup(function () {
-                if ($(this).val() !== '') {
-                    $(':input[type="submit"]').prop('disabled', false);
-                }
-            });
-        });
-    </script>
-<!--    <script type="text/javascript" src="sighup.js"></script>-->
 </head>
 <body>
 <div class="container">
     <h1> Welcome to Super Duper Market</h1> <br>
     <h2> Please enter a unique user name:</h2> <br>
-    <form action="LogicServlet" method="Get">
+    <form action="LogicServlet" method="POST" enctype="multipart/form-data">
         <label>User Name:</label>
-        <input type="text" name="user-name"/>
+        <input type="text" name="user-name" id="user-name" onkeyup="submitButtonValidateParameters()"/>
         <br><br>
         <label for="user-position">User Position:</label>
-        <select name="user-position" id="user-position">
-            <!--            <option style="display: none"></option>-->
+        <select name="user-position" id="user-position" onchange="submitButtonValidateParameters()">
+            <option style="display: none"></option>
             <option value="manager">Manager</option>
             <option value="customer">Customer</option>
         </select>
-        <input type="submit" value="SighUp" class="button" id="submitForm"/>
+        <br>
+        <input type='file' id='add-file' class="button" accept='.xml' multiple onchange="submitButtonValidateParameters()"
+               disabled="disabled" name="uploadfiles">
+        <br>
+        <input type="submit" value="SighUp" class="button" disabled="disabled" id="submitForm"/>
     </form>
 </div>
+<script type="text/javascript">
+    isSessionExist({action : "isSessionExist",userNotFoundPage: "", userFoundPage: "../zones/Zones.html"});
+
+    function submitButtonValidateParameters() {
+        $("#submitForm").ready(function () {
+            if ($("#user-name").val() !== "") {
+                if ($("#user-position").find("option:selected").attr("value") === "customer") {
+                    $("#add-file").prop('disabled', true);
+                    $("#add-file").val("");
+                    $("#submitForm").prop("disabled", false);
+                } else if ($("#user-position").find("option:selected").attr("value") === "manager") {
+                    $("#add-file").prop('disabled', false);
+                    if ($("#add-file").val() !== "") {
+                        $("#submitForm").prop("disabled", false);
+                    } else {
+                        $("#submitForm").prop("disabled", true);
+                    }
+                }
+            } else {
+                $("#add-file").prop('disabled', true);
+                $("#add-file").val("");
+                $("#submitForm").prop("disabled", true);
+            }
+        })
+    }
+</script>
 </body>
 </html>

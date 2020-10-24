@@ -53,7 +53,7 @@ public final class Market {
         }
 
         for (Manager manager : KManagerNameVManger.values()){
-            KNameVPosition.put(manager.getName(), "Customer");
+            KNameVPosition.put(manager.getName(), "Manager");
         }
 
         return KNameVPosition;
@@ -82,6 +82,25 @@ public final class Market {
     public List<OrderDTO> getOrdersByZoneAndIds(String name, List<Integer> ordersId){
         ZoneMarket zoneMarket = KNameZoneVZone.get(name);
         return zoneMarket.getOrdersDTOByIds(ordersId);
+    }
+    public List<TransactionDTO> getUserTransactionsDTO(String userName){
+//        List<TransactionDTO> transactions = new ArrayList<>();
+//        Date date = new Date();
+//        TransactionDTO transactionDTO = new TransactionDTO("Deposit",date,100.0,100.0,200.0);
+//        transactions.add(transactionDTO);
+//        transactionDTO = new TransactionDTO("Deposit",date,150.0,150.0,300.0);
+//        transactions.add(transactionDTO);
+//        return transactions;
+        if (KManagerNameVManger.containsKey(userName)){
+            return KManagerNameVManger.get(userName).getManagerDTO().getTransactions();
+        }
+
+        return KCustomerNameVCustomer.get(userName).getCustomerDTO().getTransactions();
+    }
+    public StoreDTO getStoreDTO(String zoneName, Integer storeId){
+        ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
+        Managers managers = KZoneVManagers.get(zoneMarket);
+        return managers.getStoreDTO(storeId);
     }
 
     //////////method private
@@ -114,10 +133,14 @@ public final class Market {
         managers.addManager(manager);
     }
     public synchronized void addManager(String name, File file) throws JAXBException {
+        Manager manager = null;
         if (KManagerNameVManger.containsKey(name)){
-            throw new RuntimeException("the manager already in the system");
+            manager = KManagerNameVManger.get(name);
         }
-        Manager manager = new Manager(name);
+        else{
+            manager = new Manager(name);
+        }
+        KManagerNameVManger.put(name,manager);
         addZoneMarket(file,manager);
     }
     public synchronized void addCustomer(String name){

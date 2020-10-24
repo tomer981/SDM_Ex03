@@ -92,7 +92,7 @@ public class ZoneMarket {
         ManagerDTO managerDefineZone = KManagerNameVManagerDTO.get(managerDefine.getName());
 
         Double avgPriceOrder = 0.0;
-        int numberOfStores = 0;
+        int numberOfStores = KManagerNameVManager.values().stream().mapToInt(manager -> manager.getNumberOfStores(zoneName)).sum();
 
         for (SDMItem product : productsInfo.getSDMItem()){
             Integer storesSellProduct = 0;
@@ -100,7 +100,6 @@ public class ZoneMarket {
             Double totalAmountSold = 0.0;
 
             for (Manager manager : KManagerNameVManager.values()){
-                numberOfStores += manager.getKZoneNameVStores().get(zoneName).size();//TODO: check what for
                 storesSellProduct += manager.getNumberOfStoreSellProductByZone(product, zoneName);
                 totalPriceOfProducts += manager.getTotalCostProductByZone(product, zoneName);
                 totalAmountSold += manager.getTotalAmountProductSoldByZone(product, zoneName);
@@ -111,7 +110,9 @@ public class ZoneMarket {
             KProductVTotalAmountSold.put(product, totalAmountSold);
         }
 
-        avgPriceOrder = avgPriceOrder / orders.size();
+        if (orders.size() > 0){
+            avgPriceOrder = orders.stream().mapToDouble(order->order.getOrderDTO().getProductsPrice()).sum() / orders.size() ;
+        }
 
         return new ZoneMarketDTO(managerDefineZone,
                 zoneName,

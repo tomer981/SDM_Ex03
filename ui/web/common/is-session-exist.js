@@ -1,7 +1,7 @@
 function isSessionExist(data) {
     $.ajax({
-        method: "POST",
-        url: SIGHUP,
+        method: "GET",
+        url: SIGHUP_URL,
         data: data,
         success: function (data) {
             if (data !== "") {

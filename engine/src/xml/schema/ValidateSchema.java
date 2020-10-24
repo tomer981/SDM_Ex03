@@ -5,6 +5,7 @@ import xml.schema.generated.SDMCustomer;
 import xml.schema.generated.SDMItem;
 import xml.schema.generated.SDMStore;
 
+import java.io.File;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -71,10 +72,16 @@ public class ValidateSchema {
     public void eachProductSoldByAtLeastOneStore(Set<Integer> productsSoldInStores, List<SDMItem> xmlMarketProduct) throws IllegalArgumentException {
         List<Integer> MarketProductsId = xmlMarketProduct.stream().map(SDMItem::getId).collect(Collectors.toList());
         if (!MarketProductsId.containsAll(productsSoldInStores))
-            throw new IllegalArgumentException("dto.Product in market but not in any store");
+            throw new IllegalArgumentException("Product in market but not in any store");
     }
 
     public ValidateSchema(SchemaBaseJaxbObjects schema){
         this.schema = schema;
+    }
+
+    public void isXmlFile(File file) throws IllegalArgumentException{
+        if (!file.getPath().endsWith(".xml")){
+            throw new IllegalArgumentException("the file is not .xml file");
+        }
     }
 }

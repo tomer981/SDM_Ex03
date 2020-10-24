@@ -1,20 +1,30 @@
 package sdm.servlet;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Scanner;
 
 import market.Market;
-import sdm.utils.*;
 import sdm.constants.*;
 
-@WebServlet(name = "LogicServlet", urlPatterns = {"/LogicServlet","/pages/signup/LogicServlet"})
+import static sdm.constants.Constants.*;
+
+@WebServlet(name = "LogicServlet", urlPatterns = {"/LogicServlet", "/pages/signup/LogicServlet"})
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class LoginServlet extends HttpServlet {
     private final String ZONES_URL = "../zones/Zones.html";
+    private final String USER_EXIST_URL = "/pages/signup/signup.html";
 
     private void processRequestIfSessionExist(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=UTF-8");
@@ -31,33 +41,83 @@ public class LoginServlet extends HttpServlet {
     }
     
     private void processRequestCreateSession(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html;charset=UTF-8");
+        resp.setContentType("text/html");
 
-        String userName = req.getParameter(Constants.USER_NAME);
-        String position = req.getParameter(Constants.USER_POSITION);
+        Collection<Part> parts = req.getParts();
+        String userName = req.getParameter(USER_NAME);
+        String position = req.getParameter(USER_POSITION);
         Market engine = Market.getMarketInstance();
 
         synchronized (this){
-            if(SessionUtils.getUsername(req) == null){
-                if (!engine.isUserExist(userName)) {
+            if(req.getSession(false) == null){
+                if (!engine.isUserExist(userName) && userName != null) {
                     HttpSession session = req.getSession(true);
-                    session.setAttribute(Constants.USER_NAME, userName);
-                    session.setAttribute(Constants.USER_POSITION,position);
-                    engine.addCustomer(userName);
+                    session.setAttribute(USER_NAME, userName);
+                    session.setAttribute(USER_POSITION,position);
+                    if (position.equals("manager")){
+                        addManager(userName,parts);
+                    }
+                    else {
+                        engine.addCustomer(userName);
+                    }
                     resp.sendRedirect(ZONES_URL);
+                }
+                else {
+                    getServletContext().getRequestDispatcher(USER_EXIST_URL).forward(req, resp);
                 }
             }
         }
     }
 
+    private void addManager(String userName, Collection<Part> parts) {
+        Market engine = Market.getMarketInstance();
+        for (Part part : parts){
+            if(part.getName().equals("uploadfiles")){
+                try{
+                    InputStream inputStream = part.getInputStream();
+                    List<String> fileContent = new ArrayList<>();
+                    String fileName = part.getSubmittedFileName();
+                    fileContent.add(new Scanner(inputStream).useDelimiter("\\Z").next());
+                    Path file1 = Paths.get(fileName);
+                    Files.write(file1,fileContent);
+                    engine.addManager(userName,file1.toFile());
+                } catch (IOException | JAXBException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void isCustomerUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("text/html;charset=UTF-8");
+
+        HttpSession session = req.getSession(false);
+        if (session.getAttribute(USER_POSITION).equals("customer")){
+            resp.getWriter().write(String.valueOf(true));
+        }else {
+            resp.getWriter().write(String.valueOf(false));
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        processRequestCreateSession(req, resp);
+        String action = req.getParameter(Constants.ACTION);
+//        processRequestIfSessionExist(req, resp);
+        switch (action) {
+            case IS_CUSTOMER_USER_ACTION:
+                isCustomerUser(req, resp);
+                break;
+            case IS_SESSION_EXIST_ACTION:
+                processRequestIfSessionExist(req, resp);
+                break;
+
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        processRequestIfSessionExist(req, resp);
+        processRequestCreateSession(req, resp);
+
     }
 }
 
