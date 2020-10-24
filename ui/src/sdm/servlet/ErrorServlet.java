@@ -13,14 +13,11 @@ public class ErrorServlet extends HttpServlet {
         Exception exception = (Exception) req.getAttribute("javax.servlet.error.exception");
         // Integer statusCode = (Integer)req.getAttribute("javax.servlet.error.status_code");
         // String servletName = (String)req.getAttribute("javax.servlet.error.servlet_name");
-        String requestUri = (String) req.getAttribute("javax.servlet.error.request_uri");
+//        String requestUri = (String) req.getAttribute("javax.servlet.error.request_uri");
 
-        String errorParameter = "errorMessage=" + URLEncoder.encode(exception.getMessage(), "ASCII");
-        String redirectedUri = requestUri + (requestUri.contains("?")
-                ? "&" + errorParameter
-                : "?" + errorParameter);
 
-        resp.sendRedirect(redirectedUri);
+        // TODO: Send JSON of the error
+        resp.getWriter().write("");
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
