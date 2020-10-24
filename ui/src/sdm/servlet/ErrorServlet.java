@@ -15,6 +15,7 @@ public class ErrorServlet extends HttpServlet {
         // String servletName = (String)req.getAttribute("javax.servlet.error.servlet_name");
 //        String requestUri = (String) req.getAttribute("javax.servlet.error.request_uri");
 
+        resp.setStatus(500);
 
         // TODO: Send JSON of the error
         resp.getWriter().write("");
