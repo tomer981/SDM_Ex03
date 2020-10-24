@@ -6,6 +6,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet("/ErrorHandler")
 public class ErrorServlet extends HttpServlet {
@@ -15,7 +18,7 @@ public class ErrorServlet extends HttpServlet {
         // String servletName = (String)req.getAttribute("javax.servlet.error.servlet_name");
         String requestUri = (String) req.getAttribute("javax.servlet.error.request_uri");
 
-        String errorParameter = "errorMessage=" + exception.getMessage();
+        String errorParameter = "errorMessage=" + URLEncoder.encode(exception.getMessage(), "ASCII");
         String redirectedUri = requestUri.contains("?")
                 ? "&" + errorParameter
                 : "?" + errorParameter;
