@@ -1,7 +1,7 @@
 import {ThingA, ThingB, ThingC} from 'lib/things';
 
 
-isSessionExist({action: "isSessionExist",userNotFoundPage: null, userFoundPage: "../zones/Zones.html"});
+isSessionExist({action: "isSessionExist",userNotFoundPage: null, userFoundPage: "../zones/zones.html"});
 $("#submitForm").ready(function() {
     $(':input[type="submit"]').prop('disabled', true);
     $('input[type="text"]').keyup(function() {
