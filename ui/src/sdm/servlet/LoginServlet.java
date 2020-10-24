@@ -20,7 +20,7 @@ import sdm.constants.*;
 
 import static sdm.constants.Constants.*;
 
-@WebServlet(name = "LogicServlet", urlPatterns = {"/LogicServlet", "/pages/signup/LogicServlet"})
+@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet", "/pages/signup/LoginServlet"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class LoginServlet extends HttpServlet {
     private final String ZONES_URL = "../zones/zones.html";
@@ -50,17 +50,17 @@ public class LoginServlet extends HttpServlet {
         synchronized (this){
             if(req.getSession(false) == null){
                 if (!engine.isUserExist(userName) && userName != null) {
-                    HttpSession session = req.getSession(true);
-                    session.setAttribute(USER_NAME, userName);
-                    session.setAttribute(USER_POSITION,position);
-                    resp.sendRedirect(ZONES_URL);
-
                     if (position.equals("manager")){
                         addManager(userName,parts);
                     }
                     else {
                         engine.addCustomer(userName);
                     }
+
+                    HttpSession session = req.getSession(true);
+                    session.setAttribute(USER_NAME, userName);
+                    session.setAttribute(USER_POSITION,position);
+                    resp.sendRedirect(ZONES_URL);
                 }
                 else {
                     getServletContext().getRequestDispatcher(USER_EXIST_URL).forward(req, resp);//msg : user already exist
@@ -69,7 +69,7 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
-    private void addManager(String userName, Collection<Part> parts) {
+    private void addManager(String userName, Collection<Part> parts)  {
         Market engine = Market.getMarketInstance();
         for (Part part : parts){
             if(part.getName().equals("uploadfiles")){
@@ -81,8 +81,8 @@ public class LoginServlet extends HttpServlet {
                     Path file1 = Paths.get(fileName);
                     Files.write(file1,fileContent);
                     engine.addManager(userName,file1.toFile());
-                } catch (IOException | JAXBException e) {
-                    e.printStackTrace();
+                } catch (IOException e) {
+                    throw new IllegalStateException("Couldnt add manager", e);
                 }
             }
         }

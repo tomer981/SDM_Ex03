@@ -11,16 +11,16 @@ td, th {
 }
 
 
-tr:nth-child(even) {
+tbody tr:nth-child(even) {
     background-color: #dddddd;
 }
 
-tr.selected {
+tbody tr.selected {
     background-color: deepskyblue;
     color: #FFF;
 }
 
-tr.selected:nth-child(even) {
+tbody tr.selected:nth-child(even) {
     background-color: cadetblue;
     color: #FFF;
 }

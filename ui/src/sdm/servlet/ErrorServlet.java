@@ -17,7 +17,7 @@ public class ErrorServlet extends HttpServlet {
 
 
         // TODO: Send JSON of the error
-        resp.getWriter().write("");
+        resp.getWriter().write("tomer");
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {

@@ -1,3 +1,3 @@
-var SIGHUP_URL = buildUrlWithContextPath("LogicServlet")
+var SIGHUP_URL = buildUrlWithContextPath("LoginServlet")
 var ZONES_URL = buildUrlWithContextPath("ZonesServlet");
-var STORES_URL = buildUrlWithContextPath("StoreServlet");
+var STORES_URL = buildUrlWithContextPath("StoresServlet");

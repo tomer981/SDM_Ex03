@@ -24,7 +24,7 @@ public class SchemaBaseJaxbObjects {
     private List<SDMItem> xmlProducts;
     private List<SDMStore> xmlStores;
 
-    public SchemaBaseJaxbObjects(File file) throws JAXBException,IllegalStateException {
+    public SchemaBaseJaxbObjects(File file) throws IllegalStateException {
         validate = new ValidateSchema(this);
         validate.isXmlFile(file);
         JAXBContext jaxbContext = null;
@@ -35,7 +35,7 @@ public class SchemaBaseJaxbObjects {
             SDM = jaxbContext.createUnmarshaller();
             xmlZoneMarket = (SuperDuperMarketDescriptor) SDM.unmarshal(file);
         } catch (JAXBException e) {
-            throw new JAXBException("Couldn't parse XML file");
+            throw new IllegalStateException("Couldn't parse XML file", e);
         }
 
         initializeSchema();

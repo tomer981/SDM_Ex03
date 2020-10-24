@@ -12,7 +12,7 @@
 <div class="container">
     <h1> Welcome to Super Duper Market</h1> <br>
     <h2> Please enter a unique user name:</h2> <br>
-    <form action="LogicServlet" method="POST" enctype="multipart/form-data">
+    <form action="LoginServlet" method="POST" enctype="multipart/form-data">
         <label>User Name:</label>
         <input type="text" name="user-name" id="user-name" onkeyup="submitButtonValidateParameters()"/>
         <br><br>
@@ -29,9 +29,9 @@
         <input type="submit" value="SighUp" class="button" disabled="disabled" id="submitForm"/>
     </form>
 </div>
+
 <script type="text/javascript">
     isSessionExist({action : "isSessionExist",userNotFoundPage: "", userFoundPage: "../zones/zones.html"});
-
     function submitButtonValidateParameters() {
         $("#submitForm").ready(function () {
             if ($("#user-name").val() !== "") {
@@ -54,6 +54,12 @@
             }
         })
     }
+    // $.ajax({
+    //     type  : this.action,
+    //     url   :
+    // })
+
+
 </script>
 </body>
 </html>

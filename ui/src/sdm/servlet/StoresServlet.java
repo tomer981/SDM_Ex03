@@ -25,7 +25,7 @@ import xml.schema.generated.*;
 import static sdm.constants.Constants.*;
 
 @WebServlet(name = "StoresServlet", urlPatterns = {"/StoresServlet", "/pages/storesInfo/StoresServlet"})
-public class StoreServlet extends HttpServlet {
+public class StoresServlet extends HttpServlet {
     private void processRequestGetProductsInZone(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json");

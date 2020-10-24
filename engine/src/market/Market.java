@@ -104,7 +104,7 @@ public final class Market {
     }
 
     //////////method private
-    private synchronized void addZoneMarket(File file, Manager manager) throws JAXBException {
+    private synchronized void addZoneMarket(File file, Manager manager) {
         SchemaBaseJaxbObjects schema = new SchemaBaseJaxbObjects(file);
         if (KNameZoneVZone.containsKey(schema.getXmlZoneMarket().getSDMZone().getName())){
             throw new IllegalArgumentException("the zone with the same name already exist");
@@ -132,7 +132,7 @@ public final class Market {
         zoneMarket.addStoreToManager(sdmStore,manager);
         managers.addManager(manager);
     }
-    public synchronized void addManager(String name, File file) throws JAXBException {
+    public synchronized void addManager(String name, File file) {
         Manager manager = null;
         if (KManagerNameVManger.containsKey(name)){
             manager = KManagerNameVManger.get(name);
