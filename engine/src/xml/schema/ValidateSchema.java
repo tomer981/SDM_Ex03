@@ -59,13 +59,13 @@ public class ValidateSchema {
     public void StoreProductInMarketProduct( List<Integer> xmlProductsInStore, List<SDMItem> xmlProducts) throws IllegalArgumentException {
         List<Integer> xmlProductsId = xmlProducts.stream().map(SDMItem::getId).collect(Collectors.toList());
         if (!xmlProductsId.containsAll(xmlProductsInStore)){
-            throw new IllegalArgumentException("dto.Product in Store Not Found in Market");
+            throw new IllegalArgumentException("Product in Store Not Found in Market");
         }
     }
 
     public void IsDiscountProductSoldInStore(List<Integer> xmlProductsInStore, List<Integer> xmlDiscountProductsId) {
         if (!xmlProductsInStore.containsAll(xmlDiscountProductsId)){
-            throw new IllegalArgumentException("Discont dto.Product not Sold in Store");
+            throw new IllegalArgumentException("Discont Product not Sold in Store");
         }
     }
 

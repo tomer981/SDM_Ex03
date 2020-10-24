@@ -140,8 +140,8 @@ public final class Market {
         else{
             manager = new Manager(name);
         }
-        KManagerNameVManger.put(name,manager);
         addZoneMarket(file,manager);
+        KManagerNameVManger.put(name,manager);
     }
     public synchronized void addCustomer(String name){
         if (KCustomerNameVCustomer.containsKey(name)){

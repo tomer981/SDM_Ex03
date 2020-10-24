@@ -100,7 +100,6 @@
         $(output).appendTo($("#make-deposit"));
 
         $("#submitForm").on("submit", function (e) {
-            var form = this;
             $.ajax({
                 url: this.action,
                 type: this.method,
@@ -165,11 +164,6 @@
             });
         },
     })
-
-
-
-
-
 </script>
 </body>
 </html>

@@ -1,5 +1,7 @@
 package sdm.servlet;
 
+import com.google.gson.JsonObject;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,14 +13,14 @@ import java.net.URLEncoder;
 public class ErrorServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Exception exception = (Exception) req.getAttribute("javax.servlet.error.exception");
-        // Integer statusCode = (Integer)req.getAttribute("javax.servlet.error.status_code");
-        // String servletName = (String)req.getAttribute("javax.servlet.error.servlet_name");
-//        String requestUri = (String) req.getAttribute("javax.servlet.error.request_uri");
+
 
         resp.setStatus(500);
 
         // TODO: Send JSON of the error
-        resp.getWriter().write("tomer");
+        JsonObject json = new JsonObject();
+        json.addProperty("error",exception.getMessage());
+        resp.getWriter().write(exception.getMessage());
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {

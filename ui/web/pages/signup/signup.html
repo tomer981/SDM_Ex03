@@ -25,7 +25,8 @@
             <option value="customer">Customer</option>
         </select>
         <br>
-        <input type='file' id='add-file' class="button" accept='.xml' multiple onchange="submitButtonValidateParameters()"
+        <input type='file' id='add-file' class="button" accept='.xml' multiple
+               onchange="submitButtonValidateParameters()"
                disabled="disabled" name="uploadfiles">
         <br>
         <input type="submit" value="SignUp" class="button" disabled="disabled" id="submitFormButton"/>
@@ -33,7 +34,27 @@
 </div>
 
 <script type="text/javascript">
+    $("#submit-form").on("submit", function (e) {
+        $.ajax({
+            url: SIGNUP_URL,
+            type: this.method,
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            cache: false,
+            dataType: "html",
+            success: function (nextUrl) {
+                window.location.replace(nextUrl);
+            },
+            error: function (msg) {
+                var output = $("<p id='error' style='color: red'></p>").text(msg.responseText);
+                $("#error").remove();
+                $("body").append(output)
+            }
+        });
 
+        return false;
+    });
 </script>
 </body>
 </html>

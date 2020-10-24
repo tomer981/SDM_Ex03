@@ -4,7 +4,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -38,51 +37,58 @@ public class LoginServlet extends HttpServlet {
             resp.getWriter().write(userFoundPage);
         }
     }
-    
+
     private void processRequestCreateSession(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
+        resp.setContentType("text/html;charset=UTF-8");
 
         Collection<Part> parts = req.getParts();
         String userName = req.getParameter(USER_NAME);
         String position = req.getParameter(USER_POSITION);
         Market engine = Market.getMarketInstance();
 
-        synchronized (this){
-            if(req.getSession(false) == null){
-                if (!engine.isUserExist(userName) && userName != null) {
-                    if (position.equals("manager")){
-                        addManager(userName,parts);
-                    }
-                    else {
-                        engine.addCustomer(userName);
-                    }
+        try {
+            synchronized (this) {
+                if (req.getSession(false) == null) {
+                    if (!engine.isUserExist(userName) && userName != null) {
+                        if (position.equals("manager")) {
+                            addManager(userName, parts);
+                        } else {
+                            engine.addCustomer(userName);
+                        }
 
-                    HttpSession session = req.getSession(true);
-                    session.setAttribute(USER_NAME, userName);
-                    session.setAttribute(USER_POSITION,position);
-                    resp.sendRedirect(ZONES_URL);
-                }
-                else {
-                    getServletContext().getRequestDispatcher(USER_EXIST_URL).forward(req, resp);//msg : user already exist
+                        HttpSession session = req.getSession(true);
+                        session.setAttribute(USER_NAME, userName);
+                        session.setAttribute(USER_POSITION, position);
+                        resp.getWriter().write(ZONES_URL);
+                    } else {
+                        throw new IllegalStateException("User name already exist.");
+                    }
                 }
             }
         }
+        catch (IllegalStateException e){
+            String msg = e.getMessage();
+            if (e.getMessage().indexOf(':') != 0){
+                msg = msg.substring(msg.indexOf(':')+ 2);
+            }
+            throw new IllegalStateException(msg);
+        }
     }
 
-    private void addManager(String userName, Collection<Part> parts)  {
+    private void addManager(String userName, Collection<Part> parts) {
         Market engine = Market.getMarketInstance();
-        for (Part part : parts){
-            if(part.getName().equals("uploadfiles")){
-                try{
+        for (Part part : parts) {
+            if (part.getName().equals("uploadfiles")) {
+                try {
                     InputStream inputStream = part.getInputStream();
                     List<String> fileContent = new ArrayList<>();
                     String fileName = part.getSubmittedFileName();
                     fileContent.add(new Scanner(inputStream).useDelimiter("\\Z").next());
                     Path file1 = Paths.get(fileName);
-                    Files.write(file1,fileContent);
-                    engine.addManager(userName,file1.toFile());
+                    Files.write(file1, fileContent);
+                    engine.addManager(userName, file1.toFile());
                 } catch (IOException e) {
-                    throw new IllegalStateException("Couldnt add manager", e);
+                    throw new IllegalStateException(e.getMessage());
                 }
             }
         }
@@ -92,9 +98,9 @@ public class LoginServlet extends HttpServlet {
         resp.setContentType("text/html;charset=UTF-8");
 
         HttpSession session = req.getSession(false);
-        if (session.getAttribute(USER_POSITION).equals("customer")){
+        if (session.getAttribute(USER_POSITION).equals("customer")) {
             resp.getWriter().write(String.valueOf(true));
-        }else {
+        } else {
             resp.getWriter().write(String.valueOf(false));
         }
     }
@@ -102,7 +108,6 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter(Constants.ACTION);
-//        processRequestIfSessionExist(req, resp);
         switch (action) {
             case IS_CUSTOMER_USER_ACTION:
                 isCustomerUser(req, resp);
@@ -117,7 +122,6 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         processRequestCreateSession(req, resp);
-
     }
 }
 

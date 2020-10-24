@@ -23,19 +23,3 @@ function submitButtonValidateParameters() {
     })
 }
 
-// $("#submitForm").on("submit", function (e) {
-//     var form = this;
-//     $.ajax({
-//         url: this.action,
-//         type: this.method,
-//         data: $(this).serialize(),
-//         success: function (nextUrl) {
-//             window.location.reload();
-//         },
-//         error: function (){
-//
-//         }
-//     });
-//
-//     return false;
-// });
