@@ -101,7 +101,7 @@
 
         $("#submitForm").on("submit", function (e) {
             $.ajax({
-                url: this.action,
+                url: ZONES_URL,
                 type: this.method,
                 data: $(this).serialize(),
                 success: function () {

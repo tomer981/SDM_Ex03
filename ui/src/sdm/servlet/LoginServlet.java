@@ -19,7 +19,7 @@ import sdm.constants.*;
 
 import static sdm.constants.Constants.*;
 
-@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet", "/pages/signup/LoginServlet"})
+@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class LoginServlet extends HttpServlet {
     private final String ZONES_URL = "../zones/zones.html";
@@ -68,7 +68,7 @@ public class LoginServlet extends HttpServlet {
         }
         catch (IllegalStateException e){
             String msg = e.getMessage();
-            if (e.getMessage().indexOf(':') != 0){
+            if (e.getMessage().indexOf(':') != -1){
                 msg = msg.substring(msg.indexOf(':')+ 2);
             }
             throw new IllegalStateException(msg);

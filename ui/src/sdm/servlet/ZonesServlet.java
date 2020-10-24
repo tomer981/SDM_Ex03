@@ -26,7 +26,7 @@ import java.util.Map;
 import static sdm.constants.Constants.*;
 
 
-@WebServlet(name = "ZonesServlet", urlPatterns = {"/ZonesServlet", "/pages/zones/ZonesServlet"})
+@WebServlet(name = "ZonesServlet", urlPatterns = {"/ZonesServlet"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class ZonesServlet extends HttpServlet {
 
