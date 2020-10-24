@@ -10,7 +10,7 @@ import java.net.URLEncoder;
 
 @WebServlet("/ErrorHandler")
 public class ErrorServlet extends HttpServlet {
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Exception exception = (Exception) req.getAttribute("javax.servlet.error.exception");
         // Integer statusCode = (Integer)req.getAttribute("javax.servlet.error.status_code");
         // String servletName = (String)req.getAttribute("javax.servlet.error.servlet_name");
@@ -22,5 +22,9 @@ public class ErrorServlet extends HttpServlet {
                 : "?" + errorParameter;
 
         resp.sendRedirect(redirectedUri);
+    }
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        doGet(req, resp);
     }
 }
