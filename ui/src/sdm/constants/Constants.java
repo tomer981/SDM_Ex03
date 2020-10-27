@@ -7,11 +7,12 @@ public class Constants {
 
     public static final String ACTION = "action";
     public static final String ZONE_NAME = "zoneName";
+    public static final String CUSTOMER_ORDER = "customerOrder";
 
     //StoresServlet
-    public static final String GET_PRODUCTS_IN_ZONE = "getProductsInZone";
-    public static final String GET_STORE_INFO = "getStoreInfo";
-    public static final String GET_PRODUCTS_IN_STORE = "getStoreProductsInfo";
+    public static final String GET_PRODUCTS_IN_ZONE_ACTION = "getProductsInZone";
+    public static final String GET_STORE_INFO_ACTION = "getStoreInfo";
+    public static final String GET_PRODUCTS_IN_STORE_ACTION = "getStoreProductsInfo";
 
     public static final String NEW_ORDER_ACTION = "newOrder";
     public static final String CUSTOMER_SHOW_ORDER_ACTION = "showOrders";
@@ -30,8 +31,12 @@ public class Constants {
 
 
     //CustomerServlet
-    public static final String GET_STORE_PRODUCTS_ACTION =  "getStoreProducts";
-    public static final String GET_ZONE_PRODUCTS_ACTION = "getZoneProducts";
+    public static final String GET_STORE_PRODUCTS_ACTION =  "getStoreProducts";//POST
+    public static final String GET_ZONE_PRODUCTS_ACTION = "getZoneProducts";//POST
+    public static final String ADD_NEW_ORDER_STATIC_PRODUCTS_ACTION = "addStoreProducts";//POST
+    public static final String ADD_NEW_ORDER_DYNAMIC_PRODUCTS_ACTION = "addDynamicProducts";//POST
+    public static final String GET_DISCOUNTS_ACTION = "getDiscounts";//GET
+
 
     //ManagerServlet
 

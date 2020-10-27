@@ -9,7 +9,6 @@ import dto.ZoneMarketDTO;
 import market.Market;
 import xml.schema.generated.SDMItem;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -139,13 +138,13 @@ public class StoresServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter(ACTION);
         switch (action) {
-            case GET_PRODUCTS_IN_ZONE:
+            case GET_PRODUCTS_IN_ZONE_ACTION:
                 processRequestGetProductsInZone(req, resp);
                 break;
-            case GET_STORE_INFO:
+            case GET_STORE_INFO_ACTION:
                 processRequestGetStoreInfo(req, resp);
                 break;
-            case GET_PRODUCTS_IN_STORE:
+            case GET_PRODUCTS_IN_STORE_ACTION:
                 processRequestGetStoreProductsInfo(req, resp);
                 break;
         }

@@ -4,8 +4,8 @@ import xml.schema.generated.SDMItem;
 import xml.schema.generated.SDMSell;
 
 public class ProductDTO {
-    Double price;
-    Double amount;
+    private Double price = 0.0;
+    private  Double amount = 0.0;
 
     public void setPrice(Double price) {
         this.price = price;

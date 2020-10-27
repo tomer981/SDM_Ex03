@@ -16,8 +16,8 @@ public class SubOrderDTO {
     private Map<SDMItem, ProductDTO> KProductVForPriceAndAmountInfo = new HashMap<>();
     private Map<SDMDiscount, Integer> KDiscountVTimeUse = new HashMap<>();
 
-    private Double deliveryPrice;
-    private Double productsPrice;
+    private Double deliveryPrice = 0.0;
+    private Double productsPrice = 0.0;
 
     //get
     public Integer getId() {

@@ -2,11 +2,14 @@ package sdm.servlet;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import dto.ManagerDTO;
+import com.google.gson.JsonParser;
+import dto.OrderDTO;
 import dto.ProductDTO;
 import dto.StoreDTO;
 import dto.ZoneMarketDTO;
 import market.Market;
+import xml.schema.generated.Location;
+import xml.schema.generated.SDMDiscount;
 import xml.schema.generated.SDMItem;
 
 import javax.servlet.ServletException;
@@ -18,10 +21,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static sdm.constants.Constants.*;
-import static sdm.constants.Constants.GET_PRODUCTS_IN_STORE;
 
 @WebServlet(name = "CustomerServlet", urlPatterns = {"/CustomerServlet"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
@@ -47,9 +51,42 @@ public class CustomerServlet extends HttpServlet {
         }
     }
 
+    private void processRequestGetDiscounts(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        HttpSession session = req.getSession(false);
+        Market engine = Market.getMarketInstance();
+        String zoneName = (String) session.getAttribute(ZONE_NAME);
+        OrderDTO order =  (OrderDTO) session.getAttribute(CUSTOMER_ORDER);
+
+        JsonArray array = new JsonArray();
+        Set<Integer> storesId = order.getKStoreVSubStore().keySet();
+        for (Integer storeId : storesId){
+            StoreDTO store = engine.getStoreDTO(zoneName,storeId);
+            List<SDMDiscount> discounts = store.getSdmStore().getSDMDiscounts().getSDMDiscount();
+            for (SDMDiscount discount : discounts){
+                Integer needToBuyProductId = discount.getIfYouBuy().getItemId();
+                SDMItem product = order.getKStoreVSubStore().get(storeId).getKProductIdVProductsSoldInfo().get(needToBuyProductId);
+                if (needToBuyProductId.equals(product.getId())){
+                    Integer needToBuyProductAmount = discount.getIfYouBuy().getQuantity();
+                    Double productAmount = order.getKStoreVSubStore().get(storeId).getKProductVForPriceAndAmountInfo().get(product).getAmount();
+                    if (order.getKStoreVSubStore().get(storeId).getKDiscountVTimeUse().containsKey(discount)){
+                        Integer timeUse = order.getKStoreVSubStore().get(storeId).getKDiscountVTimeUse().get(discount);
+                        if (productAmount - needToBuyProductAmount > timeUse * needToBuyProductAmount){
+
+                        }
+                    }
+                }
+
+                if (order.getKStoreVSubStore().get(storeId).)
+            }
+        }
+    }
+
     private void processRequestGetProductsInStore(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         HttpSession session = req.getSession(false);
+
         String zoneName = (String) session.getAttribute(ZONE_NAME);
         String storeId = req.getParameter("store-selector");
         Market engine = Market.getMarketInstance();
@@ -95,6 +132,62 @@ public class CustomerServlet extends HttpServlet {
         }
     }
 
+    private OrderDTO getOrderData(HttpServletRequest req) {
+        HttpSession session = req.getSession(false);
+        String userName = (String) session.getAttribute(USER_NAME);
+        String jsonObject = req.getParameter("jsonData");
+        JsonObject jsonData = new JsonParser().parse(jsonObject).getAsJsonObject();
+
+        OrderDTO orderDTO = null;
+        try {
+            Integer cordX = jsonData.get("cordX").getAsInt();
+            Integer cordY = jsonData.get("cordY").getAsInt();
+            Location location = new Location();
+            location.setX(cordX);
+            location.setY(cordY);
+            String stringDate = jsonData.get("date").getAsString();
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(stringDate);
+            orderDTO = new OrderDTO(-1, date, location, userName);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return orderDTO;
+    }
+
+    private void processRequestAddDynamicProducts(HttpServletRequest req, HttpServletResponse resp) {
+        HttpSession session = req.getSession(false);
+        Market engine = Market.getMarketInstance();
+
+        String jsonObject = req.getParameter("jsonData");
+        JsonObject jsonData = new JsonParser().parse(jsonObject).getAsJsonObject();
+
+        String zoneName = (String) session.getAttribute(ZONE_NAME);
+
+        ZoneMarketDTO zoneMarket = engine.getZoneMarketDTO(zoneName);
+        Map<SDMItem, ProductDTO> KProductInfoVProductDTO = new HashMap<>();
+        List<SDMItem> productsInfo = zoneMarket.getProductsInfo().getSDMItem();
+
+        for (SDMItem productInfo : productsInfo) {
+            String productId = String.valueOf(productInfo.getId());
+            Double productAmount = jsonData.get(productId).getAsDouble();
+            if (productAmount > 0) {
+                ProductDTO product = new ProductDTO();
+                product.setAmount(productAmount);
+                KProductInfoVProductDTO.put(productInfo, product);
+            }
+        }
+
+        OrderDTO order = getOrderData(req);
+
+        order = engine.getMinOrder(zoneName, order, KProductInfoVProductDTO);
+        session.setAttribute(CUSTOMER_ORDER, order);
+    }
+
+    private void processRequestAddStoreProducts(HttpServletRequest req, HttpServletResponse resp) {
+
+    }//TODO: complete this after Dynamic
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter(ACTION);
@@ -105,6 +198,12 @@ public class CustomerServlet extends HttpServlet {
             case GET_ZONE_PRODUCTS_ACTION:
                 processRequestGetProductsInZone(req, resp);
                 break;
+            case ADD_NEW_ORDER_STATIC_PRODUCTS_ACTION:
+                processRequestAddStoreProducts(req, resp);
+                break;
+            case ADD_NEW_ORDER_DYNAMIC_PRODUCTS_ACTION:
+                processRequestAddDynamicProducts(req, resp);
+                break;
         }
     }
 
@@ -112,12 +211,13 @@ public class CustomerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter(ACTION);
         switch (action) {
-            case GET_STORE_INFO:
+            case GET_STORE_INFO_ACTION:
                 processRequestGetStoreInfo(req, resp);
                 break;
-//            case GET_PRODUCTS_IN_STORE:
-//                processRequestGetStoreProductsInfo(req, resp);
-//                break;
+            case GET_DISCOUNTS_ACTION:
+                processRequestGetDiscounts(req, resp);
+                break;
+
         }
     }
 

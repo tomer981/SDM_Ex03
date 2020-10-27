@@ -44,6 +44,7 @@
         <tbody id="buy-products-body">
         </tbody>
     </table>
+    <button id="next" type="button" onclick="nextPage()">next</button>
 </div>
 <script type="text/javascript">
     isSessionExist({action: "isSessionExist", userNotFoundPage: "../../../../index.html", userFoundPage: ""});
@@ -68,6 +69,7 @@
     }
 
     function isStatic() {
+        $("#buy-products-body").empty();
         if ($("#new-order-selection").find("option:selected").attr("value") === "static") {
             getStoresInfo();
         } else {
@@ -78,7 +80,7 @@
 
     function getStoresInfo() {
         $.ajax({
-            method: "Get",
+            method: "POST",
             url: CUSTOMER_URL,
             data: {action: "getStoreInfo"},
             success: function (arrStoresInfo) {
@@ -119,12 +121,22 @@
 
         for (var index in $('#buy-products-body tr').find("td:last")) {
             $('#buy-products-body tr').find("td:last").eq(index).editable(option, function (e) {
-                if ($(e.target).parent().find("td:contains(Weight)").text() === "Weight"){
+
+                if (e.value === "" ){
+                    e.target.html("0");
+                }else if(parseFloat(e.value) <= 0){
+                    e.target.html("0");
+                } else if ($(e.target).parent().find("td:contains(Weight)").text() === "Weight"){
                     if (!isFloat(e.value)) {
                         e.target.html(e.old_value);
                     }
+                    else {
+                        e.target.html(e.value.replace(/^0+/, ''));
+                    }
                 } else  if (!isInt(e.value)){
                     e.target.html(e.old_value);
+                }else {
+                    e.target.html(e.value.replace(/^0+/, ''));
                 }
             })
         }
@@ -166,6 +178,47 @@
 
         return false;
     })
+
+    function nextPage(){
+        var isItemSold = false;
+        var isDynamicOrder = ($("#buy-products-head").find("th:contains(Price)").text() === "")
+        if ($("#buy-products-body tr").children().text() === ""){return ;}
+        var jsonProducts = {};
+        for (var index = 0; index < $("#buy-products-body tr").length ;index++){
+            var product = $("#buy-products-body tr")[index].childNodes;
+            if (isDynamicOrder){
+                jsonProducts[product.item(0).textContent] = product.item(3).textContent;
+                isItemSold = isItemSold || (product.item(3).textContent > 0)
+            }else {
+                jsonProducts[product.item(0).textContent] = product.item(4).textContent;
+                isItemSold = isItemSold || (product.item(4).textContent > 0)
+            }
+        }
+        if (isItemSold === false ){return;}
+        jsonProducts["date"] = $("#date").val();
+        jsonProducts["cordX"] = $("#cord-x").find("option:selected").attr("value")
+        jsonProducts["cordY"] = $("#cord-y").find("option:selected").attr("value")
+
+        var data = {};
+        if (isDynamicOrder){
+            data = {action : "addDynamicProducts", jsonData : JSON.stringify(jsonProducts) }
+        }else{
+            jsonProducts["storeId"] = $("#store-selector").val();
+            data = {action : "addStoreProducts", jsonData : JSON.stringify(jsonProducts) }
+        }
+
+        $.ajax({
+            type: "POST",
+            url: CUSTOMER_URL,
+            data: data,
+            success: function () {
+                window.location.replace("new-order-discounts/new-order-discounts.html");
+            },
+            error: function (){
+                alert("error");
+            }
+        });
+    }
 
 </script>
 </body>

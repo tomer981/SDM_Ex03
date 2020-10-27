@@ -76,16 +76,18 @@ public class Managers {
         Map<Integer, SubOrderDTO> KStoreIdVSubOrderDTO = new HashMap<>();
 
         for (SDMItem product : productsToBuyDTO.keySet()){
-            if (!KStoreIdVSubOrderDTO.containsKey(KProductIdVStoreId.get(product.getId()))){
+            Integer chipsetStoreProduct_StoreId = KProductIdVStoreId.get(product.getId());
+            if (!KStoreIdVSubOrderDTO.containsKey(chipsetStoreProduct_StoreId)){
                 SubOrderDTO subOrderDTO = new SubOrderDTO(orderDTO.getId(),orderDTO.getDate(),orderDTO.getCustomerName(),orderDTO.getCustomerLocation());
-                KStoreIdVSubOrderDTO.put(KProductIdVStoreId.get(product.getId()), subOrderDTO);
+                KStoreIdVSubOrderDTO.put(chipsetStoreProduct_StoreId, subOrderDTO);
             }
 
-            SubOrderDTO subOrderDTO = KStoreIdVSubOrderDTO.get(KProductIdVStoreId.get(product.getId()));
-            Double subOrderProductsPrices = subOrderDTO.getProductsPrice() + productsToBuyDTO.get(product).getPrice();
-            Double orderProductsPrices = productsToBuyDTO.get(product).getPrice() + orderDTO.getProductsPrice();
+            SubOrderDTO subOrderDTO = KStoreIdVSubOrderDTO.get(chipsetStoreProduct_StoreId);
+            Double costProductXAmount = productsToBuyDTO.get(product).getPrice() * productsToBuyDTO.get(product).getAmount();
+            Double subOrderProductsPrices = subOrderDTO.getProductsPrice() + costProductXAmount;
+            Double orderProductsPrices = costProductXAmount + orderDTO.getProductsPrice();
 
-            subOrderDTO.getKProductIdVProductsSoldInfo().put(KProductIdVStoreId.get(product.getId()),product);
+            subOrderDTO.getKProductIdVProductsSoldInfo().put(product.getId(),product);
             subOrderDTO.getKProductVForPriceAndAmountInfo().put(product,productsToBuyDTO.get(product));
             subOrderDTO.setProductsPrice(subOrderProductsPrices);
             orderDTO.setProductsPrice(orderProductsPrices);
@@ -93,7 +95,7 @@ public class Managers {
 
 
         Double totalDelivery = 0.0;
-        for (Integer storeId : KProductIdVStoreId.keySet()){
+        for (Integer storeId : KProductIdVStoreId.values()){
             Store store = KStoreIdVStore.get(storeId);
             Location storeLocation = store.getStoreInfo().getLocation();
             Double deliveryCost = SubOrder.getDistance(orderDTO.getCustomerLocation(), storeLocation) * store.getStoreInfo().getDeliveryPpk();
