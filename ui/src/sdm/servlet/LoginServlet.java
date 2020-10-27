@@ -19,7 +19,7 @@ import sdm.constants.*;
 
 import static sdm.constants.Constants.*;
 
-@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
+@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet", "/pages/signup/LoginServlet"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class LoginServlet extends HttpServlet {
     private final String ZONES_URL = "../zones/zones.html";

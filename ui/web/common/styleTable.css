@@ -24,3 +24,9 @@ tbody tr.selected:nth-child(even) {
     background-color: cadetblue;
     color: #FFF;
 }
+
+/*.btn btn-sm btn-default{*/
+/*    visibility: hidden;*/
+/*    background-color: yellow;*/
+
+/*}*/

@@ -7,29 +7,33 @@ import dto.ProductDTO;
 import dto.StoreDTO;
 import dto.ZoneMarketDTO;
 import market.Market;
-import sdm.constants.Constants;
 import xml.schema.generated.SDMItem;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.Map;
-
-import xml.schema.generated.*;
 
 import static sdm.constants.Constants.*;
 
 @WebServlet(name = "StoresServlet", urlPatterns = {"/StoresServlet", "/pages/storesInfo/StoresServlet"})
 public class StoresServlet extends HttpServlet {
+    private final String NEW_ORDER_URL = "customer-actions-page/new-order/new-order.html";
+    private final String CUSTOMER_SHOW_ORDER_URL = "customer-actions-page/show-orders/show-orders.html";
+    private final String MANAGER_SHOW_ORDER_URL = "manager-actions-page/show-orders/show-orders.html";
+    private final String SHOW_FEEDBACKS_URL = "manager-actions-page/show-feedbacks/show-feedbacks.html";
+    private final String NEW_STORE_URL = "manager-actions-page/add-store/add-store.html";
+
     private void processRequestGetProductsInZone(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json");
-        String zoneName = request.getParameter("zoneName");
+        String zoneName = request.getParameter(ZONE_NAME);
         Market engine = Market.getMarketInstance();
         ZoneMarketDTO zoneMarket = engine.getZoneMarketDTO(zoneName);
 
@@ -91,7 +95,7 @@ public class StoresServlet extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
             JsonArray array = new JsonArray();
-            for (Map.Entry<SDMItem,ProductDTO> product : store.getKProductIdVPriceAndAmount().entrySet()) {
+            for (Map.Entry<SDMItem, ProductDTO> product : store.getKProductIdVPriceAndAmount().entrySet()) {
                 JsonObject json = new JsonObject();
                 json.addProperty("productId", product.getKey().getId());
                 json.addProperty("productName", product.getKey().getName());
@@ -104,6 +108,31 @@ public class StoresServlet extends HttpServlet {
             out.flush();
         }
 
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter(ACTION);
+        String zoneName = req.getParameter(ZONE_NAME);
+        HttpSession session = req.getSession(false);
+        session.setAttribute(ZONE_NAME, zoneName);
+        switch (action){
+            case NEW_ORDER_ACTION:
+                resp.sendRedirect(NEW_ORDER_URL);
+                break;
+            case CUSTOMER_SHOW_ORDER_ACTION:
+                resp.sendRedirect(CUSTOMER_SHOW_ORDER_URL);
+                break;
+            case MANAGER_SHOW_ORDER_ACTION:
+                resp.sendRedirect(MANAGER_SHOW_ORDER_URL);
+                break;
+            case SHOW_FEEDBACKS_ACTION:
+                resp.sendRedirect(SHOW_FEEDBACKS_URL);
+                break;
+            case NEW_STORE_ACTION:
+                resp.sendRedirect(NEW_STORE_URL);
+                break;
+        }
     }
 
     @Override
@@ -122,6 +151,4 @@ public class StoresServlet extends HttpServlet {
         }
 
     }
-
-
 }

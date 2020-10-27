@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Order</title>
+    <script type="text/javascript" src="../../../../common/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="../../../../common/jquery.editable.js"></script>
+    <script type="text/javascript" src="../../../../common/bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../common/bootstrap-4.5.3-dist/js/bootstable.js"></script>
+
+    <script type="text/javascript" src="../../../../common/context-path-helper.js"></script>
+    <script type="text/javascript" src="../../../../common/urls.js"></script>
+    <script type="text/javascript" src="../../../../common/is-session-exist.js"></script>
+    <script type="text/javascript" src="../../../../common/generalMethods.js"></script>
+    <link rel="stylesheet" href="../../../../common/styleTable.css">
+</head>
+<body>
+<div style="overflow-x:auto;">
+    <form action="CustomerServlet" method="POST" id="submit-form-order-settings" enctype="multipart/form-data">
+        <label for="new-order-selection"> an Action:</label>
+        <select id="new-order-selection" name="new-order-selection" onchange="isStatic()">'
+            <option style="display: none"></option>
+            <option value="static">Static</option>
+            <option value="dynamic">Dynamic</option>
+        </select>
+        <div id="choose-store">
+        </div>
+        <input type="date" name="date" id="date" placeholder="Pick a date" autocomplete="off"
+               onchange="checkSubmitFormButton()">
+        <div id="location-container">
+        </div>
+        <input type="submit" value="Show Products" class="button" disabled="disabled" id="submitFormButton"/>
+    </form>
+    <br>
+    <h3>Products:</h3>
+    <table id="products-table">
+        <thead id="buy-products-head">
+        <th>ID</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Price<br>Per Unit</th>
+        <th>Amount</th>
+        </thead>
+        <tbody id="buy-products-body">
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    isSessionExist({action: "isSessionExist", userNotFoundPage: "../../../../index.html", userFoundPage: ""});
+
+    function checkSubmitFormButton() {
+        if ($("#date").val() !== "" &&
+            $("#new-order-selection").find("option:selected").val() !== "" &&
+            $("#cord-x").find("option:selected").attr("value") !== "" &&
+            $("#cord-y").find("option:selected").attr("value") !== "") {
+            if ($("#new-order-selection").val() === "static") {
+                if ($("#store-selector").find("option:selected").val() === "") {
+                    $("#submitFormButton").prop("disabled", true);
+                } else {
+                    $("#submitFormButton").prop("disabled", false);
+                }
+            } else if ($("#new-order-selection").val() === "dynamic") {
+                $("#submitFormButton").prop("disabled", false);
+            } else {
+                $("#submitFormButton").prop("disabled", true);
+            }
+        }
+    }
+
+    function isStatic() {
+        if ($("#new-order-selection").find("option:selected").attr("value") === "static") {
+            getStoresInfo();
+        } else {
+            $("#choose-store").html("");
+            checkSubmitFormButton()
+        }
+    }
+
+    function getStoresInfo() {
+        $.ajax({
+            method: "Get",
+            url: CUSTOMER_URL,
+            data: {action: "getStoreInfo"},
+            success: function (arrStoresInfo) {
+                appendToScrollBar(arrStoresInfo, "choose-store", "store-selector", " -- Select Store -- ", "checkSubmitFormButton()");
+                checkSubmitFormButton()
+            },
+            error: function () {
+                alert("error getStoreInfo");
+            }
+        })
+    }
+
+    function makeAmountChangeable() {
+        // const columns = [{
+        //     dataField: 'Amount',
+        //     text: 'Amount',
+        //     editorClasses: 'edit-amount'
+        // }]
+        // $('#products-table').SetEditable();
+        // $('#products-table').editable().
+        // var len = $('#buy-products-body tr:first td').length - 1;
+        // $('#products-table').editable
+        // SetEditable({
+        //     editButton: false,
+        //     deleteButton: false,
+        //     hideIdentifier: true,
+        //     columns: {
+        //         keyField: "Amount",
+        //         cellEdit:{ cellEditFactory({ mode: 'click' }) }
+        //         identifier: [0, 'id'],
+        //         editable: [[2, 'first'], [3, 'last'],[3, 'nickname']]
+        //     },
+        //
+        //     columnsEd:"4"
+        // });
+
+        var option = {type: "textarea", action: "click"};
+
+        for (var index in $('#buy-products-body tr').find("td:last")) {
+            $('#buy-products-body tr').find("td:last").eq(index).editable(option, function (e) {
+                if ($(e.target).parent().find("td:contains(Weight)").text() === "Weight"){
+                    if (!isFloat(e.value)) {
+                        e.target.html(e.old_value);
+                    }
+                } else  if (!isInt(e.value)){
+                    e.target.html(e.old_value);
+                }
+            })
+        }
+    }
+
+    $(function () {
+        var JSONObj = [];
+        for (i = 0; i < 50; i++) {
+            JSONObj.push({"value": i + 1, cord: i + 1});
+        }
+        appendToScrollBar(JSONObj, "location-container", "cord-x", " -- Select X Cord -- ", "checkSubmitFormButton()");
+        appendToScrollBar(JSONObj, "location-container", "cord-y", " -- Select Y Cord -- ", "checkSubmitFormButton()");
+    });
+
+    $("#submit-form-order-settings").on("submit", function () {
+        $("#buy-products-body").empty();
+        $("#buy-products-head th:contains(Price)").remove();
+        var data = $("#submit-form-order-settings").serializeArray();
+
+        if (document.getElementById("store-selector") === null) {
+            data.push({name: "action", value: "getZoneProducts"});
+        } else {
+            data.push({name: "action", value: "getStoreProducts"})
+            var index = $("#buy-products-head th:contains(Category)").index();
+            $("#buy-products-head th").eq(index).after("<th>Price<br>Per Unit</th>");
+        }
+        $.ajax({
+            url: CUSTOMER_URL,
+            type: this.method,
+            data: data,
+            success: function (products) {
+                appendToTableView(products, "#buy-products-body")
+                makeAmountChangeable();
+            },
+            error: function (msg) {
+                alert("error submit-form-order-settings")
+            }
+        })
+
+        return false;
+    })
+
+</script>
+</body>
+</html>

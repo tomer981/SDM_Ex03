@@ -106,4 +106,10 @@ public class Managers {
 
         return orderDTO;
     }
+
+    public List<StoreDTO> getStoresDTO() {
+        List<StoreDTO> storesDTO = new ArrayList<>();
+        KStoreIdVStore.values().forEach(store -> storesDTO.add(store.getStoreDTO()));
+        return storesDTO;
+    }
 }

@@ -7,12 +7,14 @@ import position.Customer;
 import position.Manager;
 import position.Managers;
 import xml.schema.SchemaBaseJaxbObjects;
+import xml.schema.generated.Location;
 import xml.schema.generated.SDMItem;
 import xml.schema.generated.SDMStore;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public final class Market {
@@ -101,6 +103,16 @@ public final class Market {
         ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
         Managers managers = KZoneVManagers.get(zoneMarket);
         return managers.getStoreDTO(storeId);
+    }
+    public List<StoreDTO> getStoresDTO(String zoneName){
+        ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
+        Managers managers = KZoneVManagers.get(zoneMarket);
+        return managers.getStoresDTO();
+
+    }
+    public List<Location> getStoresLocation(String zoneName){
+        List<StoreDTO> stores = getStoresDTO(zoneName);
+        return stores.stream().map(StoreDTO::getSdmStore).map(SDMStore::getLocation).collect(Collectors.toList());
     }
 
     //////////method private
