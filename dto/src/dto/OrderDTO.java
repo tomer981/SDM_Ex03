@@ -11,7 +11,7 @@ public class OrderDTO {
     private Location customerLocation;
     private String customerName;
 
-    private Map<Integer, SubOrderDTO> KStoreVSubStore = new HashMap<>();
+    private Map<Integer, SubOrderDTO> KStoreVSubOrder = new HashMap<>();
     private Double totalDeliveryPrice = 0.0;
     private Double ProductsPrice = 0.0;
 
@@ -28,8 +28,8 @@ public class OrderDTO {
     public Double getProductsPrice() {
         return ProductsPrice;
     }
-    public Map<Integer, SubOrderDTO> getKStoreVSubStore() {
-        return KStoreVSubStore;
+    public Map<Integer, SubOrderDTO> getKStoreVSubOrder() {
+        return KStoreVSubOrder;
     }
     public Double getTotalDeliveryPrice() {
         return totalDeliveryPrice;
@@ -45,8 +45,8 @@ public class OrderDTO {
     public void setProductsPrice(Double productsPrice) {
         ProductsPrice = productsPrice;
     }
-    public void setKStoreVSubStore(Map<Integer, SubOrderDTO> KStoreVSubStore) {
-        this.KStoreVSubStore = KStoreVSubStore;
+    public void setKStoreVSubOrder(Map<Integer, SubOrderDTO> KStoreVSubOrder) {
+        this.KStoreVSubOrder = KStoreVSubOrder;
     }
     public void setId(Integer id) {
         this.id = id;

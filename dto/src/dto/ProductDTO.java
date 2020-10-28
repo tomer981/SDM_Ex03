@@ -5,11 +5,21 @@ import xml.schema.generated.SDMSell;
 
 public class ProductDTO {
     private Double price = 0.0;
-    private  Double amount = 0.0;
+    private Double amount = 0.0;
+    private Double amountUsInDiscounts = 0.0;
+
+    public Double getAmountUsInDiscounts() {
+        return amountUsInDiscounts;
+    }
+
+    public void setAmountUsInDiscounts(Double amountUsInDiscounts) {
+        this.amountUsInDiscounts = amountUsInDiscounts;
+    }
 
     public void setPrice(Double price) {
         this.price = price;
     }
+
     public void setAmount(Double amount) {
         this.amount = amount;
     }
@@ -17,6 +27,7 @@ public class ProductDTO {
     public Double getPrice() {
         return price;
     }
+
     public Double getAmount() {
         return amount;
     }

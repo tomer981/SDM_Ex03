@@ -48,8 +48,14 @@
         url: CUSTOMER_URL,
         type: "GET",
         data: {action : "getDiscounts"},
-        success : function (discounts){
-            var x = 5;
+        success : function (discountsObject){
+            var discounts = $.parseJSON(discountsObject);
+            var firstTable = [];
+            discounts.forEach((discount)=>{
+                firstTable.push(Object.values(discount[0]));
+            })
+            appendToTableView(firstTable, "#buy-discounts-body");
+
         },
         error: function (){
             alert("error : getDiscounts");

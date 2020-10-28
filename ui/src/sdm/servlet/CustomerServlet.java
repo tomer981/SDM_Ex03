@@ -3,14 +3,12 @@ package sdm.servlet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dto.OrderDTO;
-import dto.ProductDTO;
-import dto.StoreDTO;
-import dto.ZoneMarketDTO;
+import dto.*;
 import market.Market;
 import xml.schema.generated.Location;
 import xml.schema.generated.SDMDiscount;
 import xml.schema.generated.SDMItem;
+import xml.schema.generated.SDMOffer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -51,36 +49,99 @@ public class CustomerServlet extends HttpServlet {
         }
     }
 
+
     private void processRequestGetDiscounts(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
         HttpSession session = req.getSession(false);
+
         Market engine = Market.getMarketInstance();
         String zoneName = (String) session.getAttribute(ZONE_NAME);
-        OrderDTO order =  (OrderDTO) session.getAttribute(CUSTOMER_ORDER);
+        ZoneMarketDTO zoneMarket = engine.getZoneMarketDTO(zoneName);
+        OrderDTO order = (OrderDTO) session.getAttribute(CUSTOMER_ORDER);
 
-        JsonArray array = new JsonArray();
-        Set<Integer> storesId = order.getKStoreVSubStore().keySet();
-        for (Integer storeId : storesId){
-            StoreDTO store = engine.getStoreDTO(zoneName,storeId);
-            List<SDMDiscount> discounts = store.getSdmStore().getSDMDiscounts().getSDMDiscount();
-            for (SDMDiscount discount : discounts){
-                Integer needToBuyProductId = discount.getIfYouBuy().getItemId();
-                SDMItem product = order.getKStoreVSubStore().get(storeId).getKProductIdVProductsSoldInfo().get(needToBuyProductId);
-                if (needToBuyProductId.equals(product.getId())){
-                    Integer needToBuyProductAmount = discount.getIfYouBuy().getQuantity();
-                    Double productAmount = order.getKStoreVSubStore().get(storeId).getKProductVForPriceAndAmountInfo().get(product).getAmount();
-                    if (order.getKStoreVSubStore().get(storeId).getKDiscountVTimeUse().containsKey(discount)){
-                        Integer timeUse = order.getKStoreVSubStore().get(storeId).getKDiscountVTimeUse().get(discount);
-                        if (productAmount - needToBuyProductAmount > timeUse * needToBuyProductAmount){
+        JsonArray arrayDiscounts = new JsonArray();
+        Set<Integer> storesId = order.getKStoreVSubOrder().keySet();
+        for (Integer storeId : storesId) {
+            StoreDTO store = engine.getStoreDTO(zoneName, storeId);
+            SubOrderDTO subOrder = order.getKStoreVSubOrder().get(storeId);
+            if (store.getSdmStore().getSDMDiscounts() != null){
+                List<SDMDiscount> discounts = store.getSdmStore().getSDMDiscounts().getSDMDiscount();
+                for (SDMDiscount discount : discounts) {
+                    Integer needToBuyProductId = discount.getIfYouBuy().getItemId();
 
+                    if (subOrder.getKProductIdVProductsSoldInfo().containsKey(needToBuyProductId)) {
+                        SDMItem product = subOrder.getKProductIdVProductsSoldInfo().get(needToBuyProductId);
+                        if (subOrder.getKProductVForPriceAndAmountInfo().containsKey(product)){
+                            ProductDTO productDTO = subOrder.getKProductVForPriceAndAmountInfo().get(product);
+                            Double amountLeft = productDTO.getAmount() - productDTO.getAmountUsInDiscounts();
+                            Integer needToBuyProductAmount = discount.getIfYouBuy().getQuantity();
+                            if (amountLeft - needToBuyProductAmount >= needToBuyProductAmount ){
+                                JsonArray arrayDiscount = new JsonArray();
+                                JsonObject buyDiscount = new JsonObject();
+                                JsonArray getDiscount = new JsonArray();
+                                JsonObject typeDiscount = new JsonObject();
+
+                                buyDiscount.addProperty("nameDiscount",discount.getName());
+                                buyDiscount.addProperty("buyProductId",needToBuyProductId);
+                                buyDiscount.addProperty("productName",product.getName());
+                                buyDiscount.addProperty("needToBuyProductAmount",needToBuyProductAmount);
+
+                                arrayDiscount.add(buyDiscount);
+                                typeDiscount.addProperty("typeDiscount",discount.getThenYouGet().getOperator());
+                                arrayDiscount.add(typeDiscount);
+
+                                for (SDMOffer offer :discount.getThenYouGet().getSDMOffer()){
+                                    JsonObject getDiscountProduct = new JsonObject();
+                                    SDMItem productGet = zoneMarket.getProductsInfo().getSDMItem().stream().filter(item-> item.getId() == offer.getItemId()).findFirst().orElse(null);
+                                    getDiscountProduct.addProperty("productId",offer.getItemId());
+                                    getDiscountProduct.addProperty("productName",productGet.getName());
+                                    getDiscountProduct.addProperty("getAmount",offer.getQuantity());
+                                    getDiscountProduct.addProperty("additionalPrice",offer.getForAdditional());
+                                    getDiscount.add(getDiscountProduct);
+                                }
+                                arrayDiscount.add(getDiscount);
+                                arrayDiscounts.add(arrayDiscount);
+                            }
                         }
                     }
                 }
-
-                if (order.getKStoreVSubStore().get(storeId).)
             }
         }
+        PrintWriter out = resp.getWriter();
+        out.println(arrayDiscounts);
+        out.flush();
+
+//        {//arrayDiscounts
+//            {//arrayDiscount
+//                {//buyDiscount (first Table)
+//                    "nameDiscount" : "half-Price",
+//                        "buyProductId" : 1,
+//                        "productName" : "banana",
+//                        "needToBuyProductAmount" : 10
+//                }
+//                {//typeDiscount (headLine)
+//                    "typeDiscount":"one of"
+//                }
+//                {//getDiscount (click On row First Get this Table)
+//                    {//getDiscountProduct
+//                        "productId": 1,
+//                            "productName": "banana",
+//                            "getAmount" : 5,
+//                            "additionalPrice" : 10
+//                    }
+//                    //.
+//                    //.
+//                    //.
+//                }
+//                //.
+//                //.
+//                //.
+//            }
+//            //.
+//            //.
+//            //.
+//        }
+
     }
 
     private void processRequestGetProductsInStore(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

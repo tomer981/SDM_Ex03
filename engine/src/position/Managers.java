@@ -104,7 +104,7 @@ public class Managers {
         }
 
         orderDTO.setTotalDeliveryCost(totalDelivery);
-        orderDTO.setKStoreVSubStore(KStoreIdVSubOrderDTO);
+        orderDTO.setKStoreVSubOrder(KStoreIdVSubOrderDTO);
 
         return orderDTO;
     }
