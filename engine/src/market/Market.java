@@ -143,7 +143,7 @@ public final class Market {
         ZoneMarket zoneMarket = KNameZoneVZone.get(managerName);
         Managers managers = KZoneVManagers.get(zoneMarket);
 
-        zoneMarket.addStoreToManager(sdmStore,manager);
+        zoneMarket.addStoreToManager(sdmStore,manager,zoneName);
         managers.addManager(manager);
     }
     public synchronized void addManager(String name, File file) {
@@ -183,8 +183,15 @@ public final class Market {
     public OrderDTO getMinOrder(String zoneName,OrderDTO orderDTO, Map<SDMItem,ProductDTO> KProductInfoVProductDTO){
         ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
         Managers managers = KZoneVManagers.get(zoneMarket);
+        Map<Integer,Integer> KProductIdVStore = managers.getProductIdToChipsetStore(KProductInfoVProductDTO);
 
-        return managers.getMinOrder(orderDTO, KProductInfoVProductDTO);
+        return managers.getOrderDTO(orderDTO, KProductInfoVProductDTO, KProductIdVStore);
+    }
+    public OrderDTO getOrderDTO(String zoneName,OrderDTO orderDTO,Map<SDMItem,ProductDTO> KProductInfoVProductDTO ,Map<Integer,Integer> KProductIdVStore){
+        ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
+        Managers managers = KZoneVManagers.get(zoneMarket);
+
+        return managers.getOrderDTO(orderDTO, KProductInfoVProductDTO, KProductIdVStore);
     }
     public Boolean isUserExist(String name){
         return KCustomerNameVCustomer.containsKey(name) || KManagerNameVManger.containsKey(name);

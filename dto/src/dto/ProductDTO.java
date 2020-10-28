@@ -3,10 +3,15 @@ package dto;
 import xml.schema.generated.SDMItem;
 import xml.schema.generated.SDMSell;
 
-public class ProductDTO {
+public class ProductDTO implements Cloneable {
     private Double price = 0.0;
     private Double amount = 0.0;
     private Double amountUsInDiscounts = 0.0;
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return (ProductDTO)super.clone();
+    }
 
     public Double getAmountUsInDiscounts() {
         return amountUsInDiscounts;

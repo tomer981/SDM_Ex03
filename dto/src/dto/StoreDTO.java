@@ -6,7 +6,7 @@ import xml.schema.generated.SDMStore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StoreDTO {
+public class StoreDTO implements Cloneable{
     private SDMStore sdmStore;//1,2,4,8 getId,getName(),getLocation(),getPpk()
     private String StoreOwnerName;//3 - getStoreOwnerName
     private Map<Integer, SubOrderDTO> KIdOrderVSubOrderDTO;//6 - getSize
@@ -14,6 +14,11 @@ public class StoreDTO {
 
     private Double moneyEarnFromProducts;//getMoneyEarnFromProducts
     private Double moneyEarnFromDelivery;//getMoneyEarnFromDelivery
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return (StoreDTO)super.clone();
+    }
 
     public SDMStore getSdmStore() {
         return sdmStore;

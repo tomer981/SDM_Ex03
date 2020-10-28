@@ -48,9 +48,9 @@
 
     function activeDiscount() {
         var data = {};
-        data["discountName"] = $("#buy-discounts-body tr").find("td:first").html();
+        data["discountName"] = $("#buy-discounts-body tr.selected").find("td:first").text();
         if ($("#type-discount").text() === "ONE-OF") {
-            var productId = $("#get-discounts-body tr").find("td:first").html();
+            var productId = $("#get-discounts-body tr.selected").find("td:first").text();
             data["productId"] = productId;
         }
         data["action"] = "addDiscountToOrder";

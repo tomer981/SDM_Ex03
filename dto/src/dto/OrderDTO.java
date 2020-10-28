@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OrderDTO {
+public class OrderDTO implements Cloneable {
     private Integer id;
     private Date date;
     private Location customerLocation;
@@ -14,6 +14,8 @@ public class OrderDTO {
     private Map<Integer, SubOrderDTO> KStoreVSubOrder = new HashMap<>();
     private Double totalDeliveryPrice = 0.0;
     private Double ProductsPrice = 0.0;
+
+
 
     //get
     public Location getCustomerLocation() {

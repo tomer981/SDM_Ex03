@@ -51,7 +51,7 @@ public class Managers {
         return order;
     }
 
-    private Map<Integer,Integer> getProductIdToChipsetStore(Map<SDMItem, ProductDTO> productsToBuy){
+    public Map<Integer,Integer> getProductIdToChipsetStore(Map<SDMItem, ProductDTO> productsToBuy){
         Map<Integer,Integer> KProductIdVStoreId = new HashMap<>();
         for (SDMItem product : productsToBuy.keySet()){
             for (Store store : KStoreIdVStore.values()){
@@ -72,9 +72,7 @@ public class Managers {
         return KProductIdVStoreId;
     }
 
-    public OrderDTO getMinOrder(OrderDTO orderDTO, Map<SDMItem, ProductDTO> productsToBuyDTO) {
-
-        Map<Integer,Integer> KProductIdVStoreId = getProductIdToChipsetStore(productsToBuyDTO);
+    public OrderDTO getOrderDTO(OrderDTO orderDTO, Map<SDMItem, ProductDTO> productsToBuyDTO, Map<Integer, Integer> KProductIdVStoreId) {
         Map<Integer, SubOrderDTO> KStoreIdVSubOrderDTO = new HashMap<>();
 
         for (SDMItem product : productsToBuyDTO.keySet()){
@@ -97,7 +95,7 @@ public class Managers {
 
 
         Double totalDelivery = 0.0;
-        for (Integer storeId : KProductIdVStoreId.values()){
+        for (Integer storeId : new HashSet<>(KProductIdVStoreId.values())){
             Store store = KStoreIdVStore.get(storeId);
             Location storeLocation = store.getStoreInfo().getLocation();
             Double deliveryCost = SubOrder.getDistance(orderDTO.getCustomerLocation(), storeLocation) * store.getStoreInfo().getDeliveryPpk();

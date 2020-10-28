@@ -59,7 +59,7 @@ public class ZoneMarket {
 
         List <SDMStore> storesInfo = schema.getXmlZoneMarket().getSDMStores().getSDMStore();
         for(SDMStore sdmStore : storesInfo){
-            addStoreToManager(sdmStore,manager);
+            addStoreToManager(sdmStore,manager,zoneName);
         }
     }
 
@@ -74,7 +74,7 @@ public class ZoneMarket {
 
         return KManagerNameVManagerDTO;
     }
-    public void addStoreToManager(SDMStore store, Manager manager){
+    public void addStoreToManager(SDMStore store, Manager manager, String zoneName){
         if (!KManagerNameVManager.containsValue(manager)){
             KManagerNameVManager.put(manager.getName(),manager);
         }
