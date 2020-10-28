@@ -6,6 +6,7 @@ import dto.ZoneMarketDTO;
 import order.Order;
 import position.Manager;
 import xml.schema.SchemaBaseJaxbObjects;
+import xml.schema.generated.SDMDiscount;
 import xml.schema.generated.SDMItem;
 import xml.schema.generated.SDMItems;
 import xml.schema.generated.SDMStore;
@@ -48,6 +49,7 @@ public class ZoneMarket {
     public List<OrderDTO> getOrdersDTOByIds(List<Integer> ordersId){
         return getOrdersDTO().stream().filter(orderDTO -> ordersId.contains(orderDTO.getId())).collect(Collectors.toList());
     }
+
 
     //c'tor
     public ZoneMarket(SchemaBaseJaxbObjects schema, Manager manager){

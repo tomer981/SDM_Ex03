@@ -6,6 +6,8 @@ import order.Order;
 import order.SubOrder;
 import store.Store;
 import xml.schema.generated.Location;
+import xml.schema.generated.SDMDiscount;
+import xml.schema.generated.SDMDiscounts;
 import xml.schema.generated.SDMItem;
 
 import java.util.*;
@@ -113,5 +115,18 @@ public class Managers {
         List<StoreDTO> storesDTO = new ArrayList<>();
         KStoreIdVStore.values().forEach(store -> storesDTO.add(store.getStoreDTO()));
         return storesDTO;
+    }
+
+    public Map<SDMDiscount, Integer> getStoresDiscounts(Set<Integer> storesId) {
+        Map<SDMDiscount, Integer> KDiscountVStoreId = new HashMap<>();
+
+        for (Integer storeId : storesId){
+            StoreDTO store = getStoreDTO(storeId);
+            SDMDiscounts storeDiscounts = store.getSdmStore().getSDMDiscounts();
+            if (storeDiscounts !=null){
+                storeDiscounts.getSDMDiscount().forEach(sdmDiscount -> KDiscountVStoreId.put(sdmDiscount,storeId));
+            }
+        }
+        return KDiscountVStoreId;
     }
 }

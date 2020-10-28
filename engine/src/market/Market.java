@@ -7,9 +7,7 @@ import position.Customer;
 import position.Manager;
 import position.Managers;
 import xml.schema.SchemaBaseJaxbObjects;
-import xml.schema.generated.Location;
-import xml.schema.generated.SDMItem;
-import xml.schema.generated.SDMStore;
+import xml.schema.generated.*;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -114,7 +112,11 @@ public final class Market {
         List<StoreDTO> stores = getStoresDTO(zoneName);
         return stores.stream().map(StoreDTO::getSdmStore).map(SDMStore::getLocation).collect(Collectors.toList());
     }
-
+    public Map<SDMDiscount, Integer> getStoresDiscounts(String zoneName, Set<Integer> storesId){
+        ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
+        Managers managers = KZoneVManagers.get(zoneMarket);
+        return managers.getStoresDiscounts(storesId);
+    }
     //////////method private
     private synchronized void addZoneMarket(File file, Manager manager) {
         SchemaBaseJaxbObjects schema = new SchemaBaseJaxbObjects(file);

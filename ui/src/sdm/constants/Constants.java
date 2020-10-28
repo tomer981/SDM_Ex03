@@ -36,6 +36,7 @@ public class Constants {
     public static final String ADD_NEW_ORDER_STATIC_PRODUCTS_ACTION = "addStoreProducts";//POST
     public static final String ADD_NEW_ORDER_DYNAMIC_PRODUCTS_ACTION = "addDynamicProducts";//POST
     public static final String GET_DISCOUNTS_ACTION = "getDiscounts";//GET
+    public static final String ADD_DISCOUNT_TO_ORDER_ACTION = "addDiscountToOrder";//POST
 
 
     //ManagerServlet

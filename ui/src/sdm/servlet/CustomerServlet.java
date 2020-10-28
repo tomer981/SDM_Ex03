@@ -5,10 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dto.*;
 import market.Market;
-import xml.schema.generated.Location;
-import xml.schema.generated.SDMDiscount;
-import xml.schema.generated.SDMItem;
-import xml.schema.generated.SDMOffer;
+import xml.schema.generated.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -22,6 +19,7 @@ import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static sdm.constants.Constants.*;
 
@@ -50,6 +48,7 @@ public class CustomerServlet extends HttpServlet {
     }
 
 
+
     private void processRequestGetDiscounts(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         HttpSession session = req.getSession(false);
@@ -64,42 +63,51 @@ public class CustomerServlet extends HttpServlet {
         for (Integer storeId : storesId) {
             StoreDTO store = engine.getStoreDTO(zoneName, storeId);
             SubOrderDTO subOrder = order.getKStoreVSubOrder().get(storeId);
-            if (store.getSdmStore().getSDMDiscounts() != null){
+            if (store.getSdmStore().getSDMDiscounts() != null) {
                 List<SDMDiscount> discounts = store.getSdmStore().getSDMDiscounts().getSDMDiscount();
                 for (SDMDiscount discount : discounts) {
                     Integer needToBuyProductId = discount.getIfYouBuy().getItemId();
 
                     if (subOrder.getKProductIdVProductsSoldInfo().containsKey(needToBuyProductId)) {
                         SDMItem product = subOrder.getKProductIdVProductsSoldInfo().get(needToBuyProductId);
-                        if (subOrder.getKProductVForPriceAndAmountInfo().containsKey(product)){
+                        if (subOrder.getKProductVForPriceAndAmountInfo().containsKey(product)) {
                             ProductDTO productDTO = subOrder.getKProductVForPriceAndAmountInfo().get(product);
                             Double amountLeft = productDTO.getAmount() - productDTO.getAmountUsInDiscounts();
                             Integer needToBuyProductAmount = discount.getIfYouBuy().getQuantity();
-                            if (amountLeft - needToBuyProductAmount >= needToBuyProductAmount ){
-                                JsonArray arrayDiscount = new JsonArray();
-                                JsonObject buyDiscount = new JsonObject();
-                                JsonArray getDiscount = new JsonArray();
-                                JsonObject typeDiscount = new JsonObject();
+                            if (amountLeft - needToBuyProductAmount >= needToBuyProductAmount) {
+                                JsonArray arrayDiscount = new JsonArray();//[buyDiscount,nameVGetDiscountInfo]
+                                JsonObject buyDiscount = new JsonObject();// {} V
+                                JsonObject nameVGetDiscountInfo = new JsonObject();//{discount.getName() : getDiscountInfo}
+                                JsonArray getDiscountInfo = new JsonArray();// [typeDiscount,getDiscountProducts] V
+                                JsonObject typeDiscount = new JsonObject();//{"typeDiscount" : op} V
+                                JsonArray getDiscountProducts = new JsonArray();//[getDiscountProduct1,getDiscountProduct2,...] V
 
-                                buyDiscount.addProperty("nameDiscount",discount.getName());
-                                buyDiscount.addProperty("buyProductId",needToBuyProductId);
-                                buyDiscount.addProperty("productName",product.getName());
-                                buyDiscount.addProperty("needToBuyProductAmount",needToBuyProductAmount);
+                                buyDiscount.addProperty("discountName", discount.getName());
+                                buyDiscount.addProperty("buyProductId", needToBuyProductId);
+                                buyDiscount.addProperty("productName", product.getName());
+                                buyDiscount.addProperty("needToBuyProductAmount", needToBuyProductAmount);
+
+
+                                typeDiscount.addProperty("typeDiscount", discount.getThenYouGet().getOperator());
+
+                                for (SDMOffer offer : discount.getThenYouGet().getSDMOffer()) {
+                                    JsonObject getDiscountProduct = new JsonObject();
+                                    SDMItem productGet = getSDMItem(zoneName, offer.getItemId());
+                                    getDiscountProduct.addProperty("productId", offer.getItemId());
+                                    getDiscountProduct.addProperty("productName", productGet.getName());
+                                    getDiscountProduct.addProperty("getAmount", offer.getQuantity());
+                                    getDiscountProduct.addProperty("additionalPrice", offer.getForAdditional());
+                                    getDiscountProducts.add(getDiscountProduct);
+                                }
+
+                                getDiscountInfo.add(getDiscountProducts);
+                                getDiscountInfo.add(typeDiscount);
+
+                                nameVGetDiscountInfo.addProperty(discount.getName(), getDiscountInfo.toString());
 
                                 arrayDiscount.add(buyDiscount);
-                                typeDiscount.addProperty("typeDiscount",discount.getThenYouGet().getOperator());
-                                arrayDiscount.add(typeDiscount);
+                                arrayDiscount.add(nameVGetDiscountInfo);
 
-                                for (SDMOffer offer :discount.getThenYouGet().getSDMOffer()){
-                                    JsonObject getDiscountProduct = new JsonObject();
-                                    SDMItem productGet = zoneMarket.getProductsInfo().getSDMItem().stream().filter(item-> item.getId() == offer.getItemId()).findFirst().orElse(null);
-                                    getDiscountProduct.addProperty("productId",offer.getItemId());
-                                    getDiscountProduct.addProperty("productName",productGet.getName());
-                                    getDiscountProduct.addProperty("getAmount",offer.getQuantity());
-                                    getDiscountProduct.addProperty("additionalPrice",offer.getForAdditional());
-                                    getDiscount.add(getDiscountProduct);
-                                }
-                                arrayDiscount.add(getDiscount);
                                 arrayDiscounts.add(arrayDiscount);
                             }
                         }
@@ -110,38 +118,12 @@ public class CustomerServlet extends HttpServlet {
         PrintWriter out = resp.getWriter();
         out.println(arrayDiscounts);
         out.flush();
+    }
 
-//        {//arrayDiscounts
-//            {//arrayDiscount
-//                {//buyDiscount (first Table)
-//                    "nameDiscount" : "half-Price",
-//                        "buyProductId" : 1,
-//                        "productName" : "banana",
-//                        "needToBuyProductAmount" : 10
-//                }
-//                {//typeDiscount (headLine)
-//                    "typeDiscount":"one of"
-//                }
-//                {//getDiscount (click On row First Get this Table)
-//                    {//getDiscountProduct
-//                        "productId": 1,
-//                            "productName": "banana",
-//                            "getAmount" : 5,
-//                            "additionalPrice" : 10
-//                    }
-//                    //.
-//                    //.
-//                    //.
-//                }
-//                //.
-//                //.
-//                //.
-//            }
-//            //.
-//            //.
-//            //.
-//        }
-
+    private SDMItem getSDMItem(String zoneName, Integer ProductId){
+        Market engine = Market.getMarketInstance();
+        ZoneMarketDTO zoneMarket = engine.getZoneMarketDTO(zoneName);
+        return zoneMarket.getProductsInfo().getSDMItem().stream().filter(item -> item.getId() == ProductId).findFirst().orElse(null);
     }
 
     private void processRequestGetProductsInStore(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -249,6 +231,87 @@ public class CustomerServlet extends HttpServlet {
 
     }//TODO: complete this after Dynamic
 
+
+    private Set<Integer> getStoreIdsInOrder(HttpServletRequest req){
+        HttpSession session = req.getSession(false);
+        OrderDTO order = (OrderDTO) session.getAttribute(CUSTOMER_ORDER);
+        String zoneName = (String) session.getAttribute(ZONE_NAME);
+        Market engine = Market.getMarketInstance();
+        Set<Integer> storesId = order.getKStoreVSubOrder().keySet();
+        return storesId;
+    }
+
+//    private List<StoreDTO> getStoreInOrder(String zoneName,Set<Integer> storesId){
+//        Market engine = Market.getMarketInstance();
+//        List<StoreDTO> storesInOrder = new ArrayList<>();
+//        for (Integer storeId : storesId){
+//            storesInOrder.add(engine.getStoreDTO(zoneName, storeId));
+//        }
+//
+//        return storesInOrder;
+//    }
+
+    private void processRequestAddDiscountToOrder(HttpServletRequest req, HttpServletResponse resp) {
+        HttpSession session = req.getSession(false);
+
+        String zoneName = (String) session.getAttribute(ZONE_NAME);
+        OrderDTO order = (OrderDTO) session.getAttribute(CUSTOMER_ORDER);
+        String discountName = req.getParameter("discountName");
+        Market engine = Market.getMarketInstance();
+        Map<SDMDiscount,Integer> KDiscountVStoreId =  engine.getStoresDiscounts(zoneName,getStoreIdsInOrder(req));
+        SDMDiscount discount = KDiscountVStoreId.keySet().stream().filter(sdmDiscount -> sdmDiscount.getName().equals(discountName)).findFirst().get();
+        Integer storeId = KDiscountVStoreId.get(discount);
+        SDMItem productCondition = getSDMItem(zoneName, discount.getIfYouBuy().getItemId());
+
+
+        SubOrderDTO subOrderDTO = order.getKStoreVSubOrder().get(storeId);
+        ProductDTO productInfo = subOrderDTO.getKProductVForPriceAndAmountInfo().get(productCondition);
+
+
+        List<SDMItem> getProducts = new ArrayList<>();
+
+        if (discount.getThenYouGet().getOperator().equals("ONE-OF")){
+            Integer getProductId = Integer.valueOf(req.getParameter("productsId"));
+            getProducts.add(getSDMItem(zoneName, getProductId));
+            SDMOffer offer = discount.getThenYouGet().getSDMOffer().stream().filter(sdmOffer -> sdmOffer.getItemId()==getProductId).findFirst().get();
+            Double productsPriceSubOrder = offer.getForAdditional() + subOrderDTO.getProductsPrice();
+            Double productsPriceOrder = offer.getForAdditional() + order.getProductsPrice();
+            subOrderDTO.setProductsPrice(productsPriceSubOrder);
+            order.setProductsPrice(productsPriceOrder);
+        } else {
+            SubOrderDTO finalSubOrderDTO = subOrderDTO;
+            discount.getThenYouGet().getSDMOffer().forEach(
+                    sdmOffer ->{
+                        getProducts.add(getSDMItem(zoneName,sdmOffer.getItemId()));
+                        Double productsPriceSubOrder = sdmOffer.getForAdditional() + finalSubOrderDTO.getProductsPrice();
+                        Double productsPriceOrder = sdmOffer.getForAdditional() + order.getProductsPrice();
+                        finalSubOrderDTO.setProductsPrice(productsPriceSubOrder);
+                        order.setProductsPrice(productsPriceOrder);
+                    } );
+            subOrderDTO = finalSubOrderDTO;
+        }
+
+        subOrderDTO = updateOrderByApplyDiscount(getProducts,subOrderDTO,discount,productInfo,productCondition);
+        order.getKStoreVSubOrder().put(storeId,subOrderDTO);
+        session.setAttribute(CUSTOMER_ORDER,order);
+
+
+    }
+
+    private SubOrderDTO updateOrderByApplyDiscount(List<SDMItem> products, SubOrderDTO subOrderDTO, SDMDiscount discount,ProductDTO buyProductInfo, SDMItem productCondition) {
+        Double amountUseInDiscount = buyProductInfo.getAmountUsInDiscounts() + discount.getIfYouBuy().getQuantity();
+        Integer timeUseDiscount = subOrderDTO.getKDiscountVTimeUse().get(discount) + 1;
+        buyProductInfo.setAmountUsInDiscounts(amountUseInDiscount);
+
+        for (SDMItem product : products){
+            subOrderDTO.getKProductIdVProductsSoldInfo().put(product.getId(),product);
+        }
+
+        subOrderDTO.getKProductVForPriceAndAmountInfo().put(productCondition, buyProductInfo);
+        subOrderDTO.getKDiscountVTimeUse().put(discount,timeUseDiscount);
+        return subOrderDTO;
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter(ACTION);
@@ -265,8 +328,12 @@ public class CustomerServlet extends HttpServlet {
             case ADD_NEW_ORDER_DYNAMIC_PRODUCTS_ACTION:
                 processRequestAddDynamicProducts(req, resp);
                 break;
+            case ADD_DISCOUNT_TO_ORDER_ACTION:
+                processRequestAddDiscountToOrder(req, resp);
+                break;
         }
     }
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

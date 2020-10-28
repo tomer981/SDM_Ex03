@@ -44,7 +44,7 @@
         <tbody id="buy-products-body">
         </tbody>
     </table>
-    <button id="next" type="button" onclick="nextPage()">next</button>
+    <button id="next" type="button" onclick="nextPage()">Next</button>
 </div>
 <script type="text/javascript">
     isSessionExist({action: "isSessionExist", userNotFoundPage: "../../../../index.html", userFoundPage: ""});
@@ -94,29 +94,6 @@
     }
 
     function makeAmountChangeable() {
-        // const columns = [{
-        //     dataField: 'Amount',
-        //     text: 'Amount',
-        //     editorClasses: 'edit-amount'
-        // }]
-        // $('#products-table').SetEditable();
-        // $('#products-table').editable().
-        // var len = $('#buy-products-body tr:first td').length - 1;
-        // $('#products-table').editable
-        // SetEditable({
-        //     editButton: false,
-        //     deleteButton: false,
-        //     hideIdentifier: true,
-        //     columns: {
-        //         keyField: "Amount",
-        //         cellEdit:{ cellEditFactory({ mode: 'click' }) }
-        //         identifier: [0, 'id'],
-        //         editable: [[2, 'first'], [3, 'last'],[3, 'nickname']]
-        //     },
-        //
-        //     columnsEd:"4"
-        // });
-
         var option = {type: "textarea", action: "click"};
 
         for (var index in $('#buy-products-body tr').find("td:last")) {

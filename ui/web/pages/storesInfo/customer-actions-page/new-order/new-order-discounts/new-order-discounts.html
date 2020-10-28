@@ -16,7 +16,7 @@
 </head>
 <body>
 <div style="overflow-x:auto;">
-    <h3> New Order - Discounts</h3>
+    <h2> New Order - Discounts</h2>
     <table>
         <thead id="buy-discounts-head">
         <th>Name</th>
@@ -28,10 +28,9 @@
         </tbody>
     </table>
 
-    <h2 id="type-discount"></h2>
+    <h3 id="type-discount"></h3>
     <table>
         <thead id="get-discounts-head">
-        <th>Type</th>
         <th>Product Id</th>
         <th>Product Name</th>
         <th>Amount</th>
@@ -40,28 +39,80 @@
         <tbody id="get-discounts-body">
         </tbody>
     </table>
-
+    <button id="activeDiscount" type="button" disabled="disabled" onclick="activeDiscount()">Add Discount To Order</button>
+    <button id="next" type="button" onclick="nextPage()">Next</button>
 </div>
 <script type="text/javascript">
-    // isSessionExist({action: "isSessionExist", userNotFoundPage: "../../../../../index.html", userFoundPage: ""});
+    isSessionExist({action: "isSessionExist", userNotFoundPage: "../../../../../index.html", userFoundPage: ""});
+    var KDiscountNameVGetDiscountInfo = {}
+
+    function activeDiscount() {
+        var data = {};
+        data["discountName"] = $("#buy-discounts-body tr").find("td:first").html();
+        if ($("#type-discount").text() === "ONE-OF") {
+            var productId = $("#get-discounts-body tr").find("td:first").html();
+            data["productId"] = productId;
+        }
+        data["action"] = "addDiscountToOrder";
+        $.ajax({
+            type: "POST",
+            url: CUSTOMER_URL,
+            data: data,
+            success: function () {
+                window.location.reload();
+            },
+            error: function (){
+                alert("error");
+            }
+        });
+    }
+
+    function addBuyDiscountTable(discounts){
+        var discountsTable = [];
+        discounts.forEach((discount) => {
+            discountsTable.push(Object.values(discount[0]));
+            KDiscountNameVGetDiscountInfo[discount[0].discountName] = $.parseJSON(discount[1][discount[0].discountName]);
+        })
+
+        appendToTableView(discountsTable, "#buy-discounts-body");
+    }
+
+    function addGetDiscountTable(){
+        $("#buy-discounts-body tr").click(function () {
+            $("#get-discounts-body").empty();
+            $("#activeDiscount").prop("disabled", true);
+            $(this).addClass("selected").siblings().removeClass("selected");
+            var discountName = $(this).find("td:first").html();
+            $("#type-discount").text(KDiscountNameVGetDiscountInfo[discountName][1].typeDiscount);
+            appendToTableView(KDiscountNameVGetDiscountInfo[discountName][0], "#get-discounts-body");
+            defineActiveButton();
+        })
+
+    }
+
+    function defineActiveButton() {
+        if ($("#type-discount").text() === "ONE-OF") {
+            $("#get-discounts-body tr").click(function () {
+                    $(this).addClass("selected").siblings().removeClass("selected");
+                    $("#activeDiscount").prop("disabled", false);
+                }
+            )
+        } else {
+            $("#activeDiscount").prop("disabled", false);
+        }
+    }
+
     $.ajax({
         url: CUSTOMER_URL,
         type: "GET",
-        data: {action : "getDiscounts"},
-        success : function (discountsObject){
-            var discounts = $.parseJSON(discountsObject);
-            var firstTable = [];
-            discounts.forEach((discount)=>{
-                firstTable.push(Object.values(discount[0]));
-            })
-            appendToTableView(firstTable, "#buy-discounts-body");
-
-
+        data: {action: "getDiscounts"},
+        success: function (discountsObject) {
+            addBuyDiscountTable($.parseJSON(discountsObject));
+            addGetDiscountTable();
         },
-        error: function (){
+        error: function () {
             alert("error : getDiscounts");
         }
-
     });
 
 
