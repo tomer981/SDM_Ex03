@@ -1,10 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Tomcat 8.5.58 @ Aviad" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 8.5.58" ALTERNATIVE_JRE_ENABLED="false">
-    <option name="OPEN_IN_BROWSER" value="false" />
+  <configuration default="false" name="Tomcat 8.5.58" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 8.5.58" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
     <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8080/SDM" />
-    <option name="BROWSER_ID" value="e5120d43-2c3f-47ef-9f26-65e539e05186" />
-    <option name="SHOW_DIALOG_ON_UPDATE" value="false" />
-    <option name="UPDATING_POLICY" value="restart-server" />
+    <option name="UPDATING_POLICY" value="redeploy-artifacts" />
     <deployment>
       <artifact name="ui:Web exploded">
         <settings>
@@ -13,15 +10,15 @@
       </artifact>
     </deployment>
     <server-settings>
-      <option name="BASE_DIRECTORY_NAME" value="Unnamed_SDM_Ex03" />
+      <option name="BASE_DIRECTORY_NAME" value="Unnamed_SDM_Ex03_2" />
     </server-settings>
-    <log_file alias="Tomcat Manager Log" path="%IDEA_RUN:CATALINA_BASE%/logs/manager.*" skipped="false" />
-    <log_file alias="Tomcat Host Manager Log" path="%IDEA_RUN:CATALINA_BASE%/logs/host-manager.*" skipped="false" />
-    <log_file alias="Tomcat Localhost Access Log" path="%IDEA_RUN:CATALINA_BASE%/logs/localhost_access_log.*" skipped="false" />
     <predefined_log_file enabled="true" id="Tomcat" />
     <predefined_log_file enabled="true" id="Tomcat Catalina" />
+    <predefined_log_file id="Tomcat Manager" />
+    <predefined_log_file id="Tomcat Host Manager" />
+    <predefined_log_file id="Tomcat Localhost Access" />
     <RunnerSettings RunnerId="Debug">
-      <option name="DEBUG_PORT" value="64914" />
+      <option name="DEBUG_PORT" value="51891" />
     </RunnerSettings>
     <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
       <option name="USE_ENV_VARIABLES" value="true" />
@@ -56,28 +53,23 @@
     <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Run">
       <option name="USE_ENV_VARIABLES" value="true" />
       <STARTUP>
-        <option name="USE_DEFAULT" value="false" />
-        <option name="SCRIPT" value="/bin/sh %IDEA_RUN:TOMCAT_HOME%/bin/catalina.sh run" />
+        <option name="USE_DEFAULT" value="true" />
+        <option name="SCRIPT" value="" />
         <option name="VM_PARAMETERS" value="" />
         <option name="PROGRAM_PARAMETERS" value="" />
       </STARTUP>
       <SHUTDOWN>
-        <option name="USE_DEFAULT" value="false" />
-        <option name="SCRIPT" value="/bin/sh %IDEA_RUN:TOMCAT_HOME%/bin/catalina.sh stop" />
+        <option name="USE_DEFAULT" value="true" />
+        <option name="SCRIPT" value="" />
         <option name="VM_PARAMETERS" value="" />
         <option name="PROGRAM_PARAMETERS" value="" />
       </SHUTDOWN>
-      <EnvironmentVariables>
-        <option name="NAME" value="CATALINA_OPTS" />
-        <option name="VALUE" value="-Dcom.sun.management.jmxremotads= -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false" />
-        <option name="IS_PREDEFINED" value="false" />
-      </EnvironmentVariables>
     </ConfigurationWrapper>
     <method v="2">
       <option name="Make" enabled="true" />
-      <option name="BuildArtifacts" enabled="true" />
-      <option name="BuildArtifacts" enabled="true" />
-      <option name="BuildArtifacts" enabled="true" />
+      <option name="BuildArtifacts" enabled="true">
+        <artifact name="ui:Web exploded" />
+      </option>
     </method>
   </configuration>
 </component>
