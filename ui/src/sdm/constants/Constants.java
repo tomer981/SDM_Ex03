@@ -37,9 +37,17 @@ public class Constants {
     public static final String ADD_NEW_ORDER_DYNAMIC_PRODUCTS_ACTION = "addDynamicProducts";//POST
     public static final String GET_DISCOUNTS_ACTION = "getDiscounts";//GET
     public static final String ADD_DISCOUNT_TO_ORDER_ACTION = "addDiscountToOrder";//POST
+    public static final String GET_STORE_ORDER_DETAILS_ACTION = "getStoreOrderDetails";//GET
+    public static final String GET_STORES_IN_ORDER_DETAILS_ACTION = "getStoreInOrderInfo";//GET
 
 
     //ManagerServlet
+
+
+    //OrderServlet
+    public static final String GET_IN_PROGRESS_ORDER_ACTION =  "getInProgressOrder";//POST
+    public static final String GET_DISPLAY_ORDER_ACTION =  "getDisplayOrder";//POST
+
 
 
 }

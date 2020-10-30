@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Order Dynamic Details</title>
+    <script type="text/javascript" src="../../../../../common/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="../../../../../common/jquery.editable.js"></script>
+    <script type="text/javascript" src="../../../../../common/bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../../common/bootstrap-4.5.3-dist/js/bootstable.js"></script>
+
+    <script type="text/javascript" src="../../../../../common/context-path-helper.js"></script>
+    <script type="text/javascript" src="../../../../../common/urls.js"></script>
+    <script type="text/javascript" src="../../../../../common/is-session-exist.js"></script>
+    <script type="text/javascript" src="../../../../../common/generalMethods.js"></script>
+    <link rel="stylesheet" href="../../../../../common/styleTable.css">
+</head>
+<body>
+<div style="overflow-x:auto;">
+    <div id="scroll-details-Container">
+    </div>
+    <p id="store-id">
+    <p><br>
+    <p id="store-name">
+    <p><br>
+    <p id="store-location">
+    <p><br>
+    <p id="type-products-sold">
+    <p><br>
+    <p id="total-products-sold">
+    <p><br>
+        <button id="next" type="button" onclick="location.href='../new-order-discounts/new-order-discounts.html';">Next</button>
+</div>
+<script type="text/javascript">
+    isSessionExist({action: "isSessionExist", userNotFoundPage: "../../../../../index.html", userFoundPage: ""});
+
+    $.ajax({
+        type: "Get",
+        url: CUSTOMER_URL,
+        data: {action: "getStoreInOrderInfo"},
+        success: function (storesDetails) {
+            appendToScrollBar(storesDetails,"scroll-details-Container", "store-selector"," -- Select Store -- ","selectedStore()" )
+        }
+    })
+    function selectedStore(){
+        $.ajax({
+            type: "Get",
+            url: CUSTOMER_URL,
+            data: {action: "getStoreOrderDetails" , storeId : $("#store-selector").val()},
+            success: function (storeDetails) {
+                var x = 5;
+                $("#store-id").text("Id: " + storeDetails.storeId);
+                $("#store-name").text("Name: " + storeDetails.storeName);
+                $("#store-location").text("Location: " + storeDetails.location);
+                $("#type-products-sold").text("Number Of Type Sold: " + storeDetails.typeProducts);
+                $("#total-products-sold").text("Products Costs: " + storeDetails.productsOrderCost);
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

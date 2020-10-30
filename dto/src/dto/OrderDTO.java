@@ -11,7 +11,7 @@ public class OrderDTO implements Cloneable {
     private Location customerLocation;
     private String customerName;
 
-    private Map<Integer, SubOrderDTO> KStoreVSubOrder = new HashMap<>();
+    private Map<Integer, SubOrderDTO> KStoreIdVSubOrder = new HashMap<>();
     private Double totalDeliveryPrice = 0.0;
     private Double ProductsPrice = 0.0;
 
@@ -30,8 +30,8 @@ public class OrderDTO implements Cloneable {
     public Double getProductsPrice() {
         return ProductsPrice;
     }
-    public Map<Integer, SubOrderDTO> getKStoreVSubOrder() {
-        return KStoreVSubOrder;
+    public Map<Integer, SubOrderDTO> getKStoreIdVSubOrder() {
+        return KStoreIdVSubOrder;
     }
     public Double getTotalDeliveryPrice() {
         return totalDeliveryPrice;
@@ -47,8 +47,8 @@ public class OrderDTO implements Cloneable {
     public void setProductsPrice(Double productsPrice) {
         ProductsPrice = productsPrice;
     }
-    public void setKStoreVSubOrder(Map<Integer, SubOrderDTO> KStoreVSubOrder) {
-        this.KStoreVSubOrder = KStoreVSubOrder;
+    public void setKStoreIdVSubOrder(Map<Integer, SubOrderDTO> KStoreIdVSubOrder) {
+        this.KStoreIdVSubOrder = KStoreIdVSubOrder;
     }
     public void setId(Integer id) {
         this.id = id;

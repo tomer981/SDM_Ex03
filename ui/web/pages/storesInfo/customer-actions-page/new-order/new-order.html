@@ -99,20 +99,19 @@
         for (var index in $('#buy-products-body tr').find("td:last")) {
             $('#buy-products-body tr').find("td:last").eq(index).editable(option, function (e) {
 
-                if (e.value === "" ){
+                if (e.value === "") {
                     e.target.html("0");
-                }else if(parseFloat(e.value) <= 0){
+                } else if (parseFloat(e.value) <= 0) {
                     e.target.html("0");
-                } else if ($(e.target).parent().find("td:contains(Weight)").text() === "Weight"){
+                } else if ($(e.target).parent().find("td:contains(Weight)").text() === "Weight") {
                     if (!isFloat(e.value)) {
                         e.target.html(e.old_value);
-                    }
-                    else {
+                    } else {
                         e.target.html(e.value.replace(/^0+/, ''));
                     }
-                } else  if (!isInt(e.value)){
+                } else if (!isInt(e.value)) {
                     e.target.html(e.old_value);
-                }else {
+                } else {
                     e.target.html(e.value.replace(/^0+/, ''));
                 }
             })
@@ -156,32 +155,36 @@
         return false;
     })
 
-    function nextPage(){
+    function nextPage() {
         var isItemSold = false;
         var isDynamicOrder = ($("#buy-products-head").find("th:contains(Price)").text() === "")
-        if ($("#buy-products-body tr").children().text() === ""){return ;}
+        if ($("#buy-products-body tr").children().text() === "") {
+            return;
+        }
         var jsonProducts = {};
-        for (var index = 0; index < $("#buy-products-body tr").length ;index++){
+        for (var index = 0; index < $("#buy-products-body tr").length; index++) {
             var product = $("#buy-products-body tr")[index].childNodes;
-            if (isDynamicOrder){
+            if (isDynamicOrder) {
                 jsonProducts[product.item(0).textContent] = product.item(3).textContent;
                 isItemSold = isItemSold || (product.item(3).textContent > 0)
-            }else {
+            } else {
                 jsonProducts[product.item(0).textContent] = product.item(4).textContent;
                 isItemSold = isItemSold || (product.item(4).textContent > 0)
             }
         }
-        if (isItemSold === false ){return;}
+        if (isItemSold === false) {
+            return;
+        }
         jsonProducts["date"] = $("#date").val();
         jsonProducts["cordX"] = $("#cord-x").find("option:selected").attr("value")
         jsonProducts["cordY"] = $("#cord-y").find("option:selected").attr("value")
 
         var data = {};
-        if (isDynamicOrder){
-            data = {action : "addDynamicProducts", jsonData : JSON.stringify(jsonProducts) }
-        }else{
+        if (isDynamicOrder) {
+            data = {action: "addDynamicProducts", jsonData: JSON.stringify(jsonProducts)}
+        } else {
             jsonProducts["storeId"] = $("#store-selector").val();
-            data = {action : "addStoreProducts", jsonData : JSON.stringify(jsonProducts) }
+            data = {action: "addStoreProducts", jsonData: JSON.stringify(jsonProducts)}
         }
 
         $.ajax({
@@ -189,9 +192,13 @@
             url: CUSTOMER_URL,
             data: data,
             success: function () {
-                window.location.replace("new-order-discounts/new-order-discounts.html");
+                if (data["action"] === "addDynamicProducts") {
+                    window.location.replace("show-dynamic-details/show-dynamic-details.html");
+                } else {
+                    window.location.replace("new-order-discounts/new-order-discounts.html");
+                }
             },
-            error: function (){
+            error: function () {
                 alert("error");
             }
         });

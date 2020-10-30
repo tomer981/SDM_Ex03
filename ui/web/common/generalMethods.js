@@ -15,6 +15,22 @@ function appendToTableView(arrObject, idAddTo) {
     })
 }
 
+function appendToTableViewInPage(arrObject, tbodyElement) {
+    if (arrObject === "") {
+        return
+    }
+    arrObject.forEach((object) => {
+        var output = "<tr>";
+        for (var key in object) {
+            if (object.hasOwnProperty(key)) {
+                output += "<td>" + object[key] + "</td>";
+            }
+        }
+        output += "</tr>";
+        $(output).appendTo(tbodyElement);
+    })
+}
+
 //appendToScrollBar(arrStoresInfo, "choose-store", "#store-selector", " -- Select Store -- ", "");
 function appendToScrollBar(arrObject, divIdAddTo, idSelector , textSelection , onchangeFunction){
     if (arrObject === "") {

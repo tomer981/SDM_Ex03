@@ -19,13 +19,20 @@ import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static sdm.constants.Constants.*;
 
 @WebServlet(name = "CustomerServlet", urlPatterns = {"/CustomerServlet"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class CustomerServlet extends HttpServlet {
+
+    private JsonObject getStoreInfo(StoreDTO store){
+        JsonObject json = new JsonObject();
+        json.addProperty("value", store.getSdmStore().getId());
+        json.addProperty("storeName", store.getSdmStore().getName());
+        return json;
+    }
+
 
     private void processRequestGetStoreInfo(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -37,16 +44,12 @@ public class CustomerServlet extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
             for (StoreDTO store : engine.getStoresDTO(zoneName)) {
-                JsonObject json = new JsonObject();
-                json.addProperty("value", store.getSdmStore().getId());
-                json.addProperty("storeName", store.getSdmStore().getName());
-                array.add(json);
+                array.add(getStoreInfo(store));
             }
             out.println(array);
             out.flush();
         }
     }
-
 
 
     private void processRequestGetDiscounts(HttpServletRequest req, HttpServletResponse resp)
@@ -59,10 +62,10 @@ public class CustomerServlet extends HttpServlet {
         OrderDTO order = (OrderDTO) session.getAttribute(CUSTOMER_ORDER);
 
         JsonArray arrayDiscounts = new JsonArray();
-        Set<Integer> storesId = order.getKStoreVSubOrder().keySet();
+        Set<Integer> storesId = order.getKStoreIdVSubOrder().keySet();
         for (Integer storeId : storesId) {
             StoreDTO store = engine.getStoreDTO(zoneName, storeId);
-            SubOrderDTO subOrder = order.getKStoreVSubOrder().get(storeId);
+            SubOrderDTO subOrder = order.getKStoreIdVSubOrder().get(storeId);
             if (store.getSdmStore().getSDMDiscounts() != null) {
                 List<SDMDiscount> discounts = store.getSdmStore().getSDMDiscounts().getSDMDiscount();
                 for (SDMDiscount discount : discounts) {
@@ -120,7 +123,7 @@ public class CustomerServlet extends HttpServlet {
         out.flush();
     }
 
-    private SDMItem getSDMItem(String zoneName, Integer ProductId){
+    private SDMItem getSDMItem(String zoneName, Integer ProductId) {
         Market engine = Market.getMarketInstance();
         ZoneMarketDTO zoneMarket = engine.getZoneMarketDTO(zoneName);
         return zoneMarket.getProductsInfo().getSDMItem().stream().filter(item -> item.getId() == ProductId).findFirst().orElse(null);
@@ -197,6 +200,25 @@ public class CustomerServlet extends HttpServlet {
         return orderDTO;
     }
 
+    private JsonObject getStoreDetailsFromOrder(StoreDTO store, SubOrderDTO subOrderDTO, Location storeLocation, Location customerLocation) {
+        Double distance = Math.pow(
+                Math.pow(storeLocation.getX() - customerLocation.getX(), 2) +
+                        Math.pow(storeLocation.getY() - customerLocation.getY(), 2),
+                0.5);
+        JsonObject jsonStore = new JsonObject();
+
+        jsonStore.addProperty("storeId", store.getSdmStore().getId());
+        jsonStore.addProperty("storeName", store.getSdmStore().getName());
+        jsonStore.addProperty("location", storeLocation.getX() + "," + storeLocation.getY());
+        jsonStore.addProperty("distance", distance);
+        jsonStore.addProperty("ppk", store.getSdmStore().getDeliveryPpk());
+        jsonStore.addProperty("deliveryCost", subOrderDTO.getDeliveryPrice());
+        jsonStore.addProperty("typeProducts", subOrderDTO.getKProductIdVProductsSoldInfo().size());
+        jsonStore.addProperty("productsOrderCost", subOrderDTO.getProductsPrice());
+
+        return jsonStore;
+    }
+
     private void processRequestAddDynamicProducts(HttpServletRequest req, HttpServletResponse resp) {
         HttpSession session = req.getSession(false);
         String zoneName = (String) session.getAttribute(ZONE_NAME);
@@ -238,15 +260,15 @@ public class CustomerServlet extends HttpServlet {
 
         StoreDTO store = null;
         try {
-            store = (StoreDTO) (engine.getStoreDTO(zoneName,storeId)).clone();
+            store = (StoreDTO) (engine.getStoreDTO(zoneName, storeId)).clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
-        Map<Integer,Integer> KProductIdVStore = new HashMap<>();
+        Map<Integer, Integer> KProductIdVStore = new HashMap<>();
         Map<SDMItem, ProductDTO> KProductInfoVProductDTO = store.getKProductIdVPriceAndAmount();
         Map<SDMItem, ProductDTO> KProductInfoVProduct = new HashMap<>();
 
-        for (SDMItem productInfo : KProductInfoVProductDTO.keySet()){
+        for (SDMItem productInfo : KProductInfoVProductDTO.keySet()) {
             ProductDTO product = new ProductDTO();
             String productId = String.valueOf(productInfo.getId());
             Double productAmount = jsonData.get(productId).getAsDouble();
@@ -254,33 +276,40 @@ public class CustomerServlet extends HttpServlet {
             double price = KProductInfoVProductDTO.get(productInfo).getPrice();
             product.setPrice(price);
 
-            KProductInfoVProduct.put(productInfo,product);
-            KProductIdVStore.put(productInfo.getId(),storeId);
-
-
-//            String productId = String.valueOf(productInfo.getId());
-//            Double productAmount = jsonData.get(productId).getAsDouble();
-//            if (productAmount > 0) {
-//                ProductDTO product = new ProductDTO();
-//                product.setAmount(productAmount);
-//                KProductInfoVProductDTO.put(productInfo, product);
-//                KProductIdVStore.put(productInfo.getId(),storeId);
-//            }
+            KProductInfoVProduct.put(productInfo, product);
+            KProductIdVStore.put(productInfo.getId(), storeId);
         }
 
         OrderDTO order = getOrderData(req);
-        engine.getOrderDTO(zoneName,order,KProductInfoVProductDTO,KProductIdVStore);
+        engine.getOrderDTO(zoneName, order, KProductInfoVProduct, KProductIdVStore);
         session.setAttribute(CUSTOMER_ORDER, order);
     }
 
 
-    private Set<Integer> getStoreIdsInOrder(HttpServletRequest req){
+    private Set<Integer> getStoreIdsInOrder(HttpServletRequest req) {
         HttpSession session = req.getSession(false);
         OrderDTO order = (OrderDTO) session.getAttribute(CUSTOMER_ORDER);
-        String zoneName = (String) session.getAttribute(ZONE_NAME);
-        Market engine = Market.getMarketInstance();
-        Set<Integer> storesId = order.getKStoreVSubOrder().keySet();
+        Set<Integer> storesId = order.getKStoreIdVSubOrder().keySet();
         return storesId;
+    }
+
+    private void processRequestGetDynamicDetails(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/json");
+        HttpSession session = req.getSession(false);
+        Integer storeId = Integer.valueOf(req.getParameter("storeId"));
+        OrderDTO order = (OrderDTO) session.getAttribute(CUSTOMER_ORDER);
+        String zoneName = (String) session.getAttribute(ZONE_NAME);
+
+        Market engine = Market.getMarketInstance();
+        try (PrintWriter out = resp.getWriter()) {
+            StoreDTO store = engine.getStoreDTO(zoneName, storeId);
+            SubOrderDTO subOrderDTO = order.getKStoreIdVSubOrder().get(storeId);
+            Location storeLocation = store.getSdmStore().getLocation();
+            Location customerLocation = order.getCustomerLocation();
+            JsonObject jsonStore = getStoreDetailsFromOrder(store, subOrderDTO, storeLocation, customerLocation);
+            out.println(jsonStore);
+            out.flush();
+        }
     }
 
 //    private List<StoreDTO> getStoreInOrder(String zoneName,Set<Integer> storesId){
@@ -300,19 +329,19 @@ public class CustomerServlet extends HttpServlet {
         OrderDTO order = (OrderDTO) session.getAttribute(CUSTOMER_ORDER);
         String discountName = req.getParameter("discountName");
         Market engine = Market.getMarketInstance();
-        Map<SDMDiscount,Integer> KDiscountVStoreId =  engine.getStoresDiscounts(zoneName,getStoreIdsInOrder(req));
+        Map<SDMDiscount, Integer> KDiscountVStoreId = engine.getStoresDiscounts(zoneName, getStoreIdsInOrder(req));
         SDMDiscount discount = KDiscountVStoreId.keySet().stream().filter(sdmDiscount -> sdmDiscount.getName().equals(discountName)).findFirst().get();
         Integer storeId = KDiscountVStoreId.get(discount);
         SDMItem productCondition = getSDMItem(zoneName, discount.getIfYouBuy().getItemId());
 
 
-        SubOrderDTO subOrderDTO = order.getKStoreVSubOrder().get(storeId);
+        SubOrderDTO subOrderDTO = order.getKStoreIdVSubOrder().get(storeId);
         ProductDTO productInfo = subOrderDTO.getKProductVForPriceAndAmountInfo().get(productCondition);
 
 
         List<SDMItem> getProducts = new ArrayList<>();
 
-        if (discount.getThenYouGet().getOperator().equals("ONE-OF")){
+        if (discount.getThenYouGet().getOperator().equals("ONE-OF")) {
             Integer getProductId = Integer.parseInt(req.getParameter("productId"));
             getProducts.add(getSDMItem(zoneName, getProductId));
             SDMOffer offer = discount.getThenYouGet().getSDMOffer().stream().filter(sdmOffer ->
@@ -324,35 +353,35 @@ public class CustomerServlet extends HttpServlet {
         } else {
             SubOrderDTO finalSubOrderDTO = subOrderDTO;
             discount.getThenYouGet().getSDMOffer().forEach(
-                    sdmOffer ->{
-                        getProducts.add(getSDMItem(zoneName,sdmOffer.getItemId()));
+                    sdmOffer -> {
+                        getProducts.add(getSDMItem(zoneName, sdmOffer.getItemId()));
                         Double productsPriceSubOrder = sdmOffer.getForAdditional() + finalSubOrderDTO.getProductsPrice();
                         Double productsPriceOrder = sdmOffer.getForAdditional() + order.getProductsPrice();
                         finalSubOrderDTO.setProductsPrice(productsPriceSubOrder);
                         order.setProductsPrice(productsPriceOrder);
-                    } );
+                    });
             subOrderDTO = finalSubOrderDTO;
         }
 
-        subOrderDTO = updateOrderByApplyDiscount(getProducts,subOrderDTO,discount,productInfo,productCondition);
-        order.getKStoreVSubOrder().put(storeId,subOrderDTO);
-        session.setAttribute(CUSTOMER_ORDER,order);
+        subOrderDTO = updateOrderByApplyDiscount(getProducts, subOrderDTO, discount, productInfo, productCondition);
+        order.getKStoreIdVSubOrder().put(storeId, subOrderDTO);
+        session.setAttribute(CUSTOMER_ORDER, order);
     }
 
-    private SubOrderDTO updateOrderByApplyDiscount(List<SDMItem> products, SubOrderDTO subOrderDTO, SDMDiscount discount,ProductDTO buyProductInfo, SDMItem productCondition) {
+    private SubOrderDTO updateOrderByApplyDiscount(List<SDMItem> products, SubOrderDTO subOrderDTO, SDMDiscount discount, ProductDTO buyProductInfo, SDMItem productCondition) {
         Double amountUseInDiscount = buyProductInfo.getAmountUsInDiscounts() + discount.getIfYouBuy().getQuantity();
-        if (!subOrderDTO.getKDiscountVTimeUse().containsKey(discount)){
-            subOrderDTO.getKDiscountVTimeUse().put(discount,0);
+        if (!subOrderDTO.getKDiscountVTimeUse().containsKey(discount)) {
+            subOrderDTO.getKDiscountVTimeUse().put(discount, 0);
         }
         Integer timeUseDiscount = subOrderDTO.getKDiscountVTimeUse().get(discount) + 1;
         buyProductInfo.setAmountUsInDiscounts(amountUseInDiscount);
 
-        for (SDMItem product : products){
-            subOrderDTO.getKProductIdVProductsSoldInfo().put(product.getId(),product);
+        for (SDMItem product : products) {
+            subOrderDTO.getKProductIdVProductsSoldInfo().put(product.getId(), product);
         }
 
         subOrderDTO.getKProductVForPriceAndAmountInfo().put(productCondition, buyProductInfo);
-        subOrderDTO.getKDiscountVTimeUse().put(discount,timeUseDiscount);
+        subOrderDTO.getKDiscountVTimeUse().put(discount, timeUseDiscount);
         return subOrderDTO;
     }
 
@@ -381,18 +410,39 @@ public class CustomerServlet extends HttpServlet {
         }
     }
 
+    private void processRequestGetStoreInOrderInfo(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/json");
+        HttpSession session = req.getSession(false);
+        OrderDTO order = (OrderDTO) session.getAttribute(CUSTOMER_ORDER);
+        String zoneName = (String) session.getAttribute(ZONE_NAME);
+        Market engine = Market.getMarketInstance();
+
+
+        JsonArray array = new JsonArray();
+
+        try (PrintWriter out = resp.getWriter()) {
+            for (Integer storeId : order.getKStoreIdVSubOrder().keySet()) {
+                StoreDTO store = engine.getStoreDTO(zoneName,storeId);
+                array.add(getStoreInfo(store));
+            }
+            out.println(array);
+            out.flush();
+        }
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter(ACTION);
         switch (action) {
-
             case GET_DISCOUNTS_ACTION:
                 processRequestGetDiscounts(req, resp);
                 break;
-
+            case GET_STORE_ORDER_DETAILS_ACTION:
+                processRequestGetDynamicDetails(req, resp);
+                break;
+            case GET_STORES_IN_ORDER_DETAILS_ACTION:
+                processRequestGetStoreInOrderInfo(req, resp);
+                break;
         }
     }
-
-
 }

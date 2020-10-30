@@ -16,8 +16,8 @@ public class Order {
     public Order(OrderDTO orderDTO){
         orderDTO.setId(orderId);
         this.orderDTO = orderDTO;
-        for (Integer storeId : orderDTO.getKStoreVSubOrder().keySet()){
-            SubOrderDTO subOrderDTO = orderDTO.getKStoreVSubOrder().get(storeId);
+        for (Integer storeId : orderDTO.getKStoreIdVSubOrder().keySet()){
+            SubOrderDTO subOrderDTO = orderDTO.getKStoreIdVSubOrder().get(storeId);
             subOrderDTO.setId(orderId);
             SubOrder subOrder =  new SubOrder(subOrderDTO);
             KStoreIdVSubOrder.put(storeId, subOrder);
