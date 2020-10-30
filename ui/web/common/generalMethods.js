@@ -19,16 +19,15 @@ function appendToTableViewInPage(arrObject, tbodyElement) {
     if (arrObject === "") {
         return
     }
+
     arrObject.forEach((object) => {
-        var output = "<tr>";
-        for (var key in object) {
+        let row = tbodyElement.insertRow()
+        for (let key in object) {
             if (object.hasOwnProperty(key)) {
-                output += "<td>" + object[key] + "</td>";
+                let cell = row.insertCell()
+                cell.innerHTML = object[key];
             }
         }
-        output += "</tr>";
-        tbodyElement.insertRow(output);
-        // $(output).appendTo(tbodyElement);
     })
 }
 
