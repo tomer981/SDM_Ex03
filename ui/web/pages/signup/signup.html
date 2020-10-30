@@ -12,6 +12,7 @@
             crossorigin="anonymous"></script>    <script type="text/javascript" src="../../common/context-path-helper.js"></script>
     <script type="text/javascript" src="../../common/urls.js"></script>
     <script type="text/javascript" src="../../common/is-session-exist.js"></script>
+    <script type="text/javascript" src="../../common/check-for-updates.js"></script>
     <script type="text/javascript" src="signup.js"></script>
 
 </head>
@@ -37,6 +38,8 @@
 </div>
 
 <script type="text/javascript">
+    startCheckForUpdates((updates) => console.log(updates));
+
     $("#submit-form").on("submit", function (e) {
         $.ajax({
             url: SIGNUP_URL,
