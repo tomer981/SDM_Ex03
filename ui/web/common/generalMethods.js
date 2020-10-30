@@ -27,7 +27,8 @@ function appendToTableViewInPage(arrObject, tbodyElement) {
             }
         }
         output += "</tr>";
-        $(output).appendTo(tbodyElement);
+        tbodyElement.insertRow(output);
+        // $(output).appendTo(tbodyElement);
     })
 }
 
