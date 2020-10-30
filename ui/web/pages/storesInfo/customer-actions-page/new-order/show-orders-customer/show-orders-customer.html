@@ -35,9 +35,9 @@
         obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
     }
     $(document).ready(function() {
-        orderTable = $("#order-page").contents().find("#orders-body");//orders-body
-        subOrderTable = $("#sub-order-page").contents().find("#sub-order-body");//sub-order-body
-        productsTable = $("#products-page").contents().find("#products-body");//products-body
+        orderTable = $("#order-page").contents().find("#orders-table");//orders-body
+        subOrderTable = $("#sub-order-page").contents();//.find("#sub-order-body");//sub-order-body
+        productsTable = $("#products-page").contents();//.find("#products-body");//products-body
         getOrders();
     });
 
@@ -59,7 +59,7 @@
             url: ORDER_URL,
             data: {action: "getDisplayOrder" , orders: orders},
             success: function (orders) {
-                appendToTableViewInPage(orders, orderTable)
+                appendToTableViewInPage(orders, $("#order-page").contents().find("#orders-table"))
             }
         })
     }

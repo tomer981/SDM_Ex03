@@ -21,7 +21,7 @@ function appendToTableViewInPage(arrObject, tbodyElement) {
     }
 
     arrObject.forEach((object) => {
-        let row = tbodyElement.insertRow()
+        let row = tbodyElement.insertRow();
         for (let key in object) {
             if (object.hasOwnProperty(key)) {
                 let cell = row.insertCell()
