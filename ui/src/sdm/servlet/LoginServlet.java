@@ -65,11 +65,10 @@ public class LoginServlet extends HttpServlet {
                     }
                 }
             }
-        }
-        catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
             String msg = e.getMessage();
-            if (e.getMessage().indexOf(':') != -1){
-                msg = msg.substring(msg.indexOf(':')+ 2);
+            if (e.getMessage().indexOf(':') != -1) {
+                msg = msg.substring(msg.indexOf(':') + 2);
             }
             throw new IllegalStateException(msg);
         }
