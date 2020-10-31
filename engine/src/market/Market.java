@@ -141,7 +141,7 @@ public final class Market {
     //////////method public
     public void addStoreToManager(String managerName, String zoneName, SDMStore sdmStore){
         Manager manager = KManagerNameVManger.get(managerName);
-        ZoneMarket zoneMarket = KNameZoneVZone.get(managerName);
+        ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
         Managers managers = KZoneVManagers.get(zoneMarket);
 
         zoneMarket.addStoreToManager(sdmStore,manager,zoneName);

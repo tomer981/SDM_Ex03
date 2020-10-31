@@ -17,18 +17,39 @@
     <script type="text/javascript" src="../../../../common/generalMethods.js"></script>
 </head>
 <body>
-<div dir="rtl">
-    <form id="addStore-form" method="post">
-        <input type="hidden" name="command" value="addStore"/>
-        <label for="name">שם החנות</label>
+<div>
+    <form id="storeInfo-form" method="post">
+        <input type="hidden" name="command" value="storeInfo"/>
+        <label for="name">Store Name</label>
         <input type="text" name="name" id="name" />
-        <label for="coordX">מיקום X</label>
+        <label for="coordX">X Coordinate</label>
         <input type="number" name="coordX" id="coordX" min="1" max="50" />
-        <label for="coordY">מיקום Y</label>
+        <label for="coordY">Y Coordinate</label>
         <input type="number" name="coordY" id="coordY" min="1" max="50" />
         <label for="ppk">PPK</label>
         <input type="number" name="ppk" id="ppk" />
-        <button type="submit">הוסיפי חנות</button>
+        <table id="new-store-prices">
+            <thead>
+            <th>Product ID</th>
+            <th>Price</th>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <input type="number" id="new-product-id" />
+                </td>
+                <td>
+                    <input type="number" id="new-product-price" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="button" id="add-product">Add Product</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <button type="submit">Add!</button>
     </form>
 </div>
 
@@ -37,11 +58,16 @@
 <script type="text/javascript">
     startCheckForUpdates((updates) => console.log(updates));
 
-    $("#addStore-form").on("submit", function (e) {
+    let newProductIndex = 0
+
+    $("#storeInfo-form").on("submit", function (e) {
         e.preventDefault()
 
         sendJsonForm(this, MANAGER_URL, (success) => {
             // TODO: Replace me
+            newProductIndex = 0
+            $(this).reset()
+
             console.log("Success? " + success)
         }, (msg) => {
             const output = $("<p id='error' style='color: #ff0000'></p>").text(msg.responseText);
@@ -50,6 +76,18 @@
         });
 
         return false;
+    });
+
+    $("#add-product").on("click", function(e) {
+        e.preventDefault()
+
+        const id = $("#new-product-id").val();
+        const price = $("#new-product-price").val();
+
+        const newRow = $.find("#new-store-prices")[0].insertRow()
+
+        newRow.insertCell().innerHTML = `<input type="hidden" name="sales.${newProductIndex}.id" value="${id}">${id}</input>`
+        newRow.insertCell().innerHTML = `<input type="hidden" name="sales.${newProductIndex}.price" value="${price}">${price}</input>`
     });
 </script>
 </body>

@@ -71,8 +71,29 @@ function formToJson($form){
     const array = $form.serializeArray();
     let indexed_array = {};
 
-    $.map(array, function(n, i){
-        indexed_array[n['name']] = n['value'];
+    $.map(array, function(n, i) {
+        const names = n['name'].split('.');
+
+        // This can be done in a more sophisticated way to take into account objects and arrays but we need only
+        // arrays so this is the simple solution
+        if (names.length === 1) {
+            indexed_array[names[0]] = n['value'];
+        } else {
+            console.log(indexed_array);
+            if (indexed_array[names[0]] === undefined) {
+                indexed_array[names[0]] = [];
+            }
+
+            console.log(indexed_array);
+            while (indexed_array[names[0]].length <= parseInt(names[1])) {
+                indexed_array[names[0]].push({});
+            }
+
+            console.log(indexed_array);
+            indexed_array[names[0]][names[1]][names[2]] = n['value'];
+
+            console.log(indexed_array);
+        }
     });
 
     return indexed_array;

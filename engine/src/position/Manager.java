@@ -64,7 +64,7 @@ public class Manager {
     //methods
     public void addStoreToManager(String zone, SDMStore sdmStore, SDMItems productsInfo) {
         if (!KZoneNameVStores.containsKey(zone)){
-            KZoneNameVStores.put(zone,new ArrayList());
+            KZoneNameVStores.put(zone,new ArrayList<>());
         }
 
         Store store = new Store(sdmStore, name,productsInfo);
