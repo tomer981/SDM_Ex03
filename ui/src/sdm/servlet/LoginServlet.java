@@ -81,9 +81,10 @@ public class LoginServlet extends HttpServlet {
                     fileContent.add(new Scanner(inputStream).useDelimiter("\\Z").next());
                     Path tempFile = Files.createTempFile("SDM-", ".xml");
 
-                    System.out.println("Attempting to write to file " + tempFile);
                     Files.write(tempFile, fileContent, StandardOpenOption.CREATE);
                     engine.addManager(userName, tempFile.toFile());
+
+                    // TODO: TOMER: According to the exercise, there should be ONE internal XML file and uploading the manager's xml file should be merged into it!!
                 } catch (IOException e) {
                     throw new IllegalStateException(e.getMessage(), e);
                 }
