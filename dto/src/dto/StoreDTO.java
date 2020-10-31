@@ -1,7 +1,7 @@
 package dto;
 
-import xml.schema.generated.SDMItem;
-import xml.schema.generated.SDMStore;
+import xmlBuild.schema.generated.*;
+
 
 import java.util.HashMap;
 import java.util.Map;

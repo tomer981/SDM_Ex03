@@ -6,10 +6,9 @@ import order.Order;
 import position.Customer;
 import position.Manager;
 import position.Managers;
-import xml.schema.SchemaBaseJaxbObjects;
-import xml.schema.generated.*;
+import xmlBuild.SchemaBaseJaxbObjects;
+import xmlBuild.schema.generated.*;
 
-import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -117,6 +116,11 @@ public final class Market {
         Managers managers = KZoneVManagers.get(zoneMarket);
         return managers.getStoresDiscounts(storesId);
     }
+    public OrderDTO getOrderByZoneAndOrderId(String zoneName,Integer orderID){
+        ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
+        return zoneMarket.getOrderDTOById(orderID);
+    }
+
     //////////method private
     private synchronized void addZoneMarket(File file, Manager manager) {
         SchemaBaseJaxbObjects schema = new SchemaBaseJaxbObjects(file);
@@ -175,9 +179,10 @@ public final class Market {
         Double transactionAmount = orderDTO.getTotalDeliveryPrice() + orderDTO.getProductsPrice();
 
         customerMakeTransaction(Action.TRANSFER,customer,orderDTO.getDate(),transactionAmount);
-        customer.addOrderId(zoneName,orderDTO.getId());
 
         Order order = managers.addOrder(orderDTO);
+        customer.addOrderId(zoneName,order.getOrderDTO().getId());
+
         zoneMarket.addOrder(order);
     }
     public OrderDTO getMinOrder(String zoneName,OrderDTO orderDTO, Map<SDMItem,ProductDTO> KProductInfoVProductDTO){

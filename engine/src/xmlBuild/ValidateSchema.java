@@ -1,9 +1,7 @@
-package xml.schema;
+package xmlBuild;
 
-import xml.schema.generated.Location;
-import xml.schema.generated.SDMCustomer;
-import xml.schema.generated.SDMItem;
-import xml.schema.generated.SDMStore;
+import xmlBuild.schema.generated.*;
+
 
 import java.io.File;
 import java.util.List;

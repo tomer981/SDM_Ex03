@@ -7,7 +7,7 @@ import dto.ProductDTO;
 import dto.StoreDTO;
 import dto.ZoneMarketDTO;
 import market.Market;
-import xml.schema.generated.SDMItem;
+import xmlBuild.schema.generated.SDMItem;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

@@ -1,15 +1,11 @@
 package dto;
 
-import dto.ManagerDTO;
-import dto.OrderDTO;
-import dto.StoreDTO;
-import xml.schema.generated.*;
-import xml.schema.generated.SuperDuperMarketDescriptor;
+
+import xmlBuild.schema.generated.*;
 
 import java.util.List;
 import java.util.Map;
 
-import static xml.schema.generated.SuperDuperMarketDescriptor.*;
 
 public class ZoneMarketDTO {
     //general

@@ -5,11 +5,10 @@ import dto.ProductDTO;
 import dto.StoreDTO;
 import dto.SubOrderDTO;
 import order.SubOrder;
-import xml.schema.generated.*;
+import xmlBuild.schema.generated.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Store {
     private String StoreOwnerName;

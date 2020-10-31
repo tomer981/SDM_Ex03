@@ -1,8 +1,6 @@
 package dto;
 
-import xml.schema.generated.Location;
-import xml.schema.generated.SDMDiscount;
-import xml.schema.generated.SDMItem;
+import xmlBuild.schema.generated.*;
 
 import java.util.*;
 
@@ -15,6 +13,7 @@ public class SubOrderDTO {
     private Map<Integer,SDMItem> KProductIdVProductsSoldInfo = new HashMap<>();
     private Map<SDMItem, ProductDTO> KProductVForPriceAndAmountInfo = new HashMap<>();
     private Map<SDMDiscount, Integer> KDiscountVTimeUse = new HashMap<>();
+    private Map<SDMItem,Map<SDMOffer,Integer>> KOnOfDiscountVMapOffersTime = new HashMap<>();
 
     private Double deliveryPrice = 0.0;
     private Double productsPrice = 0.0;
@@ -46,6 +45,13 @@ public class SubOrderDTO {
     }
     public Double getProductsPrice() {
         return productsPrice;
+    }
+    public Map<SDMItem, Map<SDMOffer, Integer>> getKOnOfDiscountVMapOffersTime() {
+        return KOnOfDiscountVMapOffersTime;
+    }
+
+    public void setKOnOfDiscountVMapOffersTime(Map<SDMItem, Map<SDMOffer, Integer>> KOnOfDiscountVMapOffersTime) {
+        this.KOnOfDiscountVMapOffersTime = KOnOfDiscountVMapOffersTime;
     }
 
     //set

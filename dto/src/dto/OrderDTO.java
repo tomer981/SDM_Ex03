@@ -1,6 +1,7 @@
 package dto;
 
-import xml.schema.generated.Location;
+import xmlBuild.schema.generated.*;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;

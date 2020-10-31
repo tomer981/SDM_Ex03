@@ -6,7 +6,7 @@
 //
 
 
-package xml.schema.generated;
+package xmlBuild.schema.generated;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -24,9 +24,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;complexType>
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="quantity" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
+ *       &lt;attribute name="price" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
  *       &lt;attribute name="item-id" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
- *       &lt;attribute name="for-additional" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -36,30 +35,28 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
-@XmlRootElement(name = "SDM-offer")
-public class SDMOffer {
+@XmlRootElement(name = "SDM-sell")
+public class SDMSell {
 
-    @XmlAttribute(name = "quantity", required = true)
-    protected int quantity;
+    @XmlAttribute(name = "price", required = true)
+    protected int price;
     @XmlAttribute(name = "item-id", required = true)
     protected int itemId;
-    @XmlAttribute(name = "for-additional", required = true)
-    protected int forAdditional;
 
     /**
-     * Gets the value of the quantity property.
+     * Gets the value of the price property.
      * 
      */
-    public int getQuantity() {
-        return quantity;
+    public int getPrice() {
+        return price;
     }
 
     /**
-     * Sets the value of the quantity property.
+     * Sets the value of the price property.
      * 
      */
-    public void setQuantity(int value) {
-        this.quantity = value;
+    public void setPrice(int value) {
+        this.price = value;
     }
 
     /**
@@ -76,22 +73,6 @@ public class SDMOffer {
      */
     public void setItemId(int value) {
         this.itemId = value;
-    }
-
-    /**
-     * Gets the value of the forAdditional property.
-     * 
-     */
-    public int getForAdditional() {
-        return forAdditional;
-    }
-
-    /**
-     * Sets the value of the forAdditional property.
-     * 
-     */
-    public void setForAdditional(int value) {
-        this.forAdditional = value;
     }
 
 }

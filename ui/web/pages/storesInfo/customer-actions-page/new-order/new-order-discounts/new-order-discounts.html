@@ -40,10 +40,12 @@
         </tbody>
     </table>
     <button id="activeDiscount" type="button" disabled="disabled" onclick="activeDiscount()">Add Discount To Order</button>
-    <button id="next" type="button" onclick="location.href='../show-orders-customer/show-orders-customer.html';">Next</button>
+<!--    <button id="next" type="button" onclick="location.href='../show-new-order/show-new-order.html';">Next</button>-->
+    <button id="next" type="button" onclick="location.href='../show-new-order/show-new-order.html';">Next</button>
 
 </div>
 <script type="text/javascript">
+    //todo: fix Url
     isSessionExist({action: "isSessionExist", userNotFoundPage: "../../../../../index.html", userFoundPage: ""});
     var KDiscountNameVGetDiscountInfo = {}
 

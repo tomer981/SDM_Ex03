@@ -1,7 +1,5 @@
 package dto;
 
-import xml.schema.generated.SDMItem;
-import xml.schema.generated.SDMSell;
 
 public class ProductDTO implements Cloneable {
     private Double price = 0.0;

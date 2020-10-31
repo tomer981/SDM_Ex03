@@ -6,7 +6,7 @@
 //
 
 
-package xml.schema.generated;
+package xmlBuild.schema.generated;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -24,8 +24,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;complexType>
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="quantity" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
- *       &lt;attribute name="item-id" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
+ *       &lt;attribute name="y" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
+ *       &lt;attribute name="x" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -35,44 +35,44 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
-@XmlRootElement(name = "if-you-buy")
-public class IfYouBuy {
+@XmlRootElement(name = "location")
+public class Location {
 
-    @XmlAttribute(name = "quantity", required = true)
-    protected int quantity;
-    @XmlAttribute(name = "item-id", required = true)
-    protected int itemId;
+    @XmlAttribute(name = "y", required = true)
+    protected int y;
+    @XmlAttribute(name = "x", required = true)
+    protected int x;
 
     /**
-     * Gets the value of the quantity property.
+     * Gets the value of the y property.
      * 
      */
-    public int getQuantity() {
-        return quantity;
+    public int getY() {
+        return y;
     }
 
     /**
-     * Sets the value of the quantity property.
+     * Sets the value of the y property.
      * 
      */
-    public void setQuantity(int value) {
-        this.quantity = value;
+    public void setY(int value) {
+        this.y = value;
     }
 
     /**
-     * Gets the value of the itemId property.
+     * Gets the value of the x property.
      * 
      */
-    public int getItemId() {
-        return itemId;
+    public int getX() {
+        return x;
     }
 
     /**
-     * Sets the value of the itemId property.
+     * Sets the value of the x property.
      * 
      */
-    public void setItemId(int value) {
-        this.itemId = value;
+    public void setX(int value) {
+        this.x = value;
     }
 
 }

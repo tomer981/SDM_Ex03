@@ -1,7 +1,6 @@
-package xml.schema;
+package xmlBuild;
 
-import xml.schema.generated.*;
-
+import xmlBuild.schema.generated.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -12,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static xml.schema.generated.SuperDuperMarketDescriptor.*;
 
 
 public class SchemaBaseJaxbObjects {
