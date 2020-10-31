@@ -4,9 +4,8 @@ import dto.ManagerDTO;
 import dto.StoreDTO;
 import dto.TransactionDTO;
 import store.Store;
-import xml.schema.generated.SDMItem;
-import xml.schema.generated.SDMItems;
-import xml.schema.generated.SDMStore;
+import xmlBuild.schema.generated.*;
+
 
 import java.util.*;
 

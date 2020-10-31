@@ -1,7 +1,6 @@
-package xml.schema;
+package xmlBuild;
 
-import xml.schema.generated.*;
-
+import xmlBuild.schema.generated.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
 
 
 public class SchemaBaseJaxbObjects {
-    private static final String JAXB_XML_SDM_PACKAGE_NAME = "xml.schema.generated";
+    private static final String JAXB_XML_SDM_PACKAGE_NAME = "xmlBuild.schema.generated";
 
     private ValidateSchema validate;
 

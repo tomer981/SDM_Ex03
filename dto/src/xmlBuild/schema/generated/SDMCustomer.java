@@ -6,10 +6,11 @@
 //
 
 
-package xml.schema.generated;
+package xmlBuild.schema.generated;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -26,9 +27,9 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;all>
  *         &lt;element ref="{}name"/>
- *         &lt;element ref="{}if-you-buy"/>
- *         &lt;element ref="{}then-you-get"/>
+ *         &lt;element ref="{}location"/>
  *       &lt;/all>
+ *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -40,15 +41,15 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "", propOrder = {
 
 })
-@XmlRootElement(name = "SDM-discount")
-public class SDMDiscount {
+@XmlRootElement(name = "SDM-customer")
+public class SDMCustomer {
 
     @XmlElement(required = true)
     protected String name;
-    @XmlElement(name = "if-you-buy", required = true)
-    protected IfYouBuy ifYouBuy;
-    @XmlElement(name = "then-you-get", required = true)
-    protected ThenYouGet thenYouGet;
+    @XmlElement(required = true)
+    protected Location location;
+    @XmlAttribute(name = "id", required = true)
+    protected int id;
 
     /**
      * Gets the value of the name property.
@@ -75,51 +76,43 @@ public class SDMDiscount {
     }
 
     /**
-     * Gets the value of the ifYouBuy property.
+     * Gets the value of the location property.
      * 
      * @return
      *     possible object is
-     *     {@link IfYouBuy }
+     *     {@link Location }
      *     
      */
-    public IfYouBuy getIfYouBuy() {
-        return ifYouBuy;
+    public Location getLocation() {
+        return location;
     }
 
     /**
-     * Sets the value of the ifYouBuy property.
+     * Sets the value of the location property.
      * 
      * @param value
      *     allowed object is
-     *     {@link IfYouBuy }
+     *     {@link Location }
      *     
      */
-    public void setIfYouBuy(IfYouBuy value) {
-        this.ifYouBuy = value;
+    public void setLocation(Location value) {
+        this.location = value;
     }
 
     /**
-     * Gets the value of the thenYouGet property.
+     * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ThenYouGet }
-     *     
      */
-    public ThenYouGet getThenYouGet() {
-        return thenYouGet;
+    public int getId() {
+        return id;
     }
 
     /**
-     * Sets the value of the thenYouGet property.
+     * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link ThenYouGet }
-     *     
      */
-    public void setThenYouGet(ThenYouGet value) {
-        this.thenYouGet = value;
+    public void setId(int value) {
+        this.id = value;
     }
 
 }

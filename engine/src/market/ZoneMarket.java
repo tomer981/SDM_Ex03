@@ -5,11 +5,8 @@ import dto.OrderDTO;
 import dto.ZoneMarketDTO;
 import order.Order;
 import position.Manager;
-import xml.schema.SchemaBaseJaxbObjects;
-import xml.schema.generated.SDMDiscount;
-import xml.schema.generated.SDMItem;
-import xml.schema.generated.SDMItems;
-import xml.schema.generated.SDMStore;
+import xmlBuild.SchemaBaseJaxbObjects;
+import xmlBuild.schema.generated.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -130,5 +127,9 @@ public class ZoneMarket {
 
     public void addOrder(Order order) {
         orders.add(order);
+    }
+
+    public OrderDTO getOrderDTOById(Integer orderID) {
+        return orders.stream().filter(order-> order.getOrderDTO().getId().equals(orderID)).findFirst().orElse(null).getOrderDTO();
     }
 }

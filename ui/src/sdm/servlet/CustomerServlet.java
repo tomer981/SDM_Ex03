@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dto.*;
 import market.Market;
-import xml.schema.generated.*;
+import xmlBuild.schema.generated.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -312,46 +312,41 @@ public class CustomerServlet extends HttpServlet {
         }
     }
 
-//    private List<StoreDTO> getStoreInOrder(String zoneName,Set<Integer> storesId){
-//        Market engine = Market.getMarketInstance();
-//        List<StoreDTO> storesInOrder = new ArrayList<>();
-//        for (Integer storeId : storesId){
-//            storesInOrder.add(engine.getStoreDTO(zoneName, storeId));
-//        }
-//
-//        return storesInOrder;
-//    }
-
     private void processRequestAddDiscountToOrder(HttpServletRequest req, HttpServletResponse resp) {
         HttpSession session = req.getSession(false);
-
+        Market engine = Market.getMarketInstance();
         String zoneName = (String) session.getAttribute(ZONE_NAME);
         OrderDTO order = (OrderDTO) session.getAttribute(CUSTOMER_ORDER);
         String discountName = req.getParameter("discountName");
-        Market engine = Market.getMarketInstance();
-        Map<SDMDiscount, Integer> KDiscountVStoreId = engine.getStoresDiscounts(zoneName, getStoreIdsInOrder(req));
-        SDMDiscount discount = KDiscountVStoreId.keySet().stream().filter(sdmDiscount -> sdmDiscount.getName().equals(discountName)).findFirst().get();
-        Integer storeId = KDiscountVStoreId.get(discount);
-        SDMItem productCondition = getSDMItem(zoneName, discount.getIfYouBuy().getItemId());
 
+        Map<SDMDiscount, Integer> KDiscountVStoreId = engine.getStoresDiscounts(zoneName, getStoreIdsInOrder(req));//getDiscountsToStoresId
+        SDMDiscount discount = KDiscountVStoreId.keySet().stream().filter(sdmDiscount -> sdmDiscount.getName().equals(discountName)).findFirst().get();//getDiscountMatch
 
-        SubOrderDTO subOrderDTO = order.getKStoreIdVSubOrder().get(storeId);
-        ProductDTO productInfo = subOrderDTO.getKProductVForPriceAndAmountInfo().get(productCondition);
+        Integer storeId = KDiscountVStoreId.get(discount);//getStoreIdMachForDiscount
+        SDMItem productCondition = getSDMItem(zoneName, discount.getIfYouBuy().getItemId());//IfYouBuyProduct
 
+        SubOrderDTO subOrderDTO = order.getKStoreIdVSubOrder().get(storeId);//theSubOrderToUpdate
+        ProductDTO productInfo = subOrderDTO.getKProductVForPriceAndAmountInfo().get(productCondition);//IfYouBuyProduct ProductDTO update
 
-        List<SDMItem> getProducts = new ArrayList<>();
+        List<SDMItem> getProducts = new ArrayList<>();//List Of Offers To Update
 
-        if (discount.getThenYouGet().getOperator().equals("ONE-OF")) {
+        if (discount.getThenYouGet().getOperator().equals("ONE-OF")){
             Integer getProductId = Integer.parseInt(req.getParameter("productId"));
+            SDMOffer offer = getOfferFromDiscount(discount,getProductId);
+            SDMItem product = getSDMItem(zoneName, offer.getItemId());
+            Map<SDMItem,Map<SDMOffer,Integer>> KOnOfDiscountVMapOffersTime = subOrderDTO.getKOnOfDiscountVMapOffersTime();
+            addOneOfDiscount(offer,product,KOnOfDiscountVMapOffersTime);
             getProducts.add(getSDMItem(zoneName, getProductId));
-            SDMOffer offer = discount.getThenYouGet().getSDMOffer().stream().filter(sdmOffer ->
-                    getProductId.equals(sdmOffer.getItemId())).findFirst().get();
+
             Double productsPriceSubOrder = offer.getForAdditional() + subOrderDTO.getProductsPrice();
             Double productsPriceOrder = offer.getForAdditional() + order.getProductsPrice();
+
+            subOrderDTO.getKProductIdVProductsSoldInfo().put(product.getId(),product);
             subOrderDTO.setProductsPrice(productsPriceSubOrder);
             order.setProductsPrice(productsPriceOrder);
         } else {
             SubOrderDTO finalSubOrderDTO = subOrderDTO;
+            Map<SDMDiscount, Integer> KDiscountVTimeUse = subOrderDTO.getKDiscountVTimeUse();
             discount.getThenYouGet().getSDMOffer().forEach(
                     sdmOffer -> {
                         getProducts.add(getSDMItem(zoneName, sdmOffer.getItemId()));
@@ -361,11 +356,30 @@ public class CustomerServlet extends HttpServlet {
                         order.setProductsPrice(productsPriceOrder);
                     });
             subOrderDTO = finalSubOrderDTO;
+            subOrderDTO = updateOrderByApplyDiscount(getProducts, subOrderDTO, discount, productInfo, productCondition);
         }
 
-        subOrderDTO = updateOrderByApplyDiscount(getProducts, subOrderDTO, discount, productInfo, productCondition);
         order.getKStoreIdVSubOrder().put(storeId, subOrderDTO);
         session.setAttribute(CUSTOMER_ORDER, order);
+    }
+
+    private void addOneOfDiscount(SDMOffer offer, SDMItem product, Map<SDMItem, Map<SDMOffer, Integer>> kOnOfDiscountVMapOffersTime) {
+        Map<SDMOffer,Integer> offerVTimeUse = null;
+        if (!kOnOfDiscountVMapOffersTime.containsKey(product)){
+            kOnOfDiscountVMapOffersTime.put(product,new HashMap<>());
+        }
+        offerVTimeUse = kOnOfDiscountVMapOffersTime.get(product);
+        if (!offerVTimeUse.containsKey(offer)){
+            offerVTimeUse.put(offer,1);
+        }else {
+            offerVTimeUse.put(offer,offerVTimeUse.get(offer) + 1);
+        }
+    }
+
+
+    private SDMOffer getOfferFromDiscount(SDMDiscount discount, Integer getProductId) {
+        return discount.getThenYouGet().getSDMOffer().stream().filter(sdmOffer ->
+                getProductId.equals(sdmOffer.getItemId())).findFirst().get();
     }
 
     private SubOrderDTO updateOrderByApplyDiscount(List<SDMItem> products, SubOrderDTO subOrderDTO, SDMDiscount discount, ProductDTO buyProductInfo, SDMItem productCondition) {
@@ -385,30 +399,7 @@ public class CustomerServlet extends HttpServlet {
         return subOrderDTO;
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = req.getParameter(ACTION);
-        switch (action) {
-            case GET_STORE_PRODUCTS_ACTION:
-                processRequestGetProductsInStore(req, resp);
-                break;
-            case GET_ZONE_PRODUCTS_ACTION:
-                processRequestGetProductsInZone(req, resp);
-                break;
-            case ADD_NEW_ORDER_STATIC_PRODUCTS_ACTION:
-                processRequestAddStoreProducts(req, resp);
-                break;
-            case ADD_NEW_ORDER_DYNAMIC_PRODUCTS_ACTION:
-                processRequestAddDynamicProducts(req, resp);
-                break;
-            case ADD_DISCOUNT_TO_ORDER_ACTION:
-                processRequestAddDiscountToOrder(req, resp);
-                break;
-            case GET_STORE_INFO_ACTION:
-                processRequestGetStoreInfo(req, resp);
-                break;
-        }
-    }
+
 
     private void processRequestGetStoreInOrderInfo(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
@@ -442,6 +433,31 @@ public class CustomerServlet extends HttpServlet {
                 break;
             case GET_STORES_IN_ORDER_DETAILS_ACTION:
                 processRequestGetStoreInOrderInfo(req, resp);
+                break;
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter(ACTION);
+        switch (action) {
+            case GET_STORE_PRODUCTS_ACTION:
+                processRequestGetProductsInStore(req, resp);
+                break;
+            case GET_ZONE_PRODUCTS_ACTION:
+                processRequestGetProductsInZone(req, resp);
+                break;
+            case ADD_NEW_ORDER_STATIC_PRODUCTS_ACTION:
+                processRequestAddStoreProducts(req, resp);
+                break;
+            case ADD_NEW_ORDER_DYNAMIC_PRODUCTS_ACTION:
+                processRequestAddDynamicProducts(req, resp);
+                break;
+            case ADD_DISCOUNT_TO_ORDER_ACTION:
+                processRequestAddDiscountToOrder(req, resp);
+                break;
+            case GET_STORE_INFO_ACTION:
+                processRequestGetStoreInfo(req, resp);
                 break;
         }
     }

@@ -6,7 +6,7 @@
 //
 
 
-package xml.schema.generated;
+package xmlBuild.schema.generated;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{}SDM-discount" maxOccurs="unbounded"/>
+ *         &lt;element ref="{}SDM-sell" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -38,41 +38,41 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "sdmDiscount"
+    "sdmSell"
 })
-@XmlRootElement(name = "SDM-discounts")
-public class SDMDiscounts {
+@XmlRootElement(name = "SDM-prices")
+public class SDMPrices {
 
-    @XmlElement(name = "SDM-discount", required = true)
-    protected List<SDMDiscount> sdmDiscount;
+    @XmlElement(name = "SDM-sell", required = true)
+    protected List<SDMSell> sdmSell;
 
     /**
-     * Gets the value of the sdmDiscount property.
+     * Gets the value of the sdmSell property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the sdmDiscount property.
+     * This is why there is not a <CODE>set</CODE> method for the sdmSell property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getSDMDiscount().add(newItem);
+     *    getSDMSell().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link SDMDiscount }
+     * {@link SDMSell }
      * 
      * 
      */
-    public List<SDMDiscount> getSDMDiscount() {
-        if (sdmDiscount == null) {
-            sdmDiscount = new ArrayList<SDMDiscount>();
+    public List<SDMSell> getSDMSell() {
+        if (sdmSell == null) {
+            sdmSell = new ArrayList<SDMSell>();
         }
-        return this.sdmDiscount;
+        return this.sdmSell;
     }
 
 }

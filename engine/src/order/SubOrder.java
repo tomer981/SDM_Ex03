@@ -2,10 +2,8 @@ package order;
 
 import dto.FeedbackDTO;
 import dto.SubOrderDTO;
-import xml.schema.generated.Location;
-import xml.schema.generated.SDMDiscount;
-import xml.schema.generated.SDMItem;
-import xml.schema.generated.SDMOffer;
+import xmlBuild.schema.generated.*;
+
 
 public class SubOrder {
     private SubOrderDTO subOrderDTO;

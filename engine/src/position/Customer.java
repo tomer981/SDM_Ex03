@@ -5,7 +5,6 @@ import dto.CustomerDTO;
 import dto.TransactionDTO;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +31,10 @@ public class Customer {
 
     public void addOrderId(String zoneName, Integer id) {
         Map<String, List<Integer>> KZoneVOrdersId = customerDTO.getKZoneNameVListOrderIds();
+        if (!KZoneVOrdersId.containsKey(zoneName)){
+            KZoneVOrdersId.put(zoneName, new ArrayList<>());
+        }
+
         List<Integer> ordersId = KZoneVOrdersId.get(zoneName);
         ordersId.add(id);
         KZoneVOrdersId.put(zoneName,ordersId);

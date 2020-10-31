@@ -5,10 +5,8 @@ import order.Action;
 import order.Order;
 import order.SubOrder;
 import store.Store;
-import xml.schema.generated.Location;
-import xml.schema.generated.SDMDiscount;
-import xml.schema.generated.SDMDiscounts;
-import xml.schema.generated.SDMItem;
+import xmlBuild.schema.generated.*;
+
 
 import java.util.*;
 
@@ -43,7 +41,7 @@ public class Managers {
 
             store.addSubOrder(subOrder);
             Double transferAmount = subOrder.getSubOrderDTO().getDeliveryPrice() + subOrder.getSubOrderDTO().getProductsPrice();
-            TransactionDTO transaction = Action.invokeAction(Action.TRANSFER,storeManager.getMoney(),transferAmount,orderDTO.getDate());
+            TransactionDTO transaction = new TransactionDTO(Action.TRANSFER.name(), orderDTO.getDate(),transferAmount,storeManager.getMoney(),storeManager.getMoney() + transferAmount);
             storeManager.addTransaction(transaction);
 
         }

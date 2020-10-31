@@ -6,7 +6,7 @@
 //
 
 
-package xml.schema.generated;
+package xmlBuild.schema.generated;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,10 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element ref="{}name"/>
- *         &lt;element ref="{}delivery-ppk"/>
- *         &lt;element ref="{}location"/>
- *         &lt;element ref="{}SDM-prices"/>
- *         &lt;element ref="{}SDM-discounts" minOccurs="0"/>
+ *         &lt;element ref="{}purchase-category"/>
  *       &lt;/sequence>
  *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
  *     &lt;/restriction>
@@ -43,24 +40,15 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "name",
-    "deliveryPpk",
-    "location",
-    "sdmPrices",
-    "sdmDiscounts"
+    "purchaseCategory"
 })
-@XmlRootElement(name = "SDM-store")
-public class SDMStore {
+@XmlRootElement(name = "SDM-item")
+public class SDMItem {
 
     @XmlElement(required = true)
     protected String name;
-    @XmlElement(name = "delivery-ppk")
-    protected int deliveryPpk;
-    @XmlElement(required = true)
-    protected Location location;
-    @XmlElement(name = "SDM-prices", required = true)
-    protected SDMPrices sdmPrices;
-    @XmlElement(name = "SDM-discounts")
-    protected SDMDiscounts sdmDiscounts;
+    @XmlElement(name = "purchase-category", required = true)
+    protected String purchaseCategory;
     @XmlAttribute(name = "id", required = true)
     protected int id;
 
@@ -89,91 +77,27 @@ public class SDMStore {
     }
 
     /**
-     * Gets the value of the deliveryPpk property.
-     * 
-     */
-    public int getDeliveryPpk() {
-        return deliveryPpk;
-    }
-
-    /**
-     * Sets the value of the deliveryPpk property.
-     * 
-     */
-    public void setDeliveryPpk(int value) {
-        this.deliveryPpk = value;
-    }
-
-    /**
-     * Gets the value of the location property.
+     * Gets the value of the purchaseCategory property.
      * 
      * @return
      *     possible object is
-     *     {@link Location }
+     *     {@link String }
      *     
      */
-    public Location getLocation() {
-        return location;
+    public String getPurchaseCategory() {
+        return purchaseCategory;
     }
 
     /**
-     * Sets the value of the location property.
+     * Sets the value of the purchaseCategory property.
      * 
      * @param value
      *     allowed object is
-     *     {@link Location }
+     *     {@link String }
      *     
      */
-    public void setLocation(Location value) {
-        this.location = value;
-    }
-
-    /**
-     * Gets the value of the sdmPrices property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SDMPrices }
-     *     
-     */
-    public SDMPrices getSDMPrices() {
-        return sdmPrices;
-    }
-
-    /**
-     * Sets the value of the sdmPrices property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link SDMPrices }
-     *     
-     */
-    public void setSDMPrices(SDMPrices value) {
-        this.sdmPrices = value;
-    }
-
-    /**
-     * Gets the value of the sdmDiscounts property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SDMDiscounts }
-     *     
-     */
-    public SDMDiscounts getSDMDiscounts() {
-        return sdmDiscounts;
-    }
-
-    /**
-     * Sets the value of the sdmDiscounts property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link SDMDiscounts }
-     *     
-     */
-    public void setSDMDiscounts(SDMDiscounts value) {
-        this.sdmDiscounts = value;
+    public void setPurchaseCategory(String value) {
+        this.purchaseCategory = value;
     }
 
     /**

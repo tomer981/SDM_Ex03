@@ -1,11 +1,10 @@
 package dto;
 
-import position.Customer;
 
 import java.util.Date;
 
 public class FeedbackDTO {
-    private Customer customer;
+    private CustomerDTO customer;
     private Date date;
     private Integer rate;
     private String msg;

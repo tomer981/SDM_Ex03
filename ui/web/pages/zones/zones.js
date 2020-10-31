@@ -73,8 +73,6 @@ $.ajax({
 })
 
 
-
-
 $.ajax({
     method: "Get",
     url: ZONES_URL,
