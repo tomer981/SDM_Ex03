@@ -15,6 +15,7 @@
     <script type="text/javascript" src="../../common/is-session-exist.js"></script>
     <script type="text/javascript" src="../../common/generalMethods.js"></script>
     <script type="text/javascript" src="zones.js"></script>
+    <script type="text/javascript" src="../../common/check-for-updates.js"></script>
     <link rel="stylesheet" href="zones.css">
     <link rel="stylesheet" href="../../common/styleTable.css">
 </head>
@@ -75,5 +76,10 @@
     </div>
     <br>
 </div>
+
+<script>
+    startCheckForUpdates((arr) => console.log(arr));
+</script>
+
 </body>
 </html>

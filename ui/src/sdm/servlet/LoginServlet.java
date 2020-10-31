@@ -44,7 +44,7 @@ public class LoginServlet extends HttpServlet {
 
         try {
             synchronized (this) {
-                if (req.getSession(false) == null) {
+                if (req.getSession(false) == null || req.getSession().getAttribute(USER_NAME) == null) {
                     if (!engine.isUserExist(userName) && userName != null) {
                         if (position.equals("manager")) {
                             addManager(userName, parts);

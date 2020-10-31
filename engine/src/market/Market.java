@@ -14,8 +14,13 @@ import xmlBuild.schema.generated.SDMStore;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
+interface StoreAddedListener {
+    void onStoreAdded(SDMStore store);
+}
 
 public final class Market {
     private static volatile Market marketInstance;
@@ -44,6 +49,19 @@ public final class Market {
         }
 
         return marketInstance;
+    }
+
+
+    // notifications
+
+    private final List<SDMStore> orderedStores = new CopyOnWriteArrayList<>();
+
+    public List<SDMStore> getStoresAddedSince(int index) {
+        return orderedStores.subList(index, orderedStores.size());
+    }
+
+    private void handleStoreAdded(SDMStore store) {
+        orderedStores.add(store);
     }
 
 
@@ -157,6 +175,8 @@ public final class Market {
 
         zoneMarket.addStoreToManager(sdmStore,manager,zoneName);
         managers.addManager(manager);
+
+        handleStoreAdded(sdmStore);
     }
     public synchronized void addManager(String name, File file) {
         Manager manager = null;

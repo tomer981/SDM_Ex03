@@ -3,8 +3,6 @@ $("#userslist").empty();
 $("#user-transaction-tableview").empty();
 $("#zone-info-tableview").empty();
 
-
-
 function submitButtonValidateParameters() {
     if ($("#date").val() !== "" && $("#deposit-amount").val() !== "") {
         if (isFloat($("#deposit-amount").val())) {
