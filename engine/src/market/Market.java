@@ -73,7 +73,7 @@ public final class Market {
     }
     public ManagerDTO getManagerDTO(String name){ return KManagerNameVManger.get(name).getManagerDTO();}
     public ManagerDTO getManagerDTOZone(String name, String zone){ return KManagerNameVManger.get(name).getManagerDTO(zone);}
-    public List<OrderDTO> getOrder(){
+    public List<OrderDTO> getOrders(){
         List<OrderDTO> ordersDTO = new ArrayList<>();
         for (ZoneMarket zoneMarket : KNameZoneVZone.values()){
             ordersDTO.addAll(zoneMarket.getOrdersDTO());
@@ -84,6 +84,11 @@ public final class Market {
     public List<OrderDTO> getOrdersByZoneAndIds(String name, List<Integer> ordersId){
         ZoneMarket zoneMarket = KNameZoneVZone.get(name);
         return zoneMarket.getOrdersDTOByIds(ordersId);
+    }
+    public List<OrderDTO> getOrdersByCustomerName(String customerName){
+        Customer customer = KCustomerNameVCustomer.get(customerName);
+        return customer.getOrders().stream().map(Order::getOrderDTO).collect(Collectors.toList());
+
     }
     public List<TransactionDTO> getUserTransactionsDTO(String userName){
 //        List<TransactionDTO> transactions = new ArrayList<>();
@@ -184,7 +189,7 @@ public final class Market {
         customerMakeTransaction(Action.TRANSFER,customer,orderDTO.getDate(),transactionAmount);
 
         Order order = managers.addOrder(orderDTO);
-        customer.addOrderId(zoneName,order.getOrderDTO().getId());
+        customer.addOrder(zoneName,order);
 
         zoneMarket.addOrder(order);
     }

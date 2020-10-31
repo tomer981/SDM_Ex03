@@ -25,8 +25,25 @@ tbody tr.selected:nth-child(even) {
     color: #FFF;
 }
 
-/*.btn btn-sm btn-default{*/
-/*    visibility: hidden;*/
-/*    background-color: yellow;*/
+div#content {
+    position: fixed;
+    top: 80px;
+    left: 40px;
+    bottom: 25px;
+    min-width: 200px;
+    background: black;
+    /* DEBUG: If the iframe doesn't cover the whole space,
+       it'll show through as black. */
+}
 
-/*}*/
+/* Position the iframe inside the new stacking context
+   to take up the whole space */
+div#content iframe {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+}
