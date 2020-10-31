@@ -24,7 +24,7 @@ import static sdm.constants.Constants.*;
 @WebServlet(name = "StoresServlet", urlPatterns = {"/StoresServlet", "/pages/storesInfo/StoresServlet"})
 public class StoresServlet extends HttpServlet {
     private final String NEW_ORDER_URL = "customer-actions-page/new-order/new-order.html";
-    private final String CUSTOMER_SHOW_ORDER_URL = "customer-actions-page/show-orders/show-orders.html";
+    private final String CUSTOMER_SHOW_ORDER_URL = "customer-actions-page/show-orders-customer/show-orders-customer.html";
     private final String MANAGER_SHOW_ORDER_URL = "manager-actions-page/show-orders/show-orders.html";
     private final String SHOW_FEEDBACKS_URL = "manager-actions-page/show-feedbacks/show-feedbacks.html";
     private final String NEW_STORE_URL = "manager-actions-page/add-store/add-store.html?zoneName=";

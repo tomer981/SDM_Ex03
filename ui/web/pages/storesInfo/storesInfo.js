@@ -63,7 +63,7 @@ function addCustomerAction(){
             '<select name="action" id="action-selected" onchange="activateSubmitButton()">' +
                 '<option style="display: none"></option>' +
                 '<option value="newOrder"> New Order</option>' +
-                '<option value="showOrder"> Show Order</option>' +
+                '<option value="showOrders"> Show Orders</option>' +
             '</select>' +
             '<input type="submit" value="Activate" class="button" disabled="disabled" id="submitFormButton"/>' +
         '</form>';
