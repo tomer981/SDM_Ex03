@@ -3,6 +3,7 @@ package position;
 
 import dto.CustomerDTO;
 import dto.TransactionDTO;
+import order.Order;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.Map;
 
 public class Customer {
     private CustomerDTO customerDTO;
+
+    private List<Order> orders = new ArrayList<>();
 
     public Customer(String name) {
         customerDTO = new CustomerDTO(name);
@@ -29,15 +32,20 @@ public class Customer {
         customerDTO.setTransactions(transactionDTOS);
     }
 
-    public void addOrderId(String zoneName, Integer id) {
+    public void addOrder(String zoneName, Order order) {
+        orders.add(order);
         Map<String, List<Integer>> KZoneVOrdersId = customerDTO.getKZoneNameVListOrderIds();
         if (!KZoneVOrdersId.containsKey(zoneName)){
             KZoneVOrdersId.put(zoneName, new ArrayList<>());
         }
 
         List<Integer> ordersId = KZoneVOrdersId.get(zoneName);
-        ordersId.add(id);
+        ordersId.add(order.getOrderDTO().getId());
         KZoneVOrdersId.put(zoneName,ordersId);
         customerDTO.setKZoneNameVListOrderIds(KZoneVOrdersId);
+    }
+
+    public List<Order> getOrders() {
+        return orders;
     }
 }

@@ -45,9 +45,10 @@ public class Constants {
 
 
     //OrderServlet
-    public static final String GET_IN_PROGRESS_ORDER_ACTION =  "getInProgressOrder";//POST
+    public static final String GET_IN_PROGRESS_ORDER_ACTION =  "getInProgressOrder";//GET
     public static final String GET_DISPLAY_ORDER_ACTION =  "getDisplayOrder";//POST
     public static final String GET_SUB_ORDERS_CUSTOMER_ACTION =  "getSubOrdersCustomer";//POST
     public static final String GET_SUB_ORDERS_PRODUCTS_ACTION =  "getSubOrdersProducts";//POST
-    public static final String CONFIRM_ORDER_ACTION =  "confirmOrder";//POST
+    public static final String CONFIRM_ORDER_ACTION =  "confirmOrder";//GET
+    public static final String GET_ALL_ORDERS_IDS =  "getAllOrdersIds";//GET
 }

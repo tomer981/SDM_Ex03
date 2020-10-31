@@ -6,7 +6,6 @@ import market.Market;
 import xmlBuild.schema.generated.*;
 
 
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +18,7 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static sdm.constants.Constants.*;
 
@@ -41,7 +41,7 @@ public class OrderServlet extends HttpServlet {
         resp.setContentType("application/json");
         HttpSession session = req.getSession(false);
         Market engine = Market.getMarketInstance();
-        String zoneName = (String) session.getAttribute(ZONE_NAME);
+        String userName = (String) session.getAttribute(USER_NAME);
 
         String ordersIdsObject = req.getParameter("orders");
         int[] ordersIds = new Gson().fromJson(ordersIdsObject, int[].class);
@@ -55,7 +55,9 @@ public class OrderServlet extends HttpServlet {
             for (int i = 0; i < ordersIds.length; i++) {
                 OrdersIds.add(ordersIds[i]);
             }
-            orders = engine.getOrdersByZoneAndIds(zoneName, OrdersIds);
+
+            orders = engine.getOrdersByCustomerName(userName);
+            orders = orders.stream().filter(orderDTO -> !OrdersIds.contains(orderDTO.getId())).collect(Collectors.toList());
         }
 
         JsonArray jsonOrders = new JsonArray();
@@ -202,7 +204,6 @@ public class OrderServlet extends HttpServlet {
         return jsonProduct;
     }
 
-
     private JsonArray getSubOrdersProductsJsonArray(SubOrderDTO subOrder, String zoneName) {
 
         Market engine = Market.getMarketInstance();
@@ -241,10 +242,30 @@ public class OrderServlet extends HttpServlet {
         String userName = (String) session.getAttribute(USER_NAME);
         Market engine = Market.getMarketInstance();
 
-        engine.addOrder(zoneName,userName,order);
+        engine.addOrder(zoneName, userName, order);
 
         session.removeAttribute(CUSTOMER_ORDER);
 
+    }
+
+    private void processRequestGetAllOrdersIds(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/json");
+        HttpSession session = req.getSession(false);
+        String userName = (String) session.getAttribute(USER_NAME);
+
+        Market engine = Market.getMarketInstance();
+        List<OrderDTO> ordersList = engine.getOrdersByCustomerName(userName);
+        List listOrdersIds = ordersList.stream().map(OrderDTO::getId).collect(Collectors.toList());
+
+        int[] ordersIds = new int[listOrdersIds.size()];
+        for (int i = 0; i < ordersIds.length; i++) {
+            ordersIds[i] = listOrdersIds.indexOf(i);
+        }
+
+        try (PrintWriter out = resp.getWriter()) {
+            out.println(new Gson().toJson(ordersIds));
+            out.flush();
+        }
     }
 
     @Override
@@ -257,8 +278,10 @@ public class OrderServlet extends HttpServlet {
             case CONFIRM_ORDER_ACTION:
                 processRequestConfirmOrder(req, resp);
                 break;
+            case GET_ALL_ORDERS_IDS:
+                processRequestGetAllOrdersIds(req, resp);
+                break;
         }
-
     }
 
 
