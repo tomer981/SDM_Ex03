@@ -4,15 +4,12 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Scanner;
+import java.nio.file.*;
+import java.nio.file.attribute.FileAttribute;
+import java.util.*;
 
 import market.Market;
 import sdm.constants.*;
@@ -70,7 +67,7 @@ public class LoginServlet extends HttpServlet {
             if (e.getMessage().indexOf(':') != -1) {
                 msg = msg.substring(msg.indexOf(':') + 2);
             }
-            throw new IllegalStateException(msg);
+            throw new IllegalStateException(msg, e);
         }
     }
 
@@ -81,13 +78,14 @@ public class LoginServlet extends HttpServlet {
                 try {
                     InputStream inputStream = part.getInputStream();
                     List<String> fileContent = new ArrayList<>();
-                    String fileName = part.getSubmittedFileName();
                     fileContent.add(new Scanner(inputStream).useDelimiter("\\Z").next());
-                    Path file1 = Paths.get(fileName);
-                    Files.write(file1, fileContent);
-                    engine.addManager(userName, file1.toFile());
+                    Path tempFile = Files.createTempFile("SDM-", ".xml");
+
+                    System.out.println("Attempting to write to file " + tempFile);
+                    Files.write(tempFile, fileContent, StandardOpenOption.CREATE);
+                    engine.addManager(userName, tempFile.toFile());
                 } catch (IOException e) {
-                    throw new IllegalStateException(e.getMessage());
+                    throw new IllegalStateException(e.getMessage(), e);
                 }
             }
         }
