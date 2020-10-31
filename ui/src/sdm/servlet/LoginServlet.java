@@ -81,7 +81,7 @@ public class LoginServlet extends HttpServlet {
                     fileContent.add(new Scanner(inputStream).useDelimiter("\\Z").next());
                     Path tempFile = Files.createTempFile("SDM-", ".xml");
 
-                    Files.write(tempFile, fileContent, StandardOpenOption.CREATE);
+                    Files.write(tempFile, fileContent, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
                     engine.addManager(userName, tempFile.toFile());
                 } catch (IOException e) {
                     throw new IllegalStateException(e.getMessage(), e);
