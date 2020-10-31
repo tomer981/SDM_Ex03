@@ -51,4 +51,5 @@ public class Constants {
     public static final String GET_SUB_ORDERS_PRODUCTS_ACTION =  "getSubOrdersProducts";//POST
     public static final String CONFIRM_ORDER_ACTION =  "confirmOrder";//GET
     public static final String GET_ALL_ORDERS_IDS =  "getAllOrdersIds";//GET
+    public static final String LAST_STORE_INDEX = "lastStoreId";
 }

@@ -1,4 +1,4 @@
-const interval = 500
+const interval = 5000
 let updatesCheckerHandler = null;
 let isChecking = false
 

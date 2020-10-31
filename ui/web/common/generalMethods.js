@@ -97,9 +97,6 @@ function formToJson($form){
 function sendJsonForm(form, url, successFn, errorFn) {
     let jsonData = formToJson($(form));
 
-    console.log("Sending: ");
-    console.log(jsonData);
-
     $.ajax({
         url: url,
         type: "POST",
@@ -108,7 +105,12 @@ function sendJsonForm(form, url, successFn, errorFn) {
         processData: false,
         cache: false,
         dataType: "json",
-        success: successFn,
-        error: errorFn
-    })
+        complete: (data) => {
+            if (data !== undefined && data.error !== undefined) {
+                errorFn(data.error)
+            } else {
+                successFn(data)
+            }
+        }
+    });
 }

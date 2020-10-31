@@ -19,7 +19,7 @@ public class ErrorServlet extends HttpServlet {
         // TODO: Send JSON of the error
         JsonObject json = new JsonObject();
         json.addProperty("error",throwable.getMessage());
-        resp.getWriter().write(throwable.getMessage());
+        resp.getWriter().println(json);
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
