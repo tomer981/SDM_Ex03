@@ -7,6 +7,9 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const zoneName = urlParams.get('zoneName')
 
+
+// TODO: TOMER: Better this to be in a function called from the page, otherwise this file cannot be included
+// TODO: TOMER: (This is why I have to copy this to a method elsewhere)
 $.ajax({
     method: "Get",
     url: STORES_URL,

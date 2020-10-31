@@ -15,6 +15,7 @@
     <script type="text/javascript" src="../../../../common/is-session-exist.js"></script>
     <script type="text/javascript" src="../../../../common/check-for-updates.js"></script>
     <script type="text/javascript" src="../../../../common/generalMethods.js"></script>
+    <script type="text/javascript" src="../../utils.js"></script>
 </head>
 <body>
 <div>
@@ -35,7 +36,7 @@
             </thead>
             <tbody>
             <tr>
-                <td>
+                <td id="new-product-id-cell">
                     <input type="number" id="new-product-id" />
                 </td>
                 <td>
@@ -58,6 +59,28 @@
 <script type="text/javascript">
     startCheckForUpdates((updates) => console.log(updates));
 
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const zoneName = urlParams.get('zoneName')
+
+    let products = {};
+
+    getProductsInZone(zoneName, (result) => {
+        console.debug(result);
+
+        result
+            .forEach(({productId, productName}) =>
+                products = Object.assign(products, {[productId]: productName}));
+
+        let productsSelection = "<select id='new-product-id'>";
+        productsSelection += result.map(({productId, productName}) => `<option value='${productId}'>${productName}</option>`)
+        productsSelection += "</select>";
+
+        console.debug(products);
+
+        $("#new-product-id-cell").html(productsSelection);
+    });
+
     let newProductIndex = 0
 
     $("#storeInfo-form").on("submit", function (e) {
@@ -66,7 +89,7 @@
         sendJsonForm(this, MANAGER_URL, (success) => {
             // TODO: Replace me
             newProductIndex = 0
-            // $(this).reset()
+            $(this).reset()
 
             console.log("Success? " + success)
         }, (msg) => {
@@ -86,7 +109,7 @@
 
         const newRow = $.find("#new-store-prices")[0].insertRow()
 
-        newRow.insertCell().innerHTML = `<input type="hidden" name="sales.${newProductIndex}.id" value="${id}">${id}</input>`
+        newRow.insertCell().innerHTML = `<input type="hidden" name="sales.${newProductIndex}.id" value="${id}">${products[id]}</input>`
         newRow.insertCell().innerHTML = `<input type="hidden" name="sales.${newProductIndex}.price" value="${price}">${price}</input>`
 
         newProductIndex++;
