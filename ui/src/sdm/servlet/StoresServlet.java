@@ -27,7 +27,7 @@ public class StoresServlet extends HttpServlet {
     private final String CUSTOMER_SHOW_ORDER_URL = "customer-actions-page/show-orders/show-orders.html";
     private final String MANAGER_SHOW_ORDER_URL = "manager-actions-page/show-orders/show-orders.html";
     private final String SHOW_FEEDBACKS_URL = "manager-actions-page/show-feedbacks/show-feedbacks.html";
-    private final String NEW_STORE_URL = "manager-actions-page/add-store/add-store.html";
+    private final String NEW_STORE_URL = "manager-actions-page/add-store/add-store.html?zoneName=";
 
     private void processRequestGetProductsInZone(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -129,7 +129,7 @@ public class StoresServlet extends HttpServlet {
                 resp.sendRedirect(SHOW_FEEDBACKS_URL);
                 break;
             case NEW_STORE_ACTION:
-                resp.sendRedirect(NEW_STORE_URL);
+                resp.sendRedirect(NEW_STORE_URL + zoneName);
                 break;
         }
     }
