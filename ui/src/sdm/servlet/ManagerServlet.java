@@ -3,10 +3,9 @@ package sdm.servlet;
 
 import com.google.gson.Gson;
 import market.Market;
-import xml.schema.generated.*;
+import xmlBuild.schema.generated.*;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

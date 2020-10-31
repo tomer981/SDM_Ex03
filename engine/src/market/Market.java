@@ -6,10 +6,12 @@ import order.Order;
 import position.Customer;
 import position.Manager;
 import position.Managers;
-import xml.schema.SchemaBaseJaxbObjects;
-import xml.schema.generated.*;
+import xmlBuild.SchemaBaseJaxbObjects;
+import xmlBuild.schema.generated.Location;
+import xmlBuild.schema.generated.SDMDiscount;
+import xmlBuild.schema.generated.SDMItem;
+import xmlBuild.schema.generated.SDMStore;
 
-import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
