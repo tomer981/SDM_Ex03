@@ -35,21 +35,26 @@
             <th>Price</th>
             </thead>
             <tbody>
+            </tbody>
+        </table>
+        <table>
+            <tbody>
             <tr>
-                <td id="new-product-id-cell">
+                <th id="new-product-id-cell">
                     <input type="number" id="new-product-id" />
-                </td>
-                <td>
+                </th>
+                <th>
                     <input type="number" id="new-product-price" />
-                </td>
+                </th>
             </tr>
             <tr>
-                <td colspan="2">
+                <th colspan="2">
                     <button type="button" id="add-product">Add Product</button>
-                </td>
+                </th>
             </tr>
             </tbody>
         </table>
+
         <button type="submit">Add!</button>
     </form>
 </div>
@@ -64,34 +69,50 @@
     const zoneName = urlParams.get('zoneName')
 
     let products = {};
+    let newProductIndex = 0
 
-    getProductsInZone(zoneName, (result) => {
-        console.debug(result);
+    function resetForm() {
+        newProductIndex = 0;
 
-        result
-            .forEach(({productId, productName}) =>
-                products = Object.assign(products, {[productId]: productName}));
+        getProductsInZone(zoneName, (result) => {
+            result
+                .forEach(({productId, productName}) =>
+                    products = Object.assign(products, {[productId]: productName}));
 
+            updateProductsSelection();
+        });
+
+        $.find("#storeInfo-form")[0].reset();
+
+        let table = $.find("#new-store-prices")[0];
+        console.log(table.rows.length);
+        while (table.rows.length > 0) {
+            table.deleteRow(0);
+            console.log(table.rows.length);
+        }
+    }
+
+
+    function updateProductsSelection() {
         let productsSelection = "<select id='new-product-id'>";
-        productsSelection += result.map(({productId, productName}) => `<option value='${productId}'>${productName}</option>`)
+        for (const id in products) {
+            const name = products[id];
+            productsSelection += `<option value='${id}'>${name}</option>`;
+        }
+
         productsSelection += "</select>";
 
-        console.debug(products);
-
         $("#new-product-id-cell").html(productsSelection);
-    });
+    }
 
-    let newProductIndex = 0
+    resetForm();
 
     $("#storeInfo-form").on("submit", function (e) {
         e.preventDefault()
 
         sendJsonForm(this, MANAGER_URL, (success) => {
-            // TODO: Replace me
-            newProductIndex = 0
-            $(this).reset()
-
-            console.log("Success? " + success)
+            console.log("Success! " + success);
+            resetForm();
         }, (msg) => {
             const output = $("<p id='error' style='color: #ff0000'></p>").html(msg.responseText);
             $("#error").remove();
@@ -113,6 +134,10 @@
         newRow.insertCell().innerHTML = `<input type="hidden" name="sales.${newProductIndex}.price" value="${price}">${price}</input>`
 
         newProductIndex++;
+
+        delete products[id];
+
+        updateProductsSelection();
     });
 </script>
 </body>
