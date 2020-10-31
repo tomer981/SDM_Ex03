@@ -4,6 +4,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
@@ -77,10 +78,12 @@ public class LoginServlet extends HttpServlet {
                     InputStream inputStream = part.getInputStream();
                     List<String> fileContent = new ArrayList<>();
                     fileContent.add(new Scanner(inputStream).useDelimiter("\\Z").next());
-                    Path tempFile = Files.createTempFile("SDM-", ".xml");
+                    Path tempFilePath = Files.createTempFile("SDM-", ".xml");
+                    File tempFile = tempFilePath.toFile();
+                    tempFile.deleteOnExit();
 
-                    Files.write(tempFile, fileContent, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-                    engine.addManager(userName, tempFile.toFile());
+                    Files.write(tempFilePath, fileContent, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+                    engine.addManager(userName, tempFile);
                 } catch (IOException e) {
                     throw new IllegalStateException(e.getMessage(), e);
                 }
