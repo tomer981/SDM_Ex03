@@ -7,9 +7,11 @@ import position.Customer;
 import position.Manager;
 import position.Managers;
 import xml.schema.SchemaBaseJaxbObjects;
-import xml.schema.generated.*;
+import xml.schema.generated.Location;
+import xml.schema.generated.SDMDiscount;
+import xml.schema.generated.SDMItem;
+import xml.schema.generated.SDMStore;
 
-import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -126,7 +128,6 @@ public final class Market {
 
         ZoneMarket zoneMarket = new ZoneMarket(schema,manager);
         Managers managers = new Managers(zoneMarket.getZoneName());
-
 
         KZoneVManagers.put(zoneMarket, managers);
         KNameZoneVZone.put(zoneMarket.getZoneName(),zoneMarket);

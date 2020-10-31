@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static xml.schema.generated.SuperDuperMarketDescriptor.*;
-
 
 public class SchemaBaseJaxbObjects {
     private static final String JAXB_XML_SDM_PACKAGE_NAME = "xml.schema.generated";
