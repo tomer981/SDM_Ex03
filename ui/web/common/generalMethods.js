@@ -79,20 +79,15 @@ function formToJson($form){
         if (names.length === 1) {
             indexed_array[names[0]] = n['value'];
         } else {
-            console.log(indexed_array);
             if (indexed_array[names[0]] === undefined) {
                 indexed_array[names[0]] = [];
             }
 
-            console.log(indexed_array);
             while (indexed_array[names[0]].length <= parseInt(names[1])) {
                 indexed_array[names[0]].push({});
             }
 
-            console.log(indexed_array);
             indexed_array[names[0]][names[1]][names[2]] = n['value'];
-
-            console.log(indexed_array);
         }
     });
 

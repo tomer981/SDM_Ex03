@@ -61,7 +61,7 @@ class StoreInfo {
 }
 
 @WebServlet(name = "ManagerServlet", urlPatterns = {"/ManagerServlet"})
-@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
+//@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class ManagerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -73,7 +73,5 @@ public class ManagerServlet extends HttpServlet {
         String zone = (String) req.getSession().getAttribute(ZONE_NAME);
 
         market.addStoreToManager(name, zone, storeInfo.toStore());
-
-        super.doPut(req, resp);
     }
 }

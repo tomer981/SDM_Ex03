@@ -18,7 +18,7 @@
 </head>
 <body>
 <div>
-    <form id="storeInfo-form" method="post">
+    <form id="storeInfo-form">
         <input type="hidden" name="command" value="storeInfo"/>
         <label for="name">Store Name</label>
         <input type="text" name="name" id="name" />
@@ -66,11 +66,11 @@
         sendJsonForm(this, MANAGER_URL, (success) => {
             // TODO: Replace me
             newProductIndex = 0
-            $(this).reset()
+            // $(this).reset()
 
             console.log("Success? " + success)
         }, (msg) => {
-            const output = $("<p id='error' style='color: #ff0000'></p>").text(msg.responseText);
+            const output = $("<p id='error' style='color: #ff0000'></p>").html(msg.responseText);
             $("#error").remove();
             $("body").append(output)
         });
@@ -88,6 +88,8 @@
 
         newRow.insertCell().innerHTML = `<input type="hidden" name="sales.${newProductIndex}.id" value="${id}">${id}</input>`
         newRow.insertCell().innerHTML = `<input type="hidden" name="sales.${newProductIndex}.price" value="${price}">${price}</input>`
+
+        newProductIndex++;
     });
 </script>
 </body>
