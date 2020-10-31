@@ -44,20 +44,16 @@ public class OrderServlet extends HttpServlet {
         String userName = (String) session.getAttribute(USER_NAME);
 
         String ordersIdsObject = req.getParameter("orders");
-        int[] ordersIds = new Gson().fromJson(ordersIdsObject, int[].class);
+        Integer[] ordersIds = new Gson().fromJson(ordersIdsObject, Integer[].class);
 
         List<OrderDTO> orders = new ArrayList<>();
 
         if (ordersIds[0] == -1) {
             orders.add((OrderDTO) session.getAttribute(CUSTOMER_ORDER));
         } else {
-            List<Integer> OrdersIds = new ArrayList<>();
-            for (int i = 0; i < ordersIds.length; i++) {
-                OrdersIds.add(ordersIds[i]);
-            }
+            ArrayList<Integer> OrdersIds = new ArrayList<Integer>(Arrays.asList(ordersIds));
 
             orders = engine.getOrdersByCustomerName(userName);
-            orders = orders.stream().filter(orderDTO -> !OrdersIds.contains(orderDTO.getId())).collect(Collectors.toList());
         }
 
         JsonArray jsonOrders = new JsonArray();
@@ -255,12 +251,10 @@ public class OrderServlet extends HttpServlet {
 
         Market engine = Market.getMarketInstance();
         List<OrderDTO> ordersList = engine.getOrdersByCustomerName(userName);
-        List listOrdersIds = ordersList.stream().map(OrderDTO::getId).collect(Collectors.toList());
+        List <Integer>listOrdersIds = ordersList.stream().map(OrderDTO::getId).collect(Collectors.toList());
 
-        int[] ordersIds = new int[listOrdersIds.size()];
-        for (int i = 0; i < ordersIds.length; i++) {
-            ordersIds[i] = listOrdersIds.indexOf(i);
-        }
+        Integer[] ordersIds = new Integer[listOrdersIds.size()];
+        ordersIds = listOrdersIds.toArray(ordersIds);
 
         try (PrintWriter out = resp.getWriter()) {
             out.println(new Gson().toJson(ordersIds));
