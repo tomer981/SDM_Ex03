@@ -20,9 +20,7 @@ public class UpdatesServlet extends HttpServlet {
         try (PrintWriter out = resp.getWriter()) {
 
             // TODO: Insert real update code here
-            System.out.println("Sleep started");
             Thread.sleep(500);
-            System.out.println("Sleep ended");
 
             JsonObject json = new JsonObject();
             json.addProperty("text", "hello");

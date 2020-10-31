@@ -13,11 +13,12 @@
             crossorigin="anonymous"></script>    <script type="text/javascript" src="../../../../common/context-path-helper.js"></script>
     <script type="text/javascript" src="../../../../common/urls.js"></script>
     <script type="text/javascript" src="../../../../common/is-session-exist.js"></script>
+    <script type="text/javascript" src="../../../../common/check-for-updates.js"></script>
     <script type="text/javascript" src="../../../../common/generalMethods.js"></script>
 </head>
 <body>
-<div>
-    <form id="addStore-form" method="post" >
+<div dir="rtl">
+    <form id="addStore-form" method="post">
         <input type="hidden" name="command" value="addStore"/>
         <label for="name">שם החנות</label>
         <input type="text" name="name" id="name" />
@@ -27,6 +28,7 @@
         <input type="number" name="coordY" id="coordY" min="1" max="50" />
         <label for="ppk">PPK</label>
         <input type="number" name="ppk" id="ppk" />
+        <button type="submit">הוסיפי חנות</button>
     </form>
 </div>
 
@@ -36,23 +38,15 @@
     startCheckForUpdates((updates) => console.log(updates));
 
     $("#addStore-form").on("submit", function (e) {
-        $.ajax({
-            url: MANAGER_URL,
-            type: this.method,
-            data: new FormData(this),
-            processData: false,
-            contentType: false,
-            cache: false,
-            dataType: "html",
-            success: function (success) {
-                // TODO: Replace me
-                console.log("Success? " + success)
-            },
-            error: function (msg) {
-                var output = $("<p id='error' style='color: #ff0000'></p>").text(msg.responseText);
-                $("#error").remove();
-                $("body").append(output)
-            }
+        e.preventDefault()
+
+        sendJsonForm(this, MANAGER_URL, (success) => {
+            // TODO: Replace me
+            console.log("Success? " + success)
+        }, (msg) => {
+            const output = $("<p id='error' style='color: #ff0000'></p>").text(msg.responseText);
+            $("#error").remove();
+            $("body").append(output)
         });
 
         return false;

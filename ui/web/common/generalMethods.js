@@ -66,3 +66,33 @@ function isInt(n) {
     number = parseInt(n)
     return Number(number) === number && number == n;
 }
+
+function formToJson($form){
+    const array = $form.serializeArray();
+    let indexed_array = {};
+
+    $.map(array, function(n, i){
+        indexed_array[n['name']] = n['value'];
+    });
+
+    return indexed_array;
+}
+
+function sendJsonForm(form, url, successFn, errorFn) {
+    let jsonData = formToJson($(form));
+
+    console.log("Sending: ");
+    console.log(jsonData);
+
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: JSON.stringify(jsonData),
+        contentType: 'application/json; charset=utf-8',
+        processData: false,
+        cache: false,
+        dataType: "json",
+        success: successFn,
+        error: errorFn
+    })
+}
