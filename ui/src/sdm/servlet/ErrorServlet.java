@@ -12,15 +12,14 @@ import java.net.URLEncoder;
 @WebServlet("/ErrorHandler")
 public class ErrorServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Exception exception = (Exception) req.getAttribute("javax.servlet.error.exception");
-
+        Throwable throwable = (Throwable) req.getAttribute("javax.servlet.error.exception");
 
         resp.setStatus(500);
 
         // TODO: Send JSON of the error
         JsonObject json = new JsonObject();
-        json.addProperty("error",exception.getMessage());
-        resp.getWriter().write(exception.getMessage());
+        json.addProperty("error",throwable.getMessage());
+        resp.getWriter().write(throwable.getMessage());
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {

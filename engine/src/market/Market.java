@@ -6,9 +6,10 @@ import order.Order;
 import position.Customer;
 import position.Manager;
 import position.Managers;
-import xmlBuild.SchemaBaseJaxbObjects;
-import xmlBuild.schema.generated.*;
+import xml.schema.SchemaBaseJaxbObjects;
+import xml.schema.generated.*;
 
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -144,7 +145,7 @@ public final class Market {
     //////////method public
     public void addStoreToManager(String managerName, String zoneName, SDMStore sdmStore){
         Manager manager = KManagerNameVManger.get(managerName);
-        ZoneMarket zoneMarket = KNameZoneVZone.get(managerName);
+        ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
         Managers managers = KZoneVManagers.get(zoneMarket);
 
         zoneMarket.addStoreToManager(sdmStore,manager,zoneName);

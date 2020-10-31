@@ -66,3 +66,49 @@ function isInt(n) {
     number = parseInt(n)
     return Number(number) === number && number == n;
 }
+
+function formToJson($form){
+    const array = $form.serializeArray();
+    let indexed_array = {};
+
+    $.map(array, function(n, i) {
+        const names = n['name'].split('.');
+
+        // This can be done in a more sophisticated way to take into account objects and arrays but we need only
+        // arrays so this is the simple solution
+        if (names.length === 1) {
+            indexed_array[names[0]] = n['value'];
+        } else {
+            if (indexed_array[names[0]] === undefined) {
+                indexed_array[names[0]] = [];
+            }
+
+            while (indexed_array[names[0]].length <= parseInt(names[1])) {
+                indexed_array[names[0]].push({});
+            }
+
+            indexed_array[names[0]][names[1]][names[2]] = n['value'];
+        }
+    });
+
+    return indexed_array;
+}
+
+function sendJsonForm(form, url, successFn, errorFn) {
+    let jsonData = formToJson($(form));
+
+    console.log("Sending: ");
+    console.log(jsonData);
+
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: JSON.stringify(jsonData),
+        contentType: 'application/json; charset=utf-8',
+        processData: false,
+        cache: false,
+        dataType: "json",
+        success: successFn,
+        error: errorFn
+    })
+}
