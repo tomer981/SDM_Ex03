@@ -179,7 +179,6 @@ public final class Market {
         ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
         Managers managers = KZoneVManagers.get(zoneMarket);
 
-
         if (getStoresLocation(zoneName).stream().anyMatch(location -> location.getX() == sdmStore.getLocation().getX() && location.getY() == sdmStore.getLocation().getY())){
             throw new IllegalStateException("the Location is already taken by anther store");
         }

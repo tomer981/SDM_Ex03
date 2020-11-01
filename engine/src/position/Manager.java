@@ -74,10 +74,10 @@ public class Manager {
         }
         Store store = null;
         if (sdmStore.getId() == 0){
-            store = new Store(sdmStore, name,productsInfo);
+            store = new Store(sdmStore, name,zone,productsInfo);
         }
         else {
-            store = Store.addStoreToZone(sdmStore, name,productsInfo,storesIds);
+            store = Store.addStoreToZone(sdmStore, name,productsInfo,zone,storesIds);
         }
 
         List<Store> stores = KZoneNameVStores.get(zone);
@@ -118,6 +118,7 @@ public class Manager {
         return KZoneNameVStores.get(zoneName).size();
     }
 
+
     public void addTransaction(TransactionDTO transaction) {
         transactions.add(transaction);
         money = transaction.getMoneyAfterTransaction();
@@ -137,4 +138,7 @@ public class Manager {
     }
 
 
+    public String getZoneName(Integer storeId) {
+        return null;
+    }
 }

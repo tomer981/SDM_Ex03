@@ -17,6 +17,7 @@ public class Store {
     private SDMStore storeInfo;
     private Map<Integer, SubOrder> KIdOrderVSubOrder = new HashMap<>();
     private Map<SDMItem, ProductDTO> KProductInfoVProductAmount = new HashMap<>();
+    private String zoneName;
 
     public String getStoreOwnerName() {
         return StoreOwnerName;
@@ -27,9 +28,13 @@ public class Store {
     public Map<Integer, SubOrder> getKIdOrderVSubOrder() {
         return KIdOrderVSubOrder;
     }
+    public String getZoneName() {
+        return zoneName;
+    }
 
-    public Store(SDMStore storeInfo, String StoreOwnerName,SDMItems products) {
+    public Store(SDMStore storeInfo, String StoreOwnerName, String zoneName, SDMItems products) {
         this.storeInfo = storeInfo;
+        this.zoneName = zoneName;
         this.StoreOwnerName = StoreOwnerName;
         for (SDMItem product : products.getSDMItem()){
             if (isProductSold(product)){
@@ -40,8 +45,8 @@ public class Store {
             }
         }
     }
-    public static Store addStoreToZone(SDMStore storeInfo, String StoreOwnerName, SDMItems products, List<Integer> ids) {
-        Store store = new Store(storeInfo,StoreOwnerName,products);
+    public static Store addStoreToZone(SDMStore storeInfo, String StoreOwnerName, SDMItems products,String zoneName, List<Integer> ids) {
+        Store store = new Store(storeInfo,StoreOwnerName,zoneName,products);
         while (ids.contains(assassinId)){
             assassinId++;
         }
