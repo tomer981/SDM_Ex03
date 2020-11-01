@@ -8,6 +8,7 @@ import xmlBuild.schema.generated.*;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Manager {
     private final String name;
@@ -26,7 +27,13 @@ public class Manager {
         return name;
     }
 
+    public List<Integer> getStoresIdInZone(String zoneName){
+        if (KZoneNameVStores.containsKey(zoneName)){
+            return KZoneNameVStores.get(zoneName).stream().map(Store::getStoreInfo).map(SDMStore::getId).collect(Collectors.toList());
+        }
+        return null;
 
+    }
 
     private List<StoreDTO> getStoresDTOByZone(String zoneName) {
         List<Store> storesZone =  KZoneNameVStores.get(zoneName);
@@ -61,12 +68,18 @@ public class Manager {
     }
 
     //methods
-    public void addStoreToManager(String zone, SDMStore sdmStore, SDMItems productsInfo) {
+    public void addStoreToManager(String zone, SDMStore sdmStore, SDMItems productsInfo, List<Integer> storesIds) {
         if (!KZoneNameVStores.containsKey(zone)){
             KZoneNameVStores.put(zone,new ArrayList<>());
         }
+        Store store = null;
+        if (sdmStore.getId() == 0){
+            store = new Store(sdmStore, name,productsInfo);
+        }
+        else {
+            store = Store.addStoreToZone(sdmStore, name,productsInfo,storesIds);
+        }
 
-        Store store = new Store(sdmStore, name,productsInfo);
         List<Store> stores = KZoneNameVStores.get(zone);
         stores.add(store);
         KZoneNameVStores.put(zone,stores);

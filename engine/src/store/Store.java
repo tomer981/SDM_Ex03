@@ -8,9 +8,11 @@ import order.SubOrder;
 import xmlBuild.schema.generated.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Store {
+    private static int assassinId = 1;
     private String StoreOwnerName;
     private SDMStore storeInfo;
     private Map<Integer, SubOrder> KIdOrderVSubOrder = new HashMap<>();
@@ -38,6 +40,17 @@ public class Store {
             }
         }
     }
+    public static Store addStoreToZone(SDMStore storeInfo, String StoreOwnerName, SDMItems products, List<Integer> ids) {
+        Store store = new Store(storeInfo,StoreOwnerName,products);
+        while (ids.contains(assassinId)){
+            assassinId++;
+        }
+        store.getStoreInfo().setId(assassinId);
+
+        storeInfo.setId(assassinId);
+        return store;
+    }
+
 
 
     public StoreDTO getStoreDTO(){

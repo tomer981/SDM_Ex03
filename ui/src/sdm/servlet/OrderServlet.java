@@ -239,9 +239,8 @@ public class OrderServlet extends HttpServlet {
         Market engine = Market.getMarketInstance();
 
         engine.addOrder(zoneName, userName, order);
-
+        session.setAttribute(FEEDBACK_STORES,order.getKStoreIdVSubOrder().keySet());
         session.removeAttribute(CUSTOMER_ORDER);
-
     }
 
     private void processRequestGetAllOrdersIds(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -357,8 +356,6 @@ public class OrderServlet extends HttpServlet {
             case GET_SUB_ORDERS_INFO_FOR_MANAGER:
                 processRequestGetSubOrdersInfoForManager(req, resp);
                 break;
-
-
         }
     }
 

@@ -50,6 +50,7 @@ class StoreInfo {
         );
 
         SDMStore store = new SDMStore();
+        store.setId(-1);
         store.setName(name);
         store.setDeliveryPpk(ppk);
         store.setLocation(loc);

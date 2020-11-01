@@ -61,6 +61,16 @@ public class ZoneMarket {
     }
 
     //Method
+    private List<Integer> getStoresIds(){
+        List<Integer> storesIDS = new ArrayList<>();
+        for (Manager manager : KManagerNameVManager.values()) {
+            List<Integer> storesIdInZone = manager.getStoresIdInZone(zoneName);
+            if (storesIdInZone == null){break;}
+            storesIDS.addAll(storesIdInZone);
+        }
+        return storesIDS;
+
+    }
     private Map<String,ManagerDTO> getKManagerNameVManagerDTO(){
         Map<String,ManagerDTO> KManagerNameVManagerDTO = new HashMap<>();
 
@@ -76,7 +86,7 @@ public class ZoneMarket {
             KManagerNameVManager.put(manager.getName(),manager);
         }
 
-        manager.addStoreToManager(zoneName, store, productsInfo);
+        manager.addStoreToManager(zoneName, store, productsInfo,getStoresIds());
     }
 
 

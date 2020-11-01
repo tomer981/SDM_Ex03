@@ -8,6 +8,7 @@ public class Constants {
     public static final String ACTION = "action";
     public static final String ZONE_NAME = "zoneName";
     public static final String CUSTOMER_ORDER = "customerOrder";
+    public static final String FEEDBACK_STORES = "feedbackStores";
 
     //StoresServlet
     public static final String GET_PRODUCTS_IN_ZONE_ACTION = "getProductsInZone";
