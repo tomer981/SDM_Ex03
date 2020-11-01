@@ -26,12 +26,16 @@ public class LoginServlet extends HttpServlet {
         String userNotFoundPage = req.getParameter("userNotFoundPage");
         String userFoundPage = req.getParameter("userFoundPage");
 
-        HttpSession session = req.getSession(false);
-        if (session == null) {
+        if (!isLoggedIn(req)) {
             resp.getWriter().write(userNotFoundPage);
         } else {
             resp.getWriter().write(userFoundPage);
         }
+    }
+
+    private boolean isLoggedIn(HttpServletRequest req) {
+        HttpSession session = req.getSession(false);
+        return session != null && session.getAttribute(USER_NAME) != null;
     }
 
     private void processRequestCreateSession(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -44,7 +48,7 @@ public class LoginServlet extends HttpServlet {
 
         try {
             synchronized (this) {
-                if (req.getSession(false) == null || req.getSession().getAttribute(USER_NAME) == null) {
+                if (!isLoggedIn(req)) {
                     if (!engine.isUserExist(userName) && userName != null) {
                         if (position.equals("manager")) {
                             addManager(userName, parts);
