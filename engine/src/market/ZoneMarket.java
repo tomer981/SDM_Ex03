@@ -2,6 +2,7 @@ package market;
 
 import dto.ManagerDTO;
 import dto.OrderDTO;
+import dto.StoreDTO;
 import dto.ZoneMarketDTO;
 import order.Order;
 import position.Manager;
@@ -81,12 +82,12 @@ public class ZoneMarket {
 
         return KManagerNameVManagerDTO;
     }
-    public void addStoreToManager(SDMStore store, Manager manager, String zoneName){
+    public StoreDTO addStoreToManager(SDMStore store, Manager manager, String zoneName){
         if (!KManagerNameVManager.containsValue(manager)){
             KManagerNameVManager.put(manager.getName(),manager);
         }
 
-        manager.addStoreToManager(zoneName, store, productsInfo,getStoresIds());
+        return manager.addStoreToManager(zoneName, store, productsInfo,getStoresIds());
     }
 
 

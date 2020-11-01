@@ -68,7 +68,7 @@ public class Manager {
     }
 
     //methods
-    public void addStoreToManager(String zone, SDMStore sdmStore, SDMItems productsInfo, List<Integer> storesIds) {
+    public StoreDTO addStoreToManager(String zone, SDMStore sdmStore, SDMItems productsInfo, List<Integer> storesIds) {
         if (!KZoneNameVStores.containsKey(zone)){
             KZoneNameVStores.put(zone,new ArrayList<>());
         }
@@ -83,6 +83,7 @@ public class Manager {
         List<Store> stores = KZoneNameVStores.get(zone);
         stores.add(store);
         KZoneNameVStores.put(zone,stores);
+        return store.getStoreDTO();
     }
     public Integer getNumberOfStoreSellProductByZone(SDMItem product, String zoneInfo) {
         List<Store> stores = KZoneNameVStores.get(zoneInfo);

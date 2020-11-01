@@ -174,7 +174,7 @@ public final class Market {
     }
 
     //////////method public
-    public void addStoreToManager(String managerName, String zoneName, SDMStore sdmStore) throws IllegalStateException {
+    public StoreDTO addStoreToManager(String managerName, String zoneName, SDMStore sdmStore) throws IllegalStateException {
         Manager manager = KManagerNameVManger.get(managerName);
         ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
         Managers managers = KZoneVManagers.get(zoneMarket);
@@ -183,10 +183,11 @@ public final class Market {
             throw new IllegalStateException("the Location is already taken by anther store");
         }
 
-        zoneMarket.addStoreToManager(sdmStore,manager,zoneName);
+        StoreDTO storeDTO = zoneMarket.addStoreToManager(sdmStore,manager,zoneName);
         managers.addManager(manager);
 
         handleStoreAdded(sdmStore);
+        return storeDTO;
     }
     public synchronized void addManager(String name, File file) {
         Manager manager = null;
