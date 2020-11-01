@@ -8,7 +8,7 @@ public class Constants {
     public static final String ACTION = "action";
     public static final String ZONE_NAME = "zoneName";
     public static final String CUSTOMER_ORDER = "customerOrder";
-    public static final String FEEDBACK_STORES = "feedbackStores";
+    public static final String FEEDBACK_STORES_IDS = "feedbackStores";
 
     //StoresServlet
     public static final String GET_PRODUCTS_IN_ZONE_ACTION = "getProductsInZone";
@@ -56,4 +56,9 @@ public class Constants {
     public static final String LAST_STORE_INDEX = "lastStoreId";
     public static final String GET_SUB_ORDERS_INFO_FOR_MANAGER = "getSubOrdersInfoForManager";
     public static final String GET_SUB_ORDER_PRODUCTS_INFO_FOR_MANAGER = "getSubOrderProductsInfoForManager";
+
+    //FeedbackServlet
+    public static final String GET_FEEDBACK_IN_SYSTEM = "getFeedbacksInSystem";
+
+
 }
