@@ -14,16 +14,17 @@
     <script type="text/javascript" src="../../common/urls.js"></script>
     <script type="text/javascript" src="../../common/is-session-exist.js"></script>
     <script type="text/javascript" src="../../common/generalMethods.js"></script>
+
     <script type="text/javascript" src="../../common/snackbar.js"></script>
+    <link rel="stylesheet" href="../../common/snackbar.css">
+
     <script type="text/javascript" src="zones.js"></script>
     <script type="text/javascript" src="../../common/check-for-updates.js"></script>
     <link rel="stylesheet" href="zones.css">
     <link rel="stylesheet" href="../../common/styleTable.css">
-    <link rel="stylesheet" href="../../common/snackbar.css">
 </head>
 <body>
 <div style="overflow-x:auto;">
-    <div id="snackbar"></div>
     <h1> Screen 2 : Zone Information</h1>
     <br>
     <h3> My Transaction</h3>
@@ -81,9 +82,12 @@
 </div>
 
 <script>
+    const snackbar = 'snackbar';
+    snackbar_init(snackbar);
+
     startCheckForUpdates((arr) => {
         for (let store of arr) {
-            snackbar("snackbar", 7000, `<p>Added ${store.name} to store list!</p>`);
+            snackbar_show(snackbar, 7000, `<p>Added ${store.name} to store list!</p>`);
         }
     });
 </script>

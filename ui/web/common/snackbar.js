@@ -1,4 +1,12 @@
-function snackbar(elementId, timeout, message) {
+
+function snackbar_init(elementId) {
+    let snack = document.createElement('div');
+    snack.setAttribute('id', elementId);
+
+    document.body.appendChild(snack);
+}
+
+function snackbar_show(elementId, timeout, message) {
     // Get the snackbar DIV
     let element = document.getElementById(elementId);
 
