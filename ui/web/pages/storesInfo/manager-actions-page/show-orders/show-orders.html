@@ -40,7 +40,7 @@
         thisWindow = pThisWindow
         zoneName = pZoneName;
         storeId = pStoreId;
-        subOrderTable = $("#sub-order-page").contents().find("#orders-body");
+        subOrderTable = $("#sub-order-page").contents().find("#sub-order-body");
         productsTable = $("#products-page").contents().find("#products-body");
         subOrderTable.empty();
         productsTable.empty();
@@ -56,7 +56,7 @@
         })
     }
     function registerClickSubOrder(){
-        $("#sub-order-page").contents().find("#orders-body tr").click(function (e) {
+        $("#sub-order-page").contents().find("#sub-order-body tr").click(function (e) {
             $(this).addClass("selected").siblings().removeClass("selected");
             var orderId = $(this).find("td:first").html();
             var data = {action: "getSubOrderProductsInfoForManager", orderId: orderId,zoneName: zoneName,storeId : storeId}

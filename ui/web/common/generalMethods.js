@@ -7,6 +7,9 @@ function appendToTableView(arrObject, idAddTo) {
         var output = "<tr>";
         for (var key in object) {
             if (object.hasOwnProperty(key)) {
+                if (typeof object[key] == "number"){
+                    object[key] = toTwoDigit(object[key]);
+                }
                 output += "<td>" + object[key] + "</td>";
             }
         }
@@ -25,6 +28,9 @@ function appendToTableViewInPage(arrObject, tbodyElement) {
         for (let key in object) {
             if (object.hasOwnProperty(key)) {
                 let cell = row.insertCell()
+                if (typeof object[key] == "number"){
+                    object[key] = toTwoDigit(object[key]);
+                }
                 cell.innerHTML = object[key];
             }
         }
@@ -113,6 +119,14 @@ function sendJsonForm(form, url, successFn, errorFn) {
             }
         }
     });
+}
+
+function  toTwoDigit(x){
+    if (isInt(x)){
+        return x;
+    }
+
+    return Number.parseFloat(x).toFixed(2);
 }
 
 function resizeIframe(obj) {

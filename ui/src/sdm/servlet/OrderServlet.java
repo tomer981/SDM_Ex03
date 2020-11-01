@@ -305,7 +305,6 @@ public class OrderServlet extends HttpServlet {
         Market engine = Market.getMarketInstance();
 
         Map<Integer, SubOrderDTO> orderIdToVSubOrder = engine.getSubOrderDTOByZoneAndStoreId(zoneName,storeId);
-        StoreDTO store = engine.getStoreDTO(zoneName,storeId);
 
         JsonArray jsonOrders = new JsonArray();
         for (Integer subOrderId : orderIdToVSubOrder.keySet()) {
