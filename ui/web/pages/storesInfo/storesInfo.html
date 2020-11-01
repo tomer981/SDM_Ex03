@@ -13,7 +13,11 @@
     <script type="text/javascript" src="../../common/context-path-helper.js"></script>
     <script type="text/javascript" src="../../common/urls.js"></script>
     <script type="text/javascript" src="../../common/is-session-exist.js"></script>
+    <script type="text/javascript" src="../../common/check-for-updates.js"></script>
     <script type="text/javascript" src="../../common/generalMethods.js"></script>
+    <script type="text/javascript" src="../../common/snackbar.js"></script>
+    <link rel="stylesheet" href="../../common/snackbar.css">
+
     <script type="text/javascript" src="storesInfo.js"></script>
 
     <link rel="stylesheet" href="../../common/styleTable.css">
@@ -80,5 +84,17 @@
     </div>
     <a href="../zones/zones.html">Back</a>
 </div>
+
+<script>
+    const snackbar = 'snackbar';
+    snackbar_init(snackbar);
+
+    startCheckForUpdates((arr) => {
+        for (let store of arr) {
+            snackbar_show(snackbar, 7000, `<p>Added ${store.name} to store list!</p>`);
+        }
+    });
+</script>
+
 </body>
 </html>
