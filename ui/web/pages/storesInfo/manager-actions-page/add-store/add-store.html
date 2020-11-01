@@ -109,11 +109,10 @@
     $("#storeInfo-form").on("submit", function (e) {
         e.preventDefault()
 
-        sendJsonForm(this, MANAGER_URL, (success) => {
-            console.log("Success! " + success);
+        sendJsonForm(this, MANAGER_URL, (_) => {
             resetForm();
         }, (msg) => {
-            const output = $("<p id='error' style='color: #ff0000'></p>").html(msg.responseText);
+            const output = $("<p id='error' style='color: #ff0000'></p>").html(msg);
             $("#error").remove();
             $("body").append(output)
         });

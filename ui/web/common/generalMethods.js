@@ -111,7 +111,8 @@ function sendJsonForm(form, url, successFn, errorFn) {
         processData: false,
         cache: false,
         dataType: "json",
-        complete: (data) => {
+        complete: (resp) => {
+            const data = resp.responseJSON;
             if (data !== undefined && data.error !== undefined) {
                 errorFn(data.error)
             } else {
