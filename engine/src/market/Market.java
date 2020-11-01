@@ -3,7 +3,6 @@ package market;
 import dto.*;
 import order.Action;
 import order.Order;
-import order.SubOrder;
 import position.Customer;
 import position.Manager;
 import position.Managers;
@@ -17,7 +16,6 @@ import xmlBuild.schema.generated.SDMStore;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
 interface StoreAddedListener {
