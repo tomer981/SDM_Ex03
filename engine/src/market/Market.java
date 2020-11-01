@@ -3,9 +3,11 @@ package market;
 import dto.*;
 import order.Action;
 import order.Order;
+import order.SubOrder;
 import position.Customer;
 import position.Manager;
 import position.Managers;
+import store.Store;
 import xmlBuild.SchemaBaseJaxbObjects;
 import xmlBuild.schema.generated.Location;
 import xmlBuild.schema.generated.SDMDiscount;
@@ -107,6 +109,12 @@ public final class Market {
         Customer customer = KCustomerNameVCustomer.get(customerName);
         return customer.getOrders().stream().map(Order::getOrderDTO).collect(Collectors.toList());
 
+    }
+    public Map<Integer, SubOrderDTO> getSubOrderDTOByZoneAndStoreId(String zoneName, Integer storeId){
+        ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
+        Managers managers = KZoneVManagers.get(zoneMarket);
+        Store store = managers.getStoreById(storeId);
+        return store.getStoreDTO().getKIdOrderVSubOrderDTO();
     }
     public List<TransactionDTO> getUserTransactionsDTO(String userName){
 //        List<TransactionDTO> transactions = new ArrayList<>();

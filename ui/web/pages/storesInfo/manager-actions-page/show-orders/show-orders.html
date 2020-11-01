@@ -8,11 +8,74 @@
     <script type="text/javascript" src="../../../../common/urls.js"></script>
     <script type="text/javascript" src="../../../../common/is-session-exist.js"></script>
     <script type="text/javascript" src="../../../../common/generalMethods.js"></script>
+    <link rel="stylesheet" href="../../../../common/styleTable.css">
 </head>
 <body>
-
+<div style="overflow-x:auto;">
+    <h4> Store Orders Information</h4>
+    <iframe id="sub-order-page" src="../../show-orders/show-orders.html" style="border:none;" frameborder="0" scrolling="no" width="100%" onload="resizeIframe(this)" title="Iframe Example"></iframe>
+    <br>
+    <h4> Order Products Information</h4>
+    <iframe id="products-page" src="../../show-orders/show-products-order/show-products-order.html" style="border:none;" frameborder="0" scrolling="no" width="100%" onload="resizeIframe(this)" title="Iframe Example"></iframe>
+</div>
 <script type="text/javascript">
-    isSessionExist({action: "isSessionExist", userNotFoundPage: "../../../../index.html", userFoundPage: ""});
+    var thisWindow = {};
+    var subOrderTable = {};
+    var productsTable = {};
+    var zoneName = {};
+    var storeId = {};
+
+    function resizeAll() {
+        resizeIframe($("#sub-order-page")[0]);
+        resizeIframe($("#products-page")[0]);
+        resizeIframe(thisWindow);
+    }
+
+    $(document).ready(function () {
+        productsTable = $("#products-page").contents().find("#products-body");
+    });
+
+
+    function displaySubOrder(pZoneName, pStoreId,pThisWindow) {
+        thisWindow = pThisWindow
+        zoneName = pZoneName;
+        storeId = pStoreId;
+        subOrderTable = $("#sub-order-page").contents().find("#orders-body");
+        productsTable = $("#products-page").contents().find("#products-body");
+        subOrderTable.empty();
+        productsTable.empty();
+        $.ajax({
+            method: "Post",
+            url: ORDER_URL,
+            data: {action: "getSubOrdersInfoForManager", zoneName: zoneName,storeId : storeId},
+            success: function (subOrders) {
+                appendToTableViewInPage(subOrders, subOrderTable[0]);
+                registerClickSubOrder();
+                resizeAll();
+            }
+        })
+    }
+    function registerClickSubOrder(){
+        $("#sub-order-page").contents().find("#orders-body tr").click(function (e) {
+            $(this).addClass("selected").siblings().removeClass("selected");
+            var orderId = $(this).find("td:first").html();
+            var data = {action: "getSubOrderProductsInfoForManager", orderId: orderId,zoneName: zoneName,storeId : storeId}
+            $.ajax({
+                url: ORDER_URL,
+                type: "Post",
+                data: data,
+                success: function (products) {
+                    productsTable.empty();
+                    $("#products-page").contents().find("#products-body").empty()
+                    appendToTableViewInPage(products, productsTable[0])
+                    resizeAll()
+                },
+                error: function () {
+                    alert("error getSubOrderProductsInfoForManager");
+                }
+            });
+        })
+    }
 </script>
 </body>
 </html>

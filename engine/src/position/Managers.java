@@ -125,4 +125,8 @@ public class Managers {
         }
         return KDiscountVStoreId;
     }
+
+    public Store getStoreById(Integer storeId) {
+        return KStoreIdVStore.get(storeId);
+    }
 }

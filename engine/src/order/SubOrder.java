@@ -15,11 +15,7 @@ public class SubOrder {
 //    private Map<Integer,SDMItem> KProductIdVProductsSoldInfo;
 //    private Map<SDMItem, ProductDTO> KProductVForPriceAndAmountInfo;
 //    private Map<SDMDiscount, Integer> KDiscountVTimeUse;
-    private FeedbackDTO feedbackDTO;
 
-    public FeedbackDTO getFeedback() {
-        return feedbackDTO;
-    }
     public SubOrderDTO getSubOrderDTO() {
         return subOrderDTO;
     }

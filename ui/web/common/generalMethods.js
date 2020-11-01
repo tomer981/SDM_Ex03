@@ -114,3 +114,7 @@ function sendJsonForm(form, url, successFn, errorFn) {
         }
     });
 }
+
+function resizeIframe(obj) {
+    obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+}

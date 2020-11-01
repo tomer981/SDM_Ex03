@@ -34,10 +34,6 @@
     var subOrderTable = {};
     var productsTable = {};
 
-    function resizeIframe(obj) {
-        obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
-    }
-
     function resizeAll() {
         resizeIframe($("#order-page")[0]);
         resizeIframe($("#sub-order-page")[0]);
@@ -112,8 +108,6 @@
             });
         })
     }
-
-
 </script>
 </body>
 </html>

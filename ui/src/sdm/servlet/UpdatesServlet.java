@@ -7,7 +7,6 @@ import market.Market;
 import sdm.constants.Constants;
 import xmlBuild.schema.generated.SDMStore;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,14 +21,14 @@ public class UpdatesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Market market = Market.getMarketInstance();
-        Integer lastStoreIndex = (Integer) req.getSession().getAttribute(Constants.LAST_STORE_INDEX);
+        Integer lastStoreIndex = (Integer) req.getSession().getAttribute(Constants.LAST_STORE_INDEX_ACTION);
         if (lastStoreIndex == null) {
             lastStoreIndex = 0;
         }
 
         try (PrintWriter out = resp.getWriter()) {
             List<SDMStore> result = market.getStoresAddedSince(lastStoreIndex);
-            req.getSession().setAttribute(Constants.LAST_STORE_INDEX, lastStoreIndex + result.size());
+            req.getSession().setAttribute(Constants.LAST_STORE_INDEX_ACTION, lastStoreIndex + result.size());
 
             JsonArray json = new JsonArray();
 

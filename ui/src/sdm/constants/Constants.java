@@ -16,9 +16,10 @@ public class Constants {
 
     public static final String NEW_ORDER_ACTION = "newOrder";
     public static final String CUSTOMER_SHOW_ORDER_ACTION = "showOrders";
-    public static final String MANAGER_SHOW_ORDER_ACTION = "showOrderManager";
+    public static final String MANAGER_SHOW_ORDER_ACTION = "showOrdersManager";
     public static final String SHOW_FEEDBACKS_ACTION= "showFeedbacks";
     public static final String NEW_STORE_ACTION = "newStore";
+    public static final String GET_ORDERS_IN_STORE_ACTION = "getOrdersInStore";
 
     //ZoneServlet
     public static final String GET_USERS_POSITION_ACTION = "getKUsersVPosition";
@@ -50,6 +51,8 @@ public class Constants {
     public static final String GET_SUB_ORDERS_CUSTOMER_ACTION =  "getSubOrdersCustomer";//POST
     public static final String GET_SUB_ORDERS_PRODUCTS_ACTION =  "getSubOrdersProducts";//POST
     public static final String CONFIRM_ORDER_ACTION =  "confirmOrder";//GET
-    public static final String GET_ALL_ORDERS_IDS =  "getAllOrdersIds";//GET
-    public static final String LAST_STORE_INDEX = "lastStoreId";
+    public static final String GET_ALL_ORDERS_IDS_ACTION =  "getAllOrdersIds";//GET
+    public static final String LAST_STORE_INDEX_ACTION = "lastStoreId";
+    public static final String GET_SUB_ORDERS_INFO_FOR_MANAGER = "getSubOrdersInfoForManager";
+    public static final String GET_SUB_ORDER_PRODUCTS_INFO_FOR_MANAGER = "getSubOrderProductsInfoForManager";
 }

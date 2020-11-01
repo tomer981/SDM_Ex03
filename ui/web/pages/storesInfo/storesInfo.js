@@ -28,6 +28,7 @@ $.ajax({
         $("#stores-table tbody tr").click(function () {
                 $(this).addClass("selected").siblings().removeClass("selected");
                 var storeId = $(this).find("td:first").html();
+                isManagerAddIframe(storeId)
                 getStoreProducts(storeId);
             }
         )
@@ -37,14 +38,30 @@ $.ajax({
     }
 })
 
-function getStoreProducts(storeId) {
+function getOrdersInStore(storeId){
     $.ajax({
         method: "Get",
+        url: STORES_URL,
+        data: {action: "getOrdersInStore", zoneName: zoneName, storeId: storeId},
+        success: function (arrOrders) {
+            $("#store-orders-body").empty();
+            appendToTableView(arrOrders, "#store-orders-body");
+        },
+        error: function () {
+            alert("error getOrdersInStore");
+        }
+    })
+}
+
+
+function getStoreProducts(storeId) {
+    $.ajax({
+        method: "POST",
         url: STORES_URL,
         data: {action: "getStoreProductsInfo", zoneName: zoneName, storeId: storeId},
         success: function (arrProducts) {
             $("#store-product-info").empty();
-            appendToTableView(arrProducts, "#store-product-info")
+            appendToTableView(arrProducts, "#store-product-info");
         },
         error: function () {
             alert("error getStoreProductsInfo");
@@ -83,7 +100,6 @@ function addManagerAction(){
             '<label for="action-selected">Choose an Action:</label>' +
             '<select name="action" id="action-selected" onchange="activateSubmitButton()">\n' +
                 '<option style="display: none"></option>' +
-                '<option value="showOrdersManager"> Show Order</option>' +
                 '<option value="showFeedbacks"> Show Feedbacks</option>' +
                 '<option value="newStore"> New Store</option>' +
             '</select>' +
@@ -97,6 +113,24 @@ function addManagerAction(){
         .attr("value", zoneName);
 
     $('#submit-form').append(input);
+}
+
+
+function isManagerAddIframe(storeId){
+    $.ajax({
+        method: "GET",
+        url: SIGNUP_URL,
+        data: {action: "isCustomer"},
+        success: function (isCustomer) {
+            if (isCustomer !== "true"){
+                if (document.getElementById("Iframe-orders-page") == null){
+                    var iframe = '<iframe id="Iframe-orders-page" src="manager-actions-page/show-orders/show-orders.html" style="border:none;" frameborder="0" scrolling="no" width="100%" onload="resizeIframe(this)" title="Iframe Example"></iframe>';
+                    document.getElementById("order-container").innerHTML += iframe;
+                }
+                setTimeout(function(){ $("#Iframe-orders-page")[0].contentWindow.displaySubOrder(zoneName,storeId,$("#Iframe-orders-page")[0])}, 250);
+            }
+        }
+    })
 }
 
 $.ajax({

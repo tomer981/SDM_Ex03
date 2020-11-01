@@ -251,13 +251,72 @@ public class OrderServlet extends HttpServlet {
 
         Market engine = Market.getMarketInstance();
         List<OrderDTO> ordersList = engine.getOrdersByCustomerName(userName);
-        List <Integer>listOrdersIds = ordersList.stream().map(OrderDTO::getId).collect(Collectors.toList());
+        List<Integer> listOrdersIds = ordersList.stream().map(OrderDTO::getId).collect(Collectors.toList());
 
         Integer[] ordersIds = new Integer[listOrdersIds.size()];
         ordersIds = listOrdersIds.toArray(ordersIds);
 
         try (PrintWriter out = resp.getWriter()) {
             out.println(new Gson().toJson(ordersIds));
+            out.flush();
+        }
+    }
+
+    private void processRequestGetSubOrderProductsInfoForManager(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/json");
+        String zoneName = req.getParameter("zoneName");
+        Integer storeId = Integer.valueOf(req.getParameter("storeId"));
+        Integer orderId = Integer.valueOf(req.getParameter("orderId"));
+
+        Market engine = Market.getMarketInstance();
+        Map<Integer, SubOrderDTO> orderIdToVSubOrder = engine.getSubOrderDTOByZoneAndStoreId(zoneName,storeId);
+        SubOrderDTO subOrder = orderIdToVSubOrder.get(orderId);
+
+        JsonArray jsonOrders = getSubOrdersProductsJsonArray(subOrder,zoneName);
+
+        try (PrintWriter out = resp.getWriter()) {
+            out.println(jsonOrders);
+            out.flush();
+        }
+
+    }
+
+    private JsonObject getSubOrderJsonObject(Integer subOrderId, SubOrderDTO subOrder) {
+        JsonObject jsonSubOrder = new JsonObject();
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String strDate = dateFormat.format(subOrder.getDate());
+
+        jsonSubOrder.addProperty("orderId", subOrderId);
+        jsonSubOrder.addProperty("date", strDate);
+        jsonSubOrder.addProperty("customerName", subOrder.getCustomerName());
+        jsonSubOrder.addProperty("customerLocation", subOrder.getCustomerLocation().getX() + "," + subOrder.getCustomerLocation().getY() );
+        jsonSubOrder.addProperty("numberOfProducts", subOrder.getKProductIdVProductsSoldInfo().size());
+        jsonSubOrder.addProperty("totalProductsCost", subOrder.getProductsPrice());
+        jsonSubOrder.addProperty("deliveryOrder", subOrder.getDeliveryPrice());
+        jsonSubOrder.addProperty("totalOrderCost", subOrder.getProductsPrice() + subOrder.getDeliveryPrice());
+
+        return jsonSubOrder;
+    }
+
+    private void processRequestGetSubOrdersInfoForManager(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/json");
+        String zoneName = req.getParameter("zoneName");
+        Integer storeId = Integer.valueOf(req.getParameter("storeId"));
+
+        Market engine = Market.getMarketInstance();
+
+        Map<Integer, SubOrderDTO> orderIdToVSubOrder = engine.getSubOrderDTOByZoneAndStoreId(zoneName,storeId);
+        StoreDTO store = engine.getStoreDTO(zoneName,storeId);
+
+        JsonArray jsonOrders = new JsonArray();
+        for (Integer subOrderId : orderIdToVSubOrder.keySet()) {
+            SubOrderDTO subOrder = orderIdToVSubOrder.get(subOrderId);
+
+            jsonOrders.add(getSubOrderJsonObject(subOrderId,subOrder));
+        }
+
+        try (PrintWriter out = resp.getWriter()) {
+            out.println(jsonOrders);
             out.flush();
         }
     }
@@ -272,7 +331,7 @@ public class OrderServlet extends HttpServlet {
             case CONFIRM_ORDER_ACTION:
                 processRequestConfirmOrder(req, resp);
                 break;
-            case GET_ALL_ORDERS_IDS:
+            case GET_ALL_ORDERS_IDS_ACTION:
                 processRequestGetAllOrdersIds(req, resp);
                 break;
         }
@@ -292,8 +351,18 @@ public class OrderServlet extends HttpServlet {
             case GET_SUB_ORDERS_PRODUCTS_ACTION:
                 processRequestGetSubOrdersProducts(req, resp);
                 break;
+            case GET_SUB_ORDER_PRODUCTS_INFO_FOR_MANAGER:
+                processRequestGetSubOrderProductsInfoForManager(req, resp);
+                break;
+            case GET_SUB_ORDERS_INFO_FOR_MANAGER:
+                processRequestGetSubOrdersInfoForManager(req, resp);
+                break;
+
+
         }
     }
+
+
 
 
 }
