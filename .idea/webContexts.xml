@@ -3,6 +3,7 @@
   <component name="WebContextManager">
     <option name="state">
       <map>
+        <entry key="file://$PROJECT_DIR$/ui/web/pages/storesInfo/customer-actions-page/new-order/feedback/feedback.html" value="file://$PROJECT_DIR$/ui/web/pages/storesInfo/customer-actions-page/new-order/feedback" />
         <entry key="file://$PROJECT_DIR$/ui/web/pages/storesInfo/customer-actions-page/new-order/show-orders-customer/show-orders-customer.html" value="file://$PROJECT_DIR$/ui/web/pages/storesInfo/customer-actions-page/new-order/show-orders-customer" />
       </map>
     </option>

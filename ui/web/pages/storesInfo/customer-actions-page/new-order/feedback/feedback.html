@@ -15,11 +15,39 @@
     <link rel="stylesheet" href="../../../../../common/styleTable.css">
 </head>
 <body>
-<script type="text/javascript">
-    $.ajax({
+<div style="overflow-x:auto;">
+    <form action="Feedback_URL" method="POST" id="submit-form" enctype="multipart/form-data">
+        <div id="stores-container">
+        </div>
+        <p>Please select your rating:</p>
+        <input type="radio" id="very-bad" name="rating" value="Very Bad">
+        <label for="very-bad">Very Bad</label><br>
+        <input type="radio" id="bad" name="rating" value="Bad">
+        <label for="bad">Bad</label><br>
+        <input type="radio" id="average" name="rating" value="Average">
+        <label for="average">Average</label><br>
+        <input type="radio" id="good" name="rating" value="Good">
+        <label for="good">Good</label><br>
+        <input type="radio" id="very-good" name="rating" value="Very Good">
+        <label for="very-good">Very Good</label><br>
+        <br>
+    </form>
+    <script type="text/javascript">
+        isSessionExist({action: "isSessionExist", userNotFoundPage: "../../../../../index.html", userFoundPage: ""});
+        $.ajax({
+            type: "POST",
+            url: Feedback_URL,
+            data: {action: "getFeedbacksInSystem"},
+            success: function (storesDetails) {
+                appendToScrollBar(storesDetails,"stores-container", "store-selector"," -- Select Store -- ","selectedStore()" )
+            }
+        })
+        function selectedStore(){
 
-    })
-</script>
+        }
+
+    </script>
+</div>
 
 </body>
 </html>

@@ -239,7 +239,7 @@ public class OrderServlet extends HttpServlet {
         Market engine = Market.getMarketInstance();
 
         engine.addOrder(zoneName, userName, order);
-        session.setAttribute(FEEDBACK_STORES,order.getKStoreIdVSubOrder().keySet());
+        session.setAttribute(FEEDBACK_STORES_IDS,order.getKStoreIdVSubOrder().keySet());
         session.removeAttribute(CUSTOMER_ORDER);
     }
 
