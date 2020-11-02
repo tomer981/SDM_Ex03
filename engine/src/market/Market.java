@@ -72,8 +72,12 @@ public final class Market {
             lastIndex = 0;
         }
 
+        if (lastIndex >= orderedStores.size()) {
+            return Collections.emptyList();
+        }
+
         return orderedStores
-                .subList(lastIndex, orderedStores.size())
+                .subList(lastIndex + 1, orderedStores.size())
                 .stream()
                 .filter(store -> storeIdsInZone.contains(store.getId()))
                 .collect(Collectors.toList());
