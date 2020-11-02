@@ -43,7 +43,7 @@
                     <input type="number" id="new-product-id" />
                 </th>
                 <th>
-                    <input type="number" min="1" id="new-product-price" />
+                    <input type="number" min="1" id="new-product-price" onchange="checkInput(this)" />
                 </th>
             </tr>
             <tr>
@@ -140,26 +140,10 @@
         updateProductsSelection();
     });
 
-    function makeAmountChangeable() {
-    //     var option = {type: "number", action: "onchange"};
-    //      $('#ppk').editable(option, function (e) {
-    //             if (e.value === "") {
-    //                 e.target.html("0");
-    //             } else if (parseFloat(e.value) <= 0) {
-    //                 e.target.html("0");
-    //             } else if ($(e.target).parent().find("td:contains(Weight)").text() === "Weight") {
-    //                 if (!isFloat(e.value)) {
-    //                     e.target.html(e.old_value);
-    //                 } else {
-    //                     e.target.html(e.value.replace(/^0+/, ''));
-    //                 }
-    //             } else if (!isInt(e.value)) {
-    //                 e.target.html(e.old_value);
-    //             } else {
-    //                 e.target.html(e.value.replace(/^0+/, ''));
-    //             }
-    //         })
-        }
+    // function checkInput(value){
+    //     if(isInt(value) && parseInt(value.val()) > )
+    // }
+
 
 </script>
 </body>
