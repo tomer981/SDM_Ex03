@@ -54,6 +54,7 @@ public final class Market {
     private final List<SDMStore> orderedStores = new CopyOnWriteArrayList<>();
 
     public List<SDMStore> getStoresAddedSince(int lastId, String zone) {
+
         List<Integer> storeIdsInZone = getStoresDTO(zone)
         .stream()
                 .map(store -> store.getSdmStore().getId())
