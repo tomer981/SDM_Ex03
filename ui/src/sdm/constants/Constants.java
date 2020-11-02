@@ -53,7 +53,7 @@ public class Constants {
     public static final String GET_SUB_ORDERS_PRODUCTS_ACTION =  "getSubOrdersProducts";//POST
     public static final String CONFIRM_ORDER_ACTION =  "confirmOrder";//GET
     public static final String GET_ALL_ORDERS_IDS_IN_ZONE_CUSTOMER_ACTION =  "getAllOrdersIdsInZoneForCustomer";//GET
-    public static final String LAST_STORE_INDEX = "lastStoreId";
+    public static final String LAST_STORE_UPDATE_ID = "lastStoreId";
     public static final String GET_SUB_ORDERS_INFO_FOR_MANAGER = "getSubOrdersInfoForManager";
     public static final String GET_SUB_ORDER_PRODUCTS_INFO_FOR_MANAGER = "getSubOrderProductsInfoForManager";
 

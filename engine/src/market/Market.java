@@ -53,14 +53,24 @@ public final class Market {
 
     private final List<SDMStore> orderedStores = new CopyOnWriteArrayList<>();
 
-    public List<SDMStore> getStoresAddedSince(int index, String zone) {
+    public List<SDMStore> getStoresAddedSince(int lastId, String zone) {
         List<Integer> storeIdsInZone = getStoresDTO(zone)
         .stream()
                 .map(store -> store.getSdmStore().getId())
                 .collect(Collectors.toList());
 
+        int lastIndex = orderedStores
+                .stream()
+                .map(SDMStore::getId)
+                .collect(Collectors.toList())
+                .lastIndexOf(lastId);
+
+        if (lastIndex < 0) {
+            lastIndex = 0;
+        }
+
         return orderedStores
-                .subList(index, orderedStores.size())
+                .subList(lastIndex, orderedStores.size())
                 .stream()
                 .filter(store -> storeIdsInZone.contains(store.getId()))
                 .collect(Collectors.toList());
