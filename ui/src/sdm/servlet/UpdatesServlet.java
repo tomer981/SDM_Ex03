@@ -21,13 +21,14 @@ public class UpdatesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Market market = Market.getMarketInstance();
+        String zoneName = (String) req.getSession().getAttribute(Constants.ZONE_NAME);
         Integer lastStoreIndex = (Integer) req.getSession().getAttribute(Constants.LAST_STORE_INDEX);
         if (lastStoreIndex == null) {
             lastStoreIndex = 0;
         }
 
         try (PrintWriter out = resp.getWriter()) {
-            List<SDMStore> result = market.getStoresAddedSince(lastStoreIndex);
+            List<SDMStore> result = market.getStoresAddedSince(lastStoreIndex, zoneName);
             req.getSession().setAttribute(Constants.LAST_STORE_INDEX, lastStoreIndex + result.size());
 
             JsonArray json = new JsonArray();
