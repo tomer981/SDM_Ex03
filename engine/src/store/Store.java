@@ -73,7 +73,7 @@ public class Store {
             moneyEarnFromDelivery += subOrderDTO.getDeliveryPrice();
         }
 
-        return new StoreDTO(storeInfo, StoreOwnerName, KIdOrderVSubOrderDTO ,KProductInfoVProductAmount,moneyEarnFromProducts ,moneyEarnFromDelivery);
+        return new StoreDTO(storeInfo, StoreOwnerName, KIdOrderVSubOrderDTO ,KProductInfoVProductAmount,moneyEarnFromProducts ,moneyEarnFromDelivery,zoneName);
     }
 
     private boolean isProductSold(Integer productId){

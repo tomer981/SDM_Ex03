@@ -62,7 +62,7 @@ public class ZoneMarket {
     }
 
     //Method
-    private List<Integer> getStoresIds(){
+    public List<Integer> getStoresIds(){
         List<Integer> storesIDS = new ArrayList<>();
         for (Manager manager : KManagerNameVManager.values()) {
             List<Integer> storesIdInZone = manager.getStoresIdInZone(zoneName);

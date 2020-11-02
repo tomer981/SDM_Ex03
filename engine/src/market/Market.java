@@ -55,6 +55,8 @@ public final class Market {
 
     public List<SDMStore> getStoresAddedSince(int lastId, String zone) {
 
+//        ZoneMarket zoneMarket = KNameZoneVZone.get(zone); TODO: you have some function
+//        zoneMarket.getStoresIds();
         List<Integer> storeIdsInZone = getStoresDTO(zone)
         .stream()
                 .map(store -> store.getSdmStore().getId())

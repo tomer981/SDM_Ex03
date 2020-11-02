@@ -11,6 +11,7 @@ public class StoreDTO implements Cloneable{
     private String StoreOwnerName;//3 - getStoreOwnerName
     private Map<Integer, SubOrderDTO> KIdOrderVSubOrderDTO;//6 - getSize
     private Map<SDMItem, ProductDTO> KProductIdVPriceAndAmount = new HashMap<>();
+    private String zoneName;
 
     private Double moneyEarnFromProducts;//getMoneyEarnFromProducts
     private Double moneyEarnFromDelivery;//getMoneyEarnFromDelivery
@@ -21,7 +22,9 @@ public class StoreDTO implements Cloneable{
     }
 
 
-
+    public String getZoneName() {
+        return zoneName;
+    }
     public SDMStore getSdmStore() {
         return sdmStore;
     }
@@ -41,7 +44,8 @@ public class StoreDTO implements Cloneable{
         return moneyEarnFromDelivery;
     }
 
-    public StoreDTO(SDMStore sdmStore, String storeOwnerName, Map<Integer, SubOrderDTO> KIdOrderVSubOrderDTO, Map<SDMItem, ProductDTO> KProductIdVPriceAndAmount, Double moneyEarnFromProducts, Double moneyEarnFromDelivery) {
+    public StoreDTO(SDMStore sdmStore, String storeOwnerName, Map<Integer, SubOrderDTO> KIdOrderVSubOrderDTO, Map<SDMItem, ProductDTO> KProductIdVPriceAndAmount, Double moneyEarnFromProducts, Double moneyEarnFromDelivery,String zoneName) {
+        this.zoneName = zoneName;
         this.sdmStore = sdmStore;
         StoreOwnerName = storeOwnerName;
         this.KIdOrderVSubOrderDTO = KIdOrderVSubOrderDTO;
