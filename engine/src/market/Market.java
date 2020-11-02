@@ -15,6 +15,7 @@ import xmlBuild.schema.generated.SDMStore;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -51,40 +52,26 @@ public final class Market {
 
     // notifications
 
-    private final List<SDMStore> orderedStores = new CopyOnWriteArrayList<>();
-
-    public List<SDMStore> getStoresAddedSince(int lastId, String zone) {
+    private final Map<String, List<StoreDTO>> newStoreNotificationsForUser = new ConcurrentHashMap<>();
 
 //        ZoneMarket zoneMarket = KNameZoneVZone.get(zone); TODO: you have some function
 //        zoneMarket.getStoresIds();
-        List<Integer> storeIdsInZone = getStoresDTO(zone)
-        .stream()
-                .map(store -> store.getSdmStore().getId())
-                .collect(Collectors.toList());
-
-        int lastIndex = orderedStores
-                .stream()
-                .map(SDMStore::getId)
-                .collect(Collectors.toList())
-                .lastIndexOf(lastId);
-
-        if (lastIndex < 0) {
-            lastIndex = 0;
-        }
-
-        if (lastIndex >= orderedStores.size()) {
-            return Collections.emptyList();
-        }
-
-        return orderedStores
-                .subList(lastIndex + 1, orderedStores.size())
-                .stream()
-                .filter(store -> storeIdsInZone.contains(store.getId()))
-                .collect(Collectors.toList());
+    public synchronized List<StoreDTO> getLastStoresNotificationsForUser(String userName) {
+        List<StoreDTO> notifications = newStoreNotificationsForUser.get(userName);
+        List<StoreDTO> result = new LinkedList<>(notifications);
+        notifications.clear();
+        return result;
     }
 
-    private void handleStoreAdded(SDMStore store) {
-        orderedStores.add(store);
+    private void handleStoreAdded(String zoneName, StoreDTO store) {
+        ZoneMarket zone = KNameZoneVZone.get(zoneName);
+        KZoneVManagers.get(zone).getManagerNames().forEach(managerName -> {
+            if (!newStoreNotificationsForUser.containsKey(managerName)) {
+                newStoreNotificationsForUser.put(managerName, new LinkedList<>());
+            }
+
+            newStoreNotificationsForUser.get(managerName).add(store);
+        });
     }
 
 
@@ -230,7 +217,7 @@ public final class Market {
         StoreDTO storeDTO = zoneMarket.addStoreToManager(sdmStore,manager,zoneName);
         managers.addManager(manager);
 
-        handleStoreAdded(sdmStore);
+        handleStoreAdded(zoneName, storeDTO);
         return storeDTO;
     }
 
