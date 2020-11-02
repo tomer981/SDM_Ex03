@@ -129,4 +129,10 @@ public class Managers {
     public Store getStoreById(Integer storeId) {
         return KStoreIdVStore.get(storeId);
     }
+
+    public void addFeedbackDTO(Integer storeId, FeedbackDTO feedbackDTO) {
+        String storeOwnerName = KStoreIdVStore.get(storeId).getStoreOwnerName();
+        Manager manager = KManagerNameVManger.get(storeOwnerName);
+        manager.addFeedbackDTO(zoneName,feedbackDTO);
+    }
 }

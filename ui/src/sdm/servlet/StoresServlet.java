@@ -153,6 +153,10 @@ public class StoresServlet extends HttpServlet {
         String zoneName = req.getParameter(ZONE_NAME);
         HttpSession session = req.getSession(false);
         session.setAttribute(ZONE_NAME, zoneName);
+        session.removeAttribute(FEEDBACK_STORES_IDS);
+        session.removeAttribute(FEEDBACK_STORES_IDS);
+        session.removeAttribute(FEEDBACK_STORES_DATE);
+
         switch (action) {
             case NEW_ORDER_ACTION:
                 resp.sendRedirect(NEW_ORDER_URL);

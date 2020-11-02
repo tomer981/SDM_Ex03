@@ -1,6 +1,7 @@
 package store;
 
 
+import dto.FeedbackDTO;
 import dto.ProductDTO;
 import dto.StoreDTO;
 import dto.SubOrderDTO;
@@ -132,5 +133,9 @@ public class Store {
 
             KProductInfoVProductAmount.get(product).setAmount(newAmount);
         }
+    }
+
+    public void addFeedbackDTO(Integer orderId, FeedbackDTO feedbackDTO) {
+
     }
 }

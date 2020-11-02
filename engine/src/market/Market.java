@@ -221,7 +221,6 @@ public final class Market {
 
         Order order = managers.addOrder(orderDTO);
         customer.addOrder(zoneName,order);
-
         zoneMarket.addOrder(order);
     }
     public OrderDTO getMinOrder(String zoneName,OrderDTO orderDTO, Map<SDMItem,ProductDTO> KProductInfoVProductDTO){
@@ -239,5 +238,11 @@ public final class Market {
     }
     public Boolean isUserExist(String name){
         return KCustomerNameVCustomer.containsKey(name) || KManagerNameVManger.containsKey(name);
+    }
+
+    public void addFeedbackDTO(String zoneName, Integer storeId, FeedbackDTO feedbackDTO) {
+        ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
+        Managers managers = KZoneVManagers.get(zoneMarket);
+        managers.addFeedbackDTO(storeId,feedbackDTO);
     }
 }

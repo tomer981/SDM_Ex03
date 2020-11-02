@@ -1,5 +1,6 @@
 package position;
 
+import dto.FeedbackDTO;
 import dto.ManagerDTO;
 import dto.StoreDTO;
 import dto.TransactionDTO;
@@ -15,6 +16,7 @@ public class Manager {
     private Double money = 0.0;
     private final Map<String, List<Store>> KZoneNameVStores = new HashMap<>();
     private final List<TransactionDTO> transactions = new ArrayList<>();
+    private final Map<String, List<FeedbackDTO>> KZoneNameVFeedbacksDTO = new HashMap<>();
 
     //get
     public Double getMoney() {
@@ -25,6 +27,14 @@ public class Manager {
     }
     public String getName() {
         return name;
+    }
+
+    public Map<String, List<FeedbackDTO>> getKZoneNameVFeedbacksDTO() {
+        return KZoneNameVFeedbacksDTO;
+    }
+    public void addFeedbackDTO(String zoneName, FeedbackDTO feedbackDTO){
+        List<FeedbackDTO> feedbacks = KZoneNameVFeedbacksDTO.get(zoneName);
+        feedbacks.add(feedbackDTO);//todo:check if added
     }
 
     public List<Integer> getStoresIdInZone(String zoneName){

@@ -9,6 +9,7 @@ public class Constants {
     public static final String ZONE_NAME = "zoneName";
     public static final String CUSTOMER_ORDER = "customerOrder";
     public static final String FEEDBACK_STORES_IDS = "feedbackStores";
+    public static final String FEEDBACK_STORES_DATE = "feedbackDate";
 
     //StoresServlet
     public static final String GET_PRODUCTS_IN_ZONE_ACTION = "getProductsInZone";
@@ -26,7 +27,6 @@ public class Constants {
     public static final String GET_USERS_POSITION_ACTION = "getKUsersVPosition";
     public static final String GET_USER_TRANSACTIONS_ACTION = "getUserTransactions";
     public static final String GET_ZONE_INFO_ACTION = "getZoneInfo";
-    public static final String GET_STORE_URL_ACTION = "getStoresUrl";
     //LoginServlet
     public static final String IS_CUSTOMER_USER_ACTION = "isCustomer";
     public static final String IS_SESSION_EXIST_ACTION = "isSessionExist";
@@ -58,7 +58,8 @@ public class Constants {
     public static final String GET_SUB_ORDER_PRODUCTS_INFO_FOR_MANAGER = "getSubOrderProductsInfoForManager";
 
     //FeedbackServlet
-    public static final String GET_FEEDBACK_IN_SYSTEM = "getFeedbacksInSystem";
+    public static final String GET_FEEDBACK_IN_SYSTEM_ACTION = "getFeedbacksInSystem";
+    public static final String  ADD_FEEDBACK_ACTION= "addFeedback";
 
 
 }

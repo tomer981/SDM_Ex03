@@ -16,35 +16,64 @@
 </head>
 <body>
 <div style="overflow-x:auto;">
-    <form action="Feedback_URL" method="POST" id="submit-form" enctype="multipart/form-data">
+    <form action="Feedback_URL" method="POST" id="submit-form" >
         <div id="stores-container">
         </div>
         <p>Please select your rating:</p>
-        <input type="radio" id="very-bad" name="rating" value="Very Bad">
-        <label for="very-bad">Very Bad</label><br>
-        <input type="radio" id="bad" name="rating" value="Bad">
-        <label for="bad">Bad</label><br>
-        <input type="radio" id="average" name="rating" value="Average">
-        <label for="average">Average</label><br>
-        <input type="radio" id="good" name="rating" value="Good">
-        <label for="good">Good</label><br>
-        <input type="radio" id="very-good" name="rating" value="Very Good">
-        <label for="very-good">Very Good</label><br>
+        <input type="radio" id="very-bad" name="rating" value="1">
+        <label for="very-bad">1 - Very Bad</label><br>
+        <input type="radio" id="bad" name="rating" value="2">
+        <label for="bad">2 - Bad</label><br>
+        <input type="radio" id="average" name="rating" value="3">
+        <label for="average">3 - Average</label><br>
+        <input type="radio" id="good" name="rating" value="4">
+        <label for="good">4 - Good</label><br>
+        <input type="radio" id="very-good" name="rating" value="5">
+        <label for="very-good">5 - Very Good</label><br>
         <br>
+        <p>Please write a message about the order:</p>
+        <textarea name="feedbackMsg" rows="4" cols="50" id="feedback-msg"></textarea>
+        <br>
+        <input type="submit" value="Submit Feedback" class="button" disabled="disabled" id="submitFormButton"/>
     </form>
     <script type="text/javascript">
         isSessionExist({action: "isSessionExist", userNotFoundPage: "../../../../../index.html", userFoundPage: ""});
+        $('input[name="rating"]').attr('disabled', 'disabled');
+
+        var date = {};
+
+        function selectedStore() {
+            $('input[name="rating"]').removeAttr('disabled');
+
+            $('input:radio[name="rating"]').change(function (){
+                if($(this).is(':checked')){
+                    $("#submitFormButton").removeAttr(('disabled'));
+                }
+            });
+        }
+
+        $("#submit-form").on("submit",function () {
+            $.ajax({
+                type: "POST",
+                url: Feedback_URL,
+                data: {action: "addFeedback" , data: $(this).serialize(),date:date},
+                success: function (storesDetails) {
+                    $("#stores-container").find("option:selected").remove()
+                    $('input[name="rating"]').prop('checked', false);
+                }
+            })
+        });
+
         $.ajax({
             type: "POST",
             url: Feedback_URL,
             data: {action: "getFeedbacksInSystem"},
             success: function (storesDetails) {
-                appendToScrollBar(storesDetails,"stores-container", "store-selector"," -- Select Store -- ","selectedStore()" )
+                appendToScrollBar(storesDetails[0], "stores-container", "store-selector", " -- Select Store -- ", "selectedStore()");
+                date = storesDetails[1]["date"];
             }
         })
-        function selectedStore(){
 
-        }
 
     </script>
 </div>

@@ -93,15 +93,6 @@ public class ZonesServlet extends HttpServlet {
         }
     }
 
-    private void processRequestGetStoresUrl(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-//        String url = req.getParameter("url");
-//        String zoneName = req.getParameter("zoneName");
-//        String newQuery = url + ;
-        //other solution :
-        // https://stackoverflow.com/questions/26177749/how-can-i-append-a-query-parameter-to-an-existing-url
-
-    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -130,9 +121,6 @@ public class ZonesServlet extends HttpServlet {
                 break;
             case GET_ZONE_INFO_ACTION:
                 processRequestGetZoneInfo(req, resp);
-                break;
-            case GET_STORE_URL_ACTION:
-                processRequestGetStoresUrl(req, resp);
                 break;
         }
     }
