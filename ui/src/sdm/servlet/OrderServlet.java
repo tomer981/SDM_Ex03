@@ -42,6 +42,8 @@ public class OrderServlet extends HttpServlet {
         HttpSession session = req.getSession(false);
         Market engine = Market.getMarketInstance();
         String userName = (String) session.getAttribute(USER_NAME);
+        String zoneName = (String) session.getAttribute(ZONE_NAME);
+
 
         String ordersIdsObject = req.getParameter("orders");
         Integer[] ordersIds = new Gson().fromJson(ordersIdsObject, Integer[].class);
@@ -53,7 +55,7 @@ public class OrderServlet extends HttpServlet {
         } else {
             ArrayList<Integer> OrdersIds = new ArrayList<Integer>(Arrays.asList(ordersIds));
 
-            orders = engine.getOrdersByCustomerName(userName);
+            orders = engine.getOrdersByCustomerNameInZone(userName,zoneName);
         }
 
         JsonArray jsonOrders = new JsonArray();
@@ -246,14 +248,21 @@ public class OrderServlet extends HttpServlet {
         session.removeAttribute(CUSTOMER_ORDER);
     }
 
-    private void processRequestGetAllOrdersIds(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void processRequestGetAllOrdersIdsInZoneForCustomer(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
         HttpSession session = req.getSession(false);
         String userName = (String) session.getAttribute(USER_NAME);
+        String zoneName = (String) session.getAttribute(ZONE_NAME);
+
 
         Market engine = Market.getMarketInstance();
-        List<OrderDTO> ordersList = engine.getOrdersByCustomerName(userName);
-        List<Integer> listOrdersIds = ordersList.stream().map(OrderDTO::getId).collect(Collectors.toList());
+
+//        List<OrderDTO> ordersList = engine.getOrdersByCustomerNameInZone(userName,zoneName);
+        List<Integer> listOrdersIds = engine.
+                getCustomerDTO(userName).
+                getKZoneNameVListOrderIds().
+                get(zoneName);
+//                ordersList.stream().map(OrderDTO::getId).collect(Collectors.toList());
 
         Integer[] ordersIds = new Integer[listOrdersIds.size()];
         ordersIds = listOrdersIds.toArray(ordersIds);
@@ -302,23 +311,28 @@ public class OrderServlet extends HttpServlet {
 
     private void processRequestGetSubOrdersInfoForManager(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
+        HttpSession session = req.getSession(false);
+
         String zoneName = req.getParameter("zoneName");
+        String userName = (String) session.getAttribute(USER_NAME);
         Integer storeId = Integer.valueOf(req.getParameter("storeId"));
 
         Market engine = Market.getMarketInstance();
 
-        Map<Integer, SubOrderDTO> orderIdToVSubOrder = engine.getSubOrderDTOByZoneAndStoreId(zoneName,storeId);
+        if (engine.getStoreDTO(zoneName, storeId).getStoreOwnerName().equals(userName)){
+            Map<Integer, SubOrderDTO> orderIdToVSubOrder = engine.getSubOrderDTOByZoneAndStoreId(zoneName,storeId);
 
-        JsonArray jsonOrders = new JsonArray();
-        for (Integer subOrderId : orderIdToVSubOrder.keySet()) {
-            SubOrderDTO subOrder = orderIdToVSubOrder.get(subOrderId);
+            JsonArray jsonOrders = new JsonArray();
+            for (Integer subOrderId : orderIdToVSubOrder.keySet()) {
+                SubOrderDTO subOrder = orderIdToVSubOrder.get(subOrderId);
 
-            jsonOrders.add(getSubOrderJsonObject(subOrderId,subOrder));
-        }
+                jsonOrders.add(getSubOrderJsonObject(subOrderId,subOrder));
+            }
 
-        try (PrintWriter out = resp.getWriter()) {
-            out.println(jsonOrders);
-            out.flush();
+            try (PrintWriter out = resp.getWriter()) {
+                out.println(jsonOrders);
+                out.flush();
+            }
         }
     }
 
@@ -332,8 +346,8 @@ public class OrderServlet extends HttpServlet {
             case CONFIRM_ORDER_ACTION:
                 processRequestConfirmOrder(req, resp);
                 break;
-            case GET_ALL_ORDERS_IDS_ACTION:
-                processRequestGetAllOrdersIds(req, resp);
+            case GET_ALL_ORDERS_IDS_IN_ZONE_CUSTOMER_ACTION:
+                processRequestGetAllOrdersIdsInZoneForCustomer(req, resp);
                 break;
         }
     }

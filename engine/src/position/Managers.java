@@ -41,7 +41,8 @@ public class Managers {
 
             store.addSubOrder(subOrder);
             Double transferAmount = subOrder.getSubOrderDTO().getDeliveryPrice() + subOrder.getSubOrderDTO().getProductsPrice();
-            TransactionDTO transaction = new TransactionDTO(Action.TRANSFER.name(), orderDTO.getDate(),transferAmount,storeManager.getMoney(),storeManager.getMoney() + transferAmount);
+            Action.invokeAction(Action.ACCEPT,storeManager.getMoney(),transferAmount,orderDTO.getDate());
+            TransactionDTO transaction = new TransactionDTO(Action.ACCEPT.name(), orderDTO.getDate(),transferAmount,storeManager.getMoney(),storeManager.getMoney() + transferAmount);
             storeManager.addTransaction(transaction);
 
         }
@@ -61,6 +62,7 @@ public class Managers {
                     else {
                         if(productsToBuy.get(product).getPrice() > store.getProductPrice(product)){
                             productsToBuy.get(product).setPrice(store.getProductPrice(product));
+                            KProductIdVStoreId.put(product.getId(),store.getStoreInfo().getId());
                         }
                     }
                 }

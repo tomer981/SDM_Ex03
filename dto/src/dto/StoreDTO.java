@@ -20,6 +20,8 @@ public class StoreDTO implements Cloneable{
         return (StoreDTO)super.clone();
     }
 
+
+
     public SDMStore getSdmStore() {
         return sdmStore;
     }

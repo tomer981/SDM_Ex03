@@ -15,10 +15,35 @@
     <link rel="stylesheet" href="../../../../common/styleTable.css">
 </head>
 <body>
+<div style="overflow-x:auto;">
+
+    <table id="feedbacks-table">
+        <thead>
+        <tr>
+            <th>Customer<br>Name</th>
+            <th>Date</th>
+            <th>Rating</th>
+            <th>msg</th>
+        </tr>
+        </thead>
+        <tbody id="feedbacks-table-body">
+        </tbody>
+    </table>
+</div>
+<a href="../../../../index.html">Back</a>
 
 <script type="text/javascript">
     isSessionExist({action: "isSessionExist", userNotFoundPage: "../../../../index.html", userFoundPage: ""});
-    
+
+    $.ajax({
+        method: "GET",
+        url: Feedback_URL,
+        data: {action: "getFeedbacksInZoneToManager"},
+        success: function (feedbacks) {
+            appendToTableView(feedbacks, "#feedbacks-table-body");
+        }
+    })
+
 </script>
 </body>
 </html>

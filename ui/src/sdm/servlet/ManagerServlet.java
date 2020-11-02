@@ -69,10 +69,10 @@ public class ManagerServlet extends HttpServlet {
         Gson gson = new Gson();
         StoreInfo storeInfo = gson.fromJson(req.getReader(), StoreInfo.class);
 
-        Market market = Market.getMarketInstance();
+        Market engine = Market.getMarketInstance();
         String name = (String) req.getSession().getAttribute(USER_NAME);
         String zone = (String) req.getSession().getAttribute(ZONE_NAME);
 
-        market.addStoreToManager(name, zone, storeInfo.toStore());
+        engine.addStoreToManager(name, zone, storeInfo.toStore());
     }
 }

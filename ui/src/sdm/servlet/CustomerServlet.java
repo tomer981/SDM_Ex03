@@ -312,6 +312,7 @@ public class CustomerServlet extends HttpServlet {
         }
     }
 
+
     private void processRequestAddDiscountToOrder(HttpServletRequest req, HttpServletResponse resp) {
         HttpSession session = req.getSession(false);
         Market engine = Market.getMarketInstance();

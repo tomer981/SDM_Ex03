@@ -5,18 +5,17 @@ import dto.CustomerDTO;
 import dto.TransactionDTO;
 import order.Order;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Customer {
     private CustomerDTO customerDTO;
 
-    private List<Order> orders = new ArrayList<>();
-
     public Customer(String name) {
         customerDTO = new CustomerDTO(name);
     }
+    private Map<String, List<Order>> KZoneNameVListOrders = new HashMap<>();
+
 
     public CustomerDTO getCustomerDTO() {
         return customerDTO;
@@ -33,7 +32,10 @@ public class Customer {
     }
 
     public void addOrder(String zoneName, Order order) {
-        orders.add(order);
+        if (!KZoneNameVListOrders.containsKey(zoneName)){
+            KZoneNameVListOrders.put(zoneName,new ArrayList<>());
+        }
+        KZoneNameVListOrders.get(zoneName).add(order);
         Map<String, List<Integer>> KZoneVOrdersId = customerDTO.getKZoneNameVListOrderIds();
         if (!KZoneVOrdersId.containsKey(zoneName)){
             KZoneVOrdersId.put(zoneName, new ArrayList<>());
@@ -45,7 +47,16 @@ public class Customer {
         customerDTO.setKZoneNameVListOrderIds(KZoneVOrdersId);
     }
 
+    public Map<String, List<Order>> getKZoneNameVListOrders() {
+        return KZoneNameVListOrders;
+    }
+
+    public List<Order> getListOrdersByZoneName(String zoneName) {
+        return KZoneNameVListOrders.get(zoneName);
+    }
+
+
     public List<Order> getOrders() {
-        return orders;
+        return KZoneNameVListOrders.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
     }
 }

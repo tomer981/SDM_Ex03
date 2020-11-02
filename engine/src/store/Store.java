@@ -135,7 +135,4 @@ public class Store {
         }
     }
 
-    public void addFeedbackDTO(Integer orderId, FeedbackDTO feedbackDTO) {
-
-    }
 }

@@ -30,7 +30,7 @@
         $.ajax({
             method: "Get",
             url: ORDER_URL,
-            data: {action: "getAllOrdersIds"},
+            data: {action: "getAllOrdersIdsInZoneForCustomer"},
             success: function (order) {
                 $("#show-new-order-page")[0].contentWindow.displayOrder(JSON.stringify(order),$("#show-new-order-page")[0])
                 resizeIframe($("#show-new-order-page")[0]);

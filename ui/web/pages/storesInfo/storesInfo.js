@@ -33,9 +33,6 @@ $.ajax({
             }
         )
     },
-    error: function () {
-        alert("error getStoreInfo");
-    }
 })
 
 function getOrdersInStore(storeId){
@@ -47,9 +44,6 @@ function getOrdersInStore(storeId){
             $("#store-orders-body").empty();
             appendToTableView(arrOrders, "#store-orders-body");
         },
-        error: function () {
-            alert("error getOrdersInStore");
-        }
     })
 }
 
@@ -63,9 +57,6 @@ function getStoreProducts(storeId) {
             $("#store-product-info").empty();
             appendToTableView(arrProducts, "#store-product-info");
         },
-        error: function () {
-            alert("error getStoreProductsInfo");
-        }
     })
 }
 

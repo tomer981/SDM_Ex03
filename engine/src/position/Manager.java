@@ -34,7 +34,11 @@ public class Manager {
     }
     public void addFeedbackDTO(String zoneName, FeedbackDTO feedbackDTO){
         List<FeedbackDTO> feedbacks = KZoneNameVFeedbacksDTO.get(zoneName);
-        feedbacks.add(feedbackDTO);//todo:check if added
+        if (feedbacks == null){
+            feedbacks = new ArrayList<>();
+        }
+        feedbacks.add(feedbackDTO);
+        KZoneNameVFeedbacksDTO.put(zoneName,feedbacks);
     }
 
     public List<Integer> getStoresIdInZone(String zoneName){
@@ -151,5 +155,12 @@ public class Manager {
 
     public String getZoneName(Integer storeId) {
         return null;
+    }
+
+    public List<FeedbackDTO> getFeedbacksInZone(String zoneName) {
+        if (!KZoneNameVFeedbacksDTO.containsKey(zoneName)){
+            return null;
+        }
+        return KZoneNameVFeedbacksDTO.get(zoneName);
     }
 }

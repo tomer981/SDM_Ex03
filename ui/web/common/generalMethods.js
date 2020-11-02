@@ -44,7 +44,7 @@ function appendToScrollBar(arrObject, divIdAddTo, idSelector , textSelection , o
     }
     var output =    '<label for=' + idSelector + '>' + '</label>' +
                     '<select id=' + idSelector +  ' name=' + idSelector +  ' onchange=' + onchangeFunction + '>' +
-                        '<option disabled selected value>' + textSelection + '</option>';
+                        '<option id="default-selection" disabled selected value>' + textSelection + '</option>';
     arrObject.forEach((object) => {
         output += '<option value=';
         for (var key in object) {

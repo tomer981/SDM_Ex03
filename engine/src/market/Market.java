@@ -103,10 +103,12 @@ public final class Market {
         ZoneMarket zoneMarket = KNameZoneVZone.get(name);
         return zoneMarket.getOrdersDTOByIds(ordersId);
     }
-    public List<OrderDTO> getOrdersByCustomerName(String customerName){
+    public List<OrderDTO> getOrdersByCustomerNameInZone(String customerName,String zoneName){
         Customer customer = KCustomerNameVCustomer.get(customerName);
-        return customer.getOrders().stream().map(Order::getOrderDTO).collect(Collectors.toList());
-
+        return customer.getListOrdersByZoneName(zoneName).
+                stream().
+                map(Order::getOrderDTO).
+                collect(Collectors.toList());
     }
     public Map<Integer, SubOrderDTO> getSubOrderDTOByZoneAndStoreId(String zoneName, Integer storeId){
         ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
@@ -244,5 +246,10 @@ public final class Market {
         ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
         Managers managers = KZoneVManagers.get(zoneMarket);
         managers.addFeedbackDTO(storeId,feedbackDTO);
+    }
+
+    public List<FeedbackDTO> getManagerFeedbacksInZone(String zoneName, String managerName) {
+        Manager manager = KManagerNameVManger.get(managerName);
+        return manager.getFeedbacksInZone(zoneName);
     }
 }

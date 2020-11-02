@@ -20,6 +20,7 @@ public class Order {
             SubOrder subOrder =  new SubOrder(subOrderDTO);
             KStoreIdVSubOrder.put(storeId, subOrder);
         }
+        orderId++;
     }
     public Map<Integer, SubOrder> getKStoreIdVSubOrder() {
         return KStoreIdVSubOrder;

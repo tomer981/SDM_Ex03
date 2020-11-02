@@ -16,7 +16,7 @@
 </head>
 <body>
 <div style="overflow-x:auto;">
-    <form action="Feedback_URL" method="POST" id="submit-form" >
+    <form name="submit-form" action="FeedbackServlet" method="POST" id="submit-form">
         <div id="stores-container">
         </div>
         <p>Please select your rating:</p>
@@ -36,6 +36,8 @@
         <br>
         <input type="submit" value="Submit Feedback" class="button" disabled="disabled" id="submitFormButton"/>
     </form>
+    <a href="../../../../../index.html">Home</a>
+
     <script type="text/javascript">
         isSessionExist({action: "isSessionExist", userNotFoundPage: "../../../../../index.html", userFoundPage: ""});
         $('input[name="rating"]').attr('disabled', 'disabled');
@@ -47,22 +49,29 @@
 
             $('input:radio[name="rating"]').change(function (){
                 if($(this).is(':checked')){
-                    $("#submitFormButton").removeAttr(('disabled'));
+                    $("#submitFormButton").prop('disabled',false);
                 }
             });
         }
 
-        $("#submit-form").on("submit",function () {
+        $("#submit-form").on("submit",function (e) {
             $.ajax({
                 type: "POST",
                 url: Feedback_URL,
-                data: {action: "addFeedback" , data: $(this).serialize(),date:date},
-                success: function (storesDetails) {
-                    $("#stores-container").find("option:selected").remove()
-                    $('input[name="rating"]').prop('checked', false);
+                data: {action: "addFeedback" , data: $("#submit-form").serialize(),date:date},
+                success: function () {
+                    $("#store-selector").find("option:selected").remove();
+                    $("#store-selector").val($("#target option:first").val());
+                    $('input[name="rating"]').prop('checked', false)
+                    $('input[name="rating"]').prop('disabled', true)
+                    $('#feedback-msg').val('');
+                    $("#submitFormButton").prop('disabled',true);
                 }
-            })
+            });
+            e.preventDefault();
+            return false;
         });
+
 
         $.ajax({
             type: "POST",
@@ -77,6 +86,5 @@
 
     </script>
 </div>
-
 </body>
 </html>

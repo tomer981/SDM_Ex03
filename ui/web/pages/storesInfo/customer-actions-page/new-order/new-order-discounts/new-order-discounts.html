@@ -64,9 +64,6 @@
             success: function () {
                 window.location.reload();
             },
-            error: function (){
-                alert("error");
-            }
         });
     }
 
@@ -113,9 +110,6 @@
             addBuyDiscountTable($.parseJSON(discountsObject));
             addGetDiscountTable();
         },
-        error: function () {
-            alert("error : getDiscounts");
-        }
     });
 
 
