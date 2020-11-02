@@ -62,6 +62,8 @@
 
 
 <script type="text/javascript">
+    isSessionExist({action: "isSessionExist", userNotFoundPage: "../../../../index.html", userFoundPage: ""});
+
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const zoneName = urlParams.get('zoneName')
@@ -104,7 +106,7 @@
     }
 
     resetForm();
-    makeAmountChangeable();
+    // makeAmountChangeable();
 
     $("#storeInfo-form").on("submit", function (e) {
         e.preventDefault()
