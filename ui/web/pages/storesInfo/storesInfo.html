@@ -91,7 +91,7 @@
 
     startCheckForUpdates((arr) => {
         for (let store of arr) {
-            snackbar_show(snackbar, 7000, `<p>Added ${store.name} to store list!</p>`);
+            snackbar_show(snackbar, 7000, `<p>Added ${store.name} to store list! The store is at [${store.coordX},${store.coordY}] and sells ${store.itemsSold}/${store.itemsInZone} items.</p>`);
         }
     });
 </script>

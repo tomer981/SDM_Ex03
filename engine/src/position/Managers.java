@@ -11,9 +11,9 @@ import xmlBuild.schema.generated.*;
 import java.util.*;
 
 public class Managers {
-    private String zoneName;
-    private Map <String, Manager> KManagerNameVManger = new HashMap<>();
-    private Map<Integer, Store> KStoreIdVStore = new HashMap<>();
+    private final String zoneName;
+    private final Map <String, Manager> KManagerNameVManger = new HashMap<>();
+    private final Map<Integer, Store> KStoreIdVStore = new HashMap<>();
 
     public StoreDTO getStoreDTO(Integer storeId){
         return KStoreIdVStore.get(storeId).getStoreDTO();
@@ -29,6 +29,10 @@ public class Managers {
         for (Store store : storesZone){
             KStoreIdVStore.put(store.getStoreInfo().getId(), store);
         }
+    }
+
+    public Collection<String> getManagerNames() {
+        return KManagerNameVManger.keySet();
     }
 
     public synchronized Order addOrder(OrderDTO orderDTO) {
