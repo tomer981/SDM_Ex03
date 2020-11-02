@@ -27,7 +27,7 @@
         <label for="coordY">Y Coordinate: </label>
         <input type="number" name="coordY" id="coordY" min="1" max="50" /><br>
         <label for="ppk">PPK: </label>
-        <input type="number" name="ppk" id="ppk" /><br>
+        <input type="number" name="ppk" min="0" id="ppk" /><br>
         <table id="new-store-prices">
             <thead>
             <th>Product ID</th>
@@ -43,7 +43,7 @@
                     <input type="number" id="new-product-id" />
                 </th>
                 <th>
-                    <input type="number" min="0" id="new-product-price" />
+                    <input type="number" min="1" id="new-product-price" />
                 </th>
             </tr>
             <tr>
@@ -104,6 +104,7 @@
     }
 
     resetForm();
+    makeAmountChangeable();
 
     $("#storeInfo-form").on("submit", function (e) {
         e.preventDefault()
@@ -137,28 +138,26 @@
         updateProductsSelection();
     });
 
-    function makeAmountChangeable() {
-        var option = {type: "number", action: "change"};
-         $('#new-product-price').find("td:last").eq(index).editable(option, function (e) {
-
-                if (e.value === "") {
-                    e.target.html("0");
-                } else if (parseFloat(e.value) <= 0) {
-                    e.target.html("0");
-                } else if ($(e.target).parent().find("td:contains(Weight)").text() === "Weight") {
-                    if (!isFloat(e.value)) {
-                        e.target.html(e.old_value);
-                    } else {
-                        e.target.html(e.value.replace(/^0+/, ''));
-                    }
-                } else if (!isInt(e.value)) {
-                    e.target.html(e.old_value);
-                } else {
-                    e.target.html(e.value.replace(/^0+/, ''));
-                }
-            })
-        }
-    }
+    // function makeAmountChangeable() {
+    //     var option = {type: "number", action: "onchange"};
+    //      $('#ppk').editable(option, function (e) {
+    //             if (e.value === "") {
+    //                 e.target.html("0");
+    //             } else if (parseFloat(e.value) <= 0) {
+    //                 e.target.html("0");
+    //             } else if ($(e.target).parent().find("td:contains(Weight)").text() === "Weight") {
+    //                 if (!isFloat(e.value)) {
+    //                     e.target.html(e.old_value);
+    //                 } else {
+    //                     e.target.html(e.value.replace(/^0+/, ''));
+    //                 }
+    //             } else if (!isInt(e.value)) {
+    //                 e.target.html(e.old_value);
+    //             } else {
+    //                 e.target.html(e.value.replace(/^0+/, ''));
+    //             }
+    //         })
+    //     }
 
 </script>
 </body>
