@@ -75,7 +75,7 @@ public class CustomerServlet extends HttpServlet {
                         SDMItem product = subOrder.getKProductIdVProductsSoldInfo().get(needToBuyProductId);
                         if (subOrder.getKProductVForPriceAndAmountInfo().containsKey(product)) {
                             ProductDTO productDTO = subOrder.getKProductVForPriceAndAmountInfo().get(product);
-                            Double amountLeft = productDTO.getAmount() - productDTO.getAmountUsInDiscounts();
+                            Double amountLeft = productDTO.getAmount() - productDTO.getAmountUseInDiscounts();
                             Integer needToBuyProductAmount = discount.getIfYouBuy().getQuantity();
                             if (amountLeft >= needToBuyProductAmount) {
                                 JsonArray arrayDiscount = new JsonArray();//[buyDiscount,nameVGetDiscountInfo]
@@ -339,8 +339,11 @@ public class CustomerServlet extends HttpServlet {
             addOneOfDiscount(offer,product,KOnOfDiscountVMapOffersTime);
             getProducts.add(getSDMItem(zoneName, getProductId));
 
+            Double amountUseInDiscount = productInfo.getAmountUseInDiscounts() + discount.getIfYouBuy().getQuantity();
             Double productsPriceSubOrder = offer.getForAdditional() + subOrderDTO.getProductsPrice();
             Double productsPriceOrder = offer.getForAdditional() + order.getProductsPrice();
+            productInfo.setAmountUseInDiscounts(amountUseInDiscount);
+            subOrderDTO.getKProductVForPriceAndAmountInfo().put(productCondition, productInfo);
 
             subOrderDTO.getKProductIdVProductsSoldInfo().put(product.getId(),product);
             subOrderDTO.setProductsPrice(productsPriceSubOrder);
@@ -384,12 +387,12 @@ public class CustomerServlet extends HttpServlet {
     }
 
     private SubOrderDTO updateOrderByApplyDiscount(List<SDMItem> products, SubOrderDTO subOrderDTO, SDMDiscount discount, ProductDTO buyProductInfo, SDMItem productCondition) {
-        Double amountUseInDiscount = buyProductInfo.getAmountUsInDiscounts() + discount.getIfYouBuy().getQuantity();
+        Double amountUseInDiscount = buyProductInfo.getAmountUseInDiscounts() + discount.getIfYouBuy().getQuantity();
         if (!subOrderDTO.getKDiscountVTimeUse().containsKey(discount)) {
             subOrderDTO.getKDiscountVTimeUse().put(discount, 0);
         }
         Integer timeUseDiscount = subOrderDTO.getKDiscountVTimeUse().get(discount) + 1;
-        buyProductInfo.setAmountUsInDiscounts(amountUseInDiscount);
+        buyProductInfo.setAmountUseInDiscounts(amountUseInDiscount);
 
         for (SDMItem product : products) {
             subOrderDTO.getKProductIdVProductsSoldInfo().put(product.getId(), product);

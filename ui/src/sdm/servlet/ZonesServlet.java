@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -61,13 +62,25 @@ public class ZonesServlet extends HttpServlet {
         Market engine = Market.getMarketInstance();
         List<TransactionDTO> transactions = engine.getUserTransactionsDTO(userName);
 
-        try (PrintWriter out = response.getWriter()) {
-            Gson gson = new Gson();
-            String json = gson.toJson(transactions);
-            out.println(json);
-            out.flush();
+        JsonArray Transactions = new JsonArray();
+        for (TransactionDTO transaction : transactions){
+            JsonObject jsonTransaction = new JsonObject();
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            String strDate = dateFormat.format(transaction.getDate());
+
+            jsonTransaction.addProperty("action",transaction.getAction());
+            jsonTransaction.addProperty("Date",strDate);
+            jsonTransaction.addProperty("transactionAmount",transaction.getTransactionAmount());
+            jsonTransaction.addProperty("moneyBefore",transaction.getMoneyBeforeTransaction());
+            jsonTransaction.addProperty("moneyAfter",transaction.getMoneyAfterTransaction());
+            Transactions.add(jsonTransaction);
         }
 
+
+        try (PrintWriter out = response.getWriter()) {
+            out.println(Transactions);
+            out.flush();
+        }
     }
 
     private void processRequestGetZoneInfo(HttpServletRequest request, HttpServletResponse response)

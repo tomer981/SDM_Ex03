@@ -55,7 +55,7 @@ public class OrderServlet extends HttpServlet {
         } else {
             ArrayList<Integer> OrdersIds = new ArrayList<Integer>(Arrays.asList(ordersIds));
 
-            orders = engine.getOrdersByCustomerNameInZone(userName,zoneName);
+            orders = engine.getOrdersByCustomerNameInZone(userName, zoneName);
         }
 
         JsonArray jsonOrders = new JsonArray();
@@ -195,7 +195,9 @@ public class OrderServlet extends HttpServlet {
         jsonProduct.addProperty("productName", product.getName());
         jsonProduct.addProperty("purchaseCategory", product.getPurchaseCategory());
         jsonProduct.addProperty("productAmount", offer.getQuantity() * timeUse);
-        jsonProduct.addProperty("pricePerUnit", offer.getForAdditional() / offer.getQuantity());
+        Double pricePerUnit = (double) offer.getForAdditional();
+        pricePerUnit = pricePerUnit / offer.getQuantity();
+        jsonProduct.addProperty("pricePerUnit", pricePerUnit);
         jsonProduct.addProperty("totalCost", offer.getForAdditional() * timeUse);
         jsonProduct.addProperty("discount", "Yes");
 
@@ -242,8 +244,8 @@ public class OrderServlet extends HttpServlet {
 
         engine.addOrder(zoneName, userName, order);
 
-        session.setAttribute(FEEDBACK_STORES_IDS,order.getKStoreIdVSubOrder().keySet());
-        session.setAttribute(FEEDBACK_STORES_DATE,order.getDate());
+        session.setAttribute(FEEDBACK_STORES_IDS, order.getKStoreIdVSubOrder().keySet());
+        session.setAttribute(FEEDBACK_STORES_DATE, order.getDate());
 
         session.removeAttribute(CUSTOMER_ORDER);
     }
@@ -280,10 +282,10 @@ public class OrderServlet extends HttpServlet {
         Integer orderId = Integer.valueOf(req.getParameter("orderId"));
 
         Market engine = Market.getMarketInstance();
-        Map<Integer, SubOrderDTO> orderIdToVSubOrder = engine.getSubOrderDTOByZoneAndStoreId(zoneName,storeId);
+        Map<Integer, SubOrderDTO> orderIdToVSubOrder = engine.getSubOrderDTOByZoneAndStoreId(zoneName, storeId);
         SubOrderDTO subOrder = orderIdToVSubOrder.get(orderId);
 
-        JsonArray jsonOrders = getSubOrdersProductsJsonArray(subOrder,zoneName);
+        JsonArray jsonOrders = getSubOrdersProductsJsonArray(subOrder, zoneName);
 
         try (PrintWriter out = resp.getWriter()) {
             out.println(jsonOrders);
@@ -300,7 +302,7 @@ public class OrderServlet extends HttpServlet {
         jsonSubOrder.addProperty("orderId", subOrderId);
         jsonSubOrder.addProperty("date", strDate);
         jsonSubOrder.addProperty("customerName", subOrder.getCustomerName());
-        jsonSubOrder.addProperty("customerLocation", subOrder.getCustomerLocation().getX() + "," + subOrder.getCustomerLocation().getY() );
+        jsonSubOrder.addProperty("customerLocation", subOrder.getCustomerLocation().getX() + "," + subOrder.getCustomerLocation().getY());
         jsonSubOrder.addProperty("numberOfProducts", subOrder.getKProductIdVProductsSoldInfo().size());
         jsonSubOrder.addProperty("totalProductsCost", subOrder.getProductsPrice());
         jsonSubOrder.addProperty("deliveryOrder", subOrder.getDeliveryPrice());
@@ -319,14 +321,14 @@ public class OrderServlet extends HttpServlet {
 
         Market engine = Market.getMarketInstance();
 
-        if (engine.getStoreDTO(zoneName, storeId).getStoreOwnerName().equals(userName)){
-            Map<Integer, SubOrderDTO> orderIdToVSubOrder = engine.getSubOrderDTOByZoneAndStoreId(zoneName,storeId);
+        if (engine.getStoreDTO(zoneName, storeId).getStoreOwnerName().equals(userName)) {
+            Map<Integer, SubOrderDTO> orderIdToVSubOrder = engine.getSubOrderDTOByZoneAndStoreId(zoneName, storeId);
 
             JsonArray jsonOrders = new JsonArray();
             for (Integer subOrderId : orderIdToVSubOrder.keySet()) {
                 SubOrderDTO subOrder = orderIdToVSubOrder.get(subOrderId);
 
-                jsonOrders.add(getSubOrderJsonObject(subOrderId,subOrder));
+                jsonOrders.add(getSubOrderJsonObject(subOrderId, subOrder));
             }
 
             try (PrintWriter out = resp.getWriter()) {

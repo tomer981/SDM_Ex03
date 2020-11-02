@@ -4,19 +4,19 @@ package dto;
 public class ProductDTO implements Cloneable {
     private Double price = 0.0;
     private Double amount = 0.0;
-    private Double amountUsInDiscounts = 0.0;
+    private Double amountUseInDiscounts = 0.0;
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return (ProductDTO)super.clone();
     }
 
-    public Double getAmountUsInDiscounts() {
-        return amountUsInDiscounts;
+    public Double getAmountUseInDiscounts() {
+        return amountUseInDiscounts;
     }
 
-    public void setAmountUsInDiscounts(Double amountUsInDiscounts) {
-        this.amountUsInDiscounts = amountUsInDiscounts;
+    public void setAmountUseInDiscounts(Double amountUseInDiscounts) {
+        this.amountUseInDiscounts = amountUseInDiscounts;
     }
 
     public void setPrice(Double price) {

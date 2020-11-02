@@ -53,11 +53,8 @@ public final class Market {
 
     private final List<SDMStore> orderedStores = new CopyOnWriteArrayList<>();
 
-    public List<SDMStore> getStoresAddedSince(int index, String zone) {
-        return orderedStores
-                .subList(index, orderedStores.size())
-                .stream()
-                .filter(store -> );
+    public List<SDMStore> getStoresAddedSince(int index) {
+        return orderedStores.subList(index, orderedStores.size());
     }
 
     private void handleStoreAdded(SDMStore store) {
