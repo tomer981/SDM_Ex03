@@ -1,5 +1,7 @@
 
 function snackbar_init(elementId) {
+    if (document.getElementById(elementId) !== null) return;
+
     let snack = document.createElement('div');
     snack.setAttribute('id', elementId);
 
@@ -19,7 +21,6 @@ function snackbar_show(elementId, timeout, message) {
     $snack.addClass("show");
     $snack.html(message);
 
-    // After 3 seconds, remove the show class from DIV
     setTimeout(function () {
         snack.remove();
     }, timeout);

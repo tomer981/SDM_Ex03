@@ -54,8 +54,6 @@ public final class Market {
 
     private final Map<String, List<StoreDTO>> newStoreNotificationsForUser = new ConcurrentHashMap<>();
 
-//        ZoneMarket zoneMarket = KNameZoneVZone.get(zone); TODO: you have some function
-//        zoneMarket.getStoresIds();
     public synchronized List<StoreDTO> getLastStoresNotificationsForUser(String userName) {
         List<StoreDTO> notifications = newStoreNotificationsForUser.get(userName);
         List<StoreDTO> result = new LinkedList<>(notifications);
@@ -63,9 +61,14 @@ public final class Market {
         return result;
     }
 
-    private void handleStoreAdded(String zoneName, StoreDTO store) {
+    private void handleStoreAdded(String storeManagerName, String zoneName, StoreDTO store) {
         ZoneMarket zone = KNameZoneVZone.get(zoneName);
-        KZoneVManagers.get(zone).getManagerNames().forEach(managerName -> {
+        KZoneVManagers
+                .get(zone)
+                .getManagerNames()
+                .stream()
+                .filter(managerName -> !storeManagerName.equals(managerName))
+                .forEach(managerName -> {
             if (!newStoreNotificationsForUser.containsKey(managerName)) {
                 newStoreNotificationsForUser.put(managerName, new LinkedList<>());
             }
@@ -217,7 +220,7 @@ public final class Market {
         StoreDTO storeDTO = zoneMarket.addStoreToManager(sdmStore,manager,zoneName);
         managers.addManager(manager);
 
-        handleStoreAdded(zoneName, storeDTO);
+        handleStoreAdded(managerName, zoneName, storeDTO);
         return storeDTO;
     }
 
