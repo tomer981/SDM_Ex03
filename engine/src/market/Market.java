@@ -52,29 +52,62 @@ public final class Market {
 
     // notifications
 
-    private final Map<String, List<StoreDTO>> newStoreNotificationsForUser = new ConcurrentHashMap<>();
+    private final Map<String, List<AlertDTO>> notificationsForUser = new ConcurrentHashMap<>();
 
-    public synchronized List<StoreDTO> getLastStoresNotificationsForUser(String userName) {
-        List<StoreDTO> notifications = newStoreNotificationsForUser.get(userName);
-        List<StoreDTO> result = new LinkedList<>(notifications);
+    public synchronized List<AlertDTO> getLastStoresNotificationsForUser(String userName) {
+        List<AlertDTO> notifications = notificationsForUser.get(userName);
+        List<AlertDTO> result = new LinkedList<>(notifications);
         notifications.clear();
         return result;
     }
 
+    private void addToHandle(Map<String, List<AlertDTO>> newNotificationsForUser) {
+        for (Map.Entry<String, List<AlertDTO>> entry : newNotificationsForUser.entrySet()) {
+            if (!notificationsForUser.containsKey(entry.getKey())){
+                notificationsForUser.put(entry.getKey(), new LinkedList<>());
+            }
+
+            notificationsForUser.get(entry.getKey()).addAll(entry.getValue());
+        }
+    }
+
     private void handleStoreAdded(String storeManagerName, String zoneName, StoreDTO store) {
         ZoneMarket zone = KNameZoneVZone.get(zoneName);
+        Map<String, List<AlertDTO>> newNotificationsForUser = new ConcurrentHashMap<>();
         KZoneVManagers
                 .get(zone)
                 .getManagerNames()
                 .stream()
                 .filter(managerName -> !storeManagerName.equals(managerName))
                 .forEach(managerName -> {
-            if (!newStoreNotificationsForUser.containsKey(managerName)) {
-                newStoreNotificationsForUser.put(managerName, new LinkedList<>());
-            }
+                    if (!newNotificationsForUser.containsKey(managerName)) {
+                        newNotificationsForUser.put(managerName, new LinkedList<>());
+                    }
 
-            newStoreNotificationsForUser.get(managerName).add(store);
-        });
+                    newNotificationsForUser.get(managerName).add(new AlertDTO(store));
+                });
+
+        addToHandle(newNotificationsForUser);
+    }
+
+
+    private void handleOrderAdded(String zoneName, OrderDTO orderDTO) {
+        ZoneMarket zone = KNameZoneVZone.get(zoneName);
+        Managers managers = KZoneVManagers.get(zone);
+        Map<String, List<AlertDTO>> newNotificationsForUser = managers.getManagerNamesToSubOrder(orderDTO.getKStoreIdVSubOrder());
+        addToHandle(newNotificationsForUser);
+    }
+
+
+    private void handleFeedbackAdded(String zoneName, Integer storeId, FeedbackDTO feedbackDTO) {
+        ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
+        Managers managers = KZoneVManagers.get(zoneMarket);
+        StoreDTO store = managers.getStoreById(storeId).getStoreDTO();
+        String managerName = store.getStoreOwnerName();
+        Map<String, List<AlertDTO>> newNotificationsForUser = new ConcurrentHashMap<>();
+        newNotificationsForUser.put(managerName, new LinkedList<>());
+        newNotificationsForUser.get(managerName).add(new AlertDTO(feedbackDTO));
+        addToHandle(newNotificationsForUser);
     }
 
 
@@ -127,7 +160,8 @@ public final class Market {
         ZoneMarket zoneMarket = KNameZoneVZone.get(name);
         return zoneMarket.getOrdersDTOByIds(ordersId);
     }
-    public List<OrderDTO> getOrdersByCustomerNameInZone(String customerName,String zoneName){
+
+    public List<OrderDTO> getOrdersByCustomerNameInZone(String customerName, String zoneName) {
         Customer customer = KCustomerNameVCustomer.get(customerName);
         return customer.getListOrdersByZoneName(zoneName).
                 stream().
@@ -213,11 +247,11 @@ public final class Market {
         ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
         Managers managers = KZoneVManagers.get(zoneMarket);
 
-        if (getStoresLocation(zoneName).stream().anyMatch(location -> location.getX() == sdmStore.getLocation().getX() && location.getY() == sdmStore.getLocation().getY())){
+        if (getStoresLocation(zoneName).stream().anyMatch(location -> location.getX() == sdmStore.getLocation().getX() && location.getY() == sdmStore.getLocation().getY())) {
             throw new IllegalStateException("the Location is already taken by anther store");
         }
 
-        StoreDTO storeDTO = zoneMarket.addStoreToManager(sdmStore,manager,zoneName);
+        StoreDTO storeDTO = zoneMarket.addStoreToManager(sdmStore, manager, zoneName);
         managers.addManager(manager);
 
         handleStoreAdded(managerName, zoneName, storeDTO);
@@ -257,8 +291,9 @@ public final class Market {
         customerMakeTransaction(Action.TRANSFER, customer, orderDTO.getDate(), transactionAmount);
 
         Order order = managers.addOrder(orderDTO);
-        customer.addOrder(zoneName,order);
+        customer.addOrder(zoneName, order);
         zoneMarket.addOrder(order);
+        handleOrderAdded(zoneName, order.getOrderDTO());
     }
 
     public OrderDTO getMinOrder(String zoneName, OrderDTO orderDTO, Map<SDMItem, ProductDTO> KProductInfoVProductDTO) {
@@ -283,7 +318,8 @@ public final class Market {
     public void addFeedbackDTO(String zoneName, Integer storeId, FeedbackDTO feedbackDTO) {
         ZoneMarket zoneMarket = KNameZoneVZone.get(zoneName);
         Managers managers = KZoneVManagers.get(zoneMarket);
-        managers.addFeedbackDTO(storeId,feedbackDTO);
+        managers.addFeedbackDTO(storeId, feedbackDTO);
+        handleFeedbackAdded(zoneName, storeId, feedbackDTO);
     }
 
     public List<FeedbackDTO> getManagerFeedbacksInZone(String zoneName, String managerName) {

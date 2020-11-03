@@ -9,13 +9,14 @@ import xmlBuild.schema.generated.*;
 
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Managers {
     private final String zoneName;
-    private final Map <String, Manager> KManagerNameVManger = new HashMap<>();
+    private final Map<String, Manager> KManagerNameVManger = new HashMap<>();
     private final Map<Integer, Store> KStoreIdVStore = new HashMap<>();
 
-    public StoreDTO getStoreDTO(Integer storeId){
+    public StoreDTO getStoreDTO(Integer storeId) {
         return KStoreIdVStore.get(storeId).getStoreDTO();
     }
 
@@ -23,10 +24,10 @@ public class Managers {
         this.zoneName = zoneName;
     }
 
-    public void addManager(Manager manager){
+    public void addManager(Manager manager) {
         KManagerNameVManger.put(manager.getName(), manager);
         List<Store> storesZone = manager.getKZoneNameVStores().get(zoneName);
-        for (Store store : storesZone){
+        for (Store store : storesZone) {
             KStoreIdVStore.put(store.getStoreInfo().getId(), store);
         }
     }
@@ -38,15 +39,15 @@ public class Managers {
     public synchronized Order addOrder(OrderDTO orderDTO) {
         Order order = new Order(orderDTO);
         Map<Integer, SubOrder> KStoreIdVSubOrder = order.getKStoreIdVSubOrder();
-        for (Integer storeId : KStoreIdVSubOrder.keySet()){
+        for (Integer storeId : KStoreIdVSubOrder.keySet()) {
             SubOrder subOrder = KStoreIdVSubOrder.get(storeId);
             Store store = KStoreIdVStore.get(storeId);
             Manager storeManager = KManagerNameVManger.get(store.getStoreOwnerName());
 
             store.addSubOrder(subOrder);
             Double transferAmount = subOrder.getSubOrderDTO().getDeliveryPrice() + subOrder.getSubOrderDTO().getProductsPrice();
-            Action.invokeAction(Action.ACCEPT,storeManager.getMoney(),transferAmount,orderDTO.getDate());
-            TransactionDTO transaction = new TransactionDTO(Action.ACCEPT.name(), orderDTO.getDate(),transferAmount,storeManager.getMoney(),storeManager.getMoney() + transferAmount);
+            Action.invokeAction(Action.ACCEPT, storeManager.getMoney(), transferAmount, orderDTO.getDate());
+            TransactionDTO transaction = new TransactionDTO(Action.ACCEPT.name(), orderDTO.getDate(), transferAmount, storeManager.getMoney(), storeManager.getMoney() + transferAmount);
             storeManager.addTransaction(transaction);
 
         }
@@ -54,19 +55,18 @@ public class Managers {
         return order;
     }
 
-    public Map<Integer,Integer> getProductIdToChipsetStore(Map<SDMItem, ProductDTO> productsToBuy){
-        Map<Integer,Integer> KProductIdVStoreId = new HashMap<>();
-        for (SDMItem product : productsToBuy.keySet()){
-            for (Store store : KStoreIdVStore.values()){
-                if (store.isProductSold(product)){
-                    if (!KProductIdVStoreId.containsKey(product.getId())){
-                        KProductIdVStoreId.put(product.getId(),store.getStoreInfo().getId());
+    public Map<Integer, Integer> getProductIdToChipsetStore(Map<SDMItem, ProductDTO> productsToBuy) {
+        Map<Integer, Integer> KProductIdVStoreId = new HashMap<>();
+        for (SDMItem product : productsToBuy.keySet()) {
+            for (Store store : KStoreIdVStore.values()) {
+                if (store.isProductSold(product)) {
+                    if (!KProductIdVStoreId.containsKey(product.getId())) {
+                        KProductIdVStoreId.put(product.getId(), store.getStoreInfo().getId());
                         productsToBuy.get(product).setPrice(store.getProductPrice(product));
-                    }
-                    else {
-                        if(productsToBuy.get(product).getPrice() > store.getProductPrice(product)){
+                    } else {
+                        if (productsToBuy.get(product).getPrice() > store.getProductPrice(product)) {
                             productsToBuy.get(product).setPrice(store.getProductPrice(product));
-                            KProductIdVStoreId.put(product.getId(),store.getStoreInfo().getId());
+                            KProductIdVStoreId.put(product.getId(), store.getStoreInfo().getId());
                         }
                     }
                 }
@@ -79,10 +79,10 @@ public class Managers {
     public OrderDTO getOrderDTO(OrderDTO orderDTO, Map<SDMItem, ProductDTO> productsToBuyDTO, Map<Integer, Integer> KProductIdVStoreId) {
         Map<Integer, SubOrderDTO> KStoreIdVSubOrderDTO = new HashMap<>();
 
-        for (SDMItem product : productsToBuyDTO.keySet()){
+        for (SDMItem product : productsToBuyDTO.keySet()) {
             Integer chipsetStoreProduct_StoreId = KProductIdVStoreId.get(product.getId());
-            if (!KStoreIdVSubOrderDTO.containsKey(chipsetStoreProduct_StoreId)){
-                SubOrderDTO subOrderDTO = new SubOrderDTO(orderDTO.getId(),orderDTO.getDate(),orderDTO.getCustomerName(),orderDTO.getCustomerLocation());
+            if (!KStoreIdVSubOrderDTO.containsKey(chipsetStoreProduct_StoreId)) {
+                SubOrderDTO subOrderDTO = new SubOrderDTO(orderDTO.getId(), orderDTO.getDate(), orderDTO.getCustomerName(), orderDTO.getCustomerLocation());
                 KStoreIdVSubOrderDTO.put(chipsetStoreProduct_StoreId, subOrderDTO);
             }
 
@@ -91,15 +91,15 @@ public class Managers {
             Double subOrderProductsPrices = subOrderDTO.getProductsPrice() + costProductXAmount;
             Double orderProductsPrices = costProductXAmount + orderDTO.getProductsPrice();
 
-            subOrderDTO.getKProductIdVProductsSoldInfo().put(product.getId(),product);
-            subOrderDTO.getKProductVForPriceAndAmountInfo().put(product,productsToBuyDTO.get(product));
+            subOrderDTO.getKProductIdVProductsSoldInfo().put(product.getId(), product);
+            subOrderDTO.getKProductVForPriceAndAmountInfo().put(product, productsToBuyDTO.get(product));
             subOrderDTO.setProductsPrice(subOrderProductsPrices);
             orderDTO.setProductsPrice(orderProductsPrices);
         }
 
 
         Double totalDelivery = 0.0;
-        for (Integer storeId : new HashSet<>(KProductIdVStoreId.values())){
+        for (Integer storeId : new HashSet<>(KProductIdVStoreId.values())) {
             Store store = KStoreIdVStore.get(storeId);
             Location storeLocation = store.getStoreInfo().getLocation();
             Double deliveryCost = SubOrder.getDistance(orderDTO.getCustomerLocation(), storeLocation) * store.getStoreInfo().getDeliveryPpk();
@@ -122,11 +122,11 @@ public class Managers {
     public Map<SDMDiscount, Integer> getStoresDiscounts(Set<Integer> storesId) {
         Map<SDMDiscount, Integer> KDiscountVStoreId = new HashMap<>();
 
-        for (Integer storeId : storesId){
+        for (Integer storeId : storesId) {
             StoreDTO store = getStoreDTO(storeId);
             SDMDiscounts storeDiscounts = store.getSdmStore().getSDMDiscounts();
-            if (storeDiscounts !=null){
-                storeDiscounts.getSDMDiscount().forEach(sdmDiscount -> KDiscountVStoreId.put(sdmDiscount,storeId));
+            if (storeDiscounts != null) {
+                storeDiscounts.getSDMDiscount().forEach(sdmDiscount -> KDiscountVStoreId.put(sdmDiscount, storeId));
             }
         }
         return KDiscountVStoreId;
@@ -139,6 +139,22 @@ public class Managers {
     public void addFeedbackDTO(Integer storeId, FeedbackDTO feedbackDTO) {
         String storeOwnerName = KStoreIdVStore.get(storeId).getStoreOwnerName();
         Manager manager = KManagerNameVManger.get(storeOwnerName);
-        manager.addFeedbackDTO(zoneName,feedbackDTO);
+        manager.addFeedbackDTO(zoneName, feedbackDTO);
+    }
+
+    public Map<String, List<AlertDTO>> getManagerNamesToSubOrder(Map<Integer, SubOrderDTO> kStoreIdVSubOrder) {
+        Map<String, List<AlertDTO>> KManagerNameVSubOrders = new ConcurrentHashMap<>();
+        for (Integer storeId : kStoreIdVSubOrder.keySet()) {
+            StoreDTO store = getStoreDTO(storeId);
+            SubOrderDTO subOrderDTO = store.getKIdOrderVSubOrderDTO().get(storeId);
+            String storeOwner = store.getStoreOwnerName();
+            if (!KManagerNameVSubOrders.containsKey(storeOwner)) {
+                KManagerNameVSubOrders.put(storeOwner, new LinkedList<>());
+            }
+
+            KManagerNameVSubOrders.get(storeOwner).add(new AlertDTO(subOrderDTO));
+        }
+
+        return KManagerNameVSubOrders;
     }
 }

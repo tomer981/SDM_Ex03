@@ -89,7 +89,7 @@ public class FeedbackServlet extends HttpServlet {
         Map<String, String> query_pairs = new LinkedHashMap<String, String>();
         Date date = null;
         try {
-            date = new SimpleDateFormat("yyyy-MM-dd").parse(req.getParameter("date"));
+            date = new SimpleDateFormat("dd-MM-yyyy").parse(req.getParameter("date"));
         } catch (ParseException e) {
             e.printStackTrace();
         }

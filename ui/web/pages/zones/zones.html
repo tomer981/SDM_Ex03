@@ -86,8 +86,16 @@
     snackbar_init(snackbar);
 
     startCheckForUpdates((arr) => {
-        for (let store of arr) {
-            snackbar_show(snackbar, 7000, `<p>Added ${store.name} to store list! The store is at [${store.coordX},${store.coordY}] and sells ${store.itemsSold}/${store.itemsInZone} items.</p>`);
+        for (let alert of arr){
+            if (alert[0].type === "newStoreAlertMsg"){
+                snackbar_show(snackbar, 7000, `<p>Added ${alert[1].name} to store list! The store is at [${alert[1].coordX},${alert[1].coordY}] and sells ${alert[1].itemsSold}/${alert[1].itemsInZone} items.</p>`);
+            }
+            else if(alert[0].type === "newFeedbackAlertMsg"){
+                snackbar_show(snackbar, 7000, `<p>FeedBack: Customer Name: ${alert[1].customerName} Date: [${alert[1].date} Rating: ${alert[1].rate}/5 Massage: ${alert[1].msg} items.</p>`);
+            }
+            else if(alert[0].type === "newSubOrderAlertMsg"){
+                snackbar_show(snackbar, 7000, `<p>New Order: Id: ${alert[1].orderId} Customer Name: ${alert[1].customerName} Number Of Different Products: ${alert[1].productsForSale}] Products Cost: ${toTwoDigit(alert[1].productsCost)} Delivery Cost: ${toTwoDigit(alert[1].deliveryCost)} items.</p>`);
+            }
         }
     });
 </script>
