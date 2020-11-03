@@ -23,11 +23,11 @@
         <label for="name">Store Name: </label>
         <input type="text" name="name" id="name" /><br>
         <label for="coordX">X Coordinate: </label>
-        <input type="number" name="coordX" id="coordX" min="1" max="50" /><br>
+        <input type="number" name="coordX" id="coordX" min="1" max="50" onchange="checkAboveNumber(this,1,50)"/><br>
         <label for="coordY">Y Coordinate: </label>
-        <input type="number" name="coordY" id="coordY" min="1" max="50" /><br>
+        <input type="number" name="coordY" id="coordY" min="1" max="50" onchange="checkAboveNumber(this,1,50)"/><br>
         <label for="ppk">PPK: </label>
-        <input type="number" name="ppk" min="0" id="ppk" /><br>
+        <input type="number" name="ppk" min="0" id="ppk" onchange="checkAboveNumber(this,0)" /><br>
         <table id="new-store-prices">
             <thead>
             <th>Product ID</th>
@@ -40,10 +40,10 @@
             <tbody>
             <tr>
                 <th id="new-product-id-cell">
-                    <input type="number" id="new-product-id" />
+                    <input type="number" id="new-product-id"  />
                 </th>
                 <th>
-                    <input type="number" min="1" id="new-product-price" onchange="checkInput(this)" />
+                    <input type="number" min="1" id="new-product-price" onchange="checkAboveNumber(this,1)" />
                 </th>
             </tr>
             <tr>
@@ -140,9 +140,11 @@
         updateProductsSelection();
     });
 
-    // function checkInput(value){
-    //     if(isInt(value) && parseInt(value.val()) > )
-    // }
+    function checkAboveNumber(obj,minNumber, maxNumber = parseInt(obj.value)){
+        if(!(isInt(obj.value) && parseInt(obj.value) >= minNumber && parseInt(obj.value) <= maxNumber)){
+            obj.value = "";
+        }
+    }
 
 
 </script>
