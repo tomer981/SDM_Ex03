@@ -1,7 +1,7 @@
 FROM tomcat:8.5.65-jdk8-openjdk-slim-buster
 MAINTAINER Tomer Avivi "tomer981@gmail.com"
 
-ADD /out/artifacts/SDM/SDM.war /usr/local/tomcat/webapps/
+ADD /SDM.war /usr/local/tomcat/webapps/
 
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
