@@ -16,6 +16,7 @@ public class StoreDTO implements Cloneable{
     private Double moneyEarnFromProducts;//getMoneyEarnFromProducts
     private Double moneyEarnFromDelivery;//getMoneyEarnFromDelivery
 
+
     @Override
     public Object clone() throws CloneNotSupportedException {
         return (StoreDTO)super.clone();
