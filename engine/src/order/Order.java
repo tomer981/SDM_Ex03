@@ -4,12 +4,42 @@ import dto.OrderDTO;
 import dto.SubOrderDTO;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Order {
     public static Integer orderId = 1;
     private OrderDTO orderDTO;
     private Map<Integer,SubOrder> KStoreIdVSubOrder = new HashMap<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Order)) return false;
+        Order order = (Order) o;
+        return Objects.equals(orderDTO, order.orderDTO) &&
+                Objects.equals(KStoreIdVSubOrder, order.KStoreIdVSubOrder);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderDTO, KStoreIdVSubOrder);
+    }
+
+    public static Integer getOrderId() {
+        return orderId;
+    }
+
+    public static void setOrderId(Integer orderId) {
+        Order.orderId = orderId;
+    }
+
+    public void setOrderDTO(OrderDTO orderDTO) {
+        this.orderDTO = orderDTO;
+    }
+
+    public void setKStoreIdVSubOrder(Map<Integer, SubOrder> KStoreIdVSubOrder) {
+        this.KStoreIdVSubOrder = KStoreIdVSubOrder;
+    }
 
     public Order(OrderDTO orderDTO){
         orderDTO.setId(orderId);

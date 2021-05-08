@@ -173,7 +173,6 @@ public class StoresServlet extends HttpServlet {
             case GET_PRODUCTS_IN_STORE_ACTION:
                 processRequestGetStoreProductsInfo(req, resp);
                 break;
-
         }
     }
 
@@ -187,7 +186,6 @@ public class StoresServlet extends HttpServlet {
             case GET_STORE_INFO_ACTION:
                 processRequestGetStoreInfo(req, resp);
                 break;
-
             case GET_ORDERS_IN_STORE_ACTION:
                 processRequestGetOrdersInStore(req, resp);
                 break;
